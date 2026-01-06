@@ -21,23 +21,42 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-  );
-
   try {
     const { shoeId } = await req.json();
+    console.log("Received shoeId:", shoeId);
     
     if (!shoeId || !SHOE_PRICES[shoeId]) {
       throw new Error("Invalid shoe ID");
     }
 
-    const authHeader = req.headers.get("Authorization")!;
+    // Get authorization header
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      throw new Error("Missing authorization header");
+    }
+
+    // Create Supabase client with auth header
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    // Validate JWT and get claims
     const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
-    const user = data.user;
-    if (!user?.email) throw new Error("User not authenticated");
+    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getUser(token);
+    
+    if (claimsError || !claimsData?.user) {
+      console.error("Auth error:", claimsError);
+      throw new Error("User not authenticated");
+    }
+
+    const user = claimsData.user;
+    console.log("Authenticated user:", user.id, user.email);
+
+    if (!user.email) {
+      throw new Error("User email not available");
+    }
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
@@ -49,6 +68,7 @@ serve(async (req) => {
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
     }
+    console.log("Stripe customer:", customerId || "new customer");
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -67,6 +87,8 @@ serve(async (req) => {
         userId: user.id,
       },
     });
+
+    console.log("Checkout session created:", session.id);
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
