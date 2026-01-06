@@ -103,19 +103,36 @@ export function PlayerHeader() {
       <div className="flex items-start gap-4 relative z-10">
         {/* Avatar */}
         <div className="relative flex-shrink-0">
-          {profile?.avatar_url ? (
-            <img 
-              src={profile.avatar_url} 
-              alt="Avatar" 
-              className="w-20 h-20 rounded-full object-cover shadow-lg border-2 border-yellow-200"
-            />
-          ) : (
-            <img 
-              src={avatarSora} 
-              alt="Avatar" 
-              className="w-20 h-20 rounded-full object-cover shadow-lg border-2 border-yellow-200"
-            />
-          )}
+          {/* Rainbow border container */}
+          <motion.div
+            className="relative w-[88px] h-[88px] rounded-full p-1"
+            style={{
+              background: 'linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #ec4899, #ef4444)',
+              backgroundSize: '200% 100%',
+            }}
+            animate={{
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            {profile?.avatar_url ? (
+              <img 
+                src={profile.avatar_url} 
+                alt="Avatar" 
+                className="w-20 h-20 rounded-full object-cover shadow-lg"
+              />
+            ) : (
+              <img 
+                src={avatarSora} 
+                alt="Avatar" 
+                className="w-20 h-20 rounded-full object-cover shadow-lg"
+              />
+            )}
+          </motion.div>
           <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-base border-2 border-yellow-200">
             {tier.icon}
           </div>
