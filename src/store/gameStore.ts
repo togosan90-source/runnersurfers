@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 export interface Boost {
   id: number;
@@ -352,9 +351,7 @@ export function getTotalShoeBonus(ownedShoes: string[]): { coinBonus: number; ex
   return { coinBonus, expBonus };
 }
 
-export const useGameStore = create<GameState>()(
-  persist(
-    (set, get) => ({
+export const useGameStore = create<GameState>()((set, get) => ({
       // Initial state
       user: {
         id: '',
@@ -647,19 +644,14 @@ export const useGameStore = create<GameState>()(
         }, 0);
       },
       
-      getTotalExpBonus: () => {
-        const state = get();
-        return state.purchasedUpgrades.reduce((total, id) => {
-          const upgrade = SCORE_UPGRADES.find(u => u.id === id);
-          if (upgrade && upgrade.type === 'exp') {
-            return total + upgrade.bonusPercent;
-          }
-          return total;
-        }, 0);
-      },
-    }),
-    {
-      name: 'runner-legends-storage',
-    }
-  )
-);
+    getTotalExpBonus: () => {
+      const state = get();
+      return state.purchasedUpgrades.reduce((total, id) => {
+        const upgrade = SCORE_UPGRADES.find(u => u.id === id);
+        if (upgrade && upgrade.type === 'exp') {
+          return total + upgrade.bonusPercent;
+        }
+        return total;
+      }, 0);
+    },
+  }));
