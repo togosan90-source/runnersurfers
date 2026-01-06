@@ -30,9 +30,9 @@ export function DailyQuests() {
       animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl overflow-hidden relative"
       style={{
-        background: 'linear-gradient(180deg, #1a0a0a 0%, #2d1010 50%, #1a0505 100%)',
-        border: '3px solid #ff4500',
-        boxShadow: '0 0 30px rgba(255, 69, 0, 0.4), inset 0 0 20px rgba(255, 100, 0, 0.1)',
+        background: 'linear-gradient(180deg, #fef9c3 0%, #e0f2fe 50%, #fef3c7 100%)',
+        border: '3px solid #38bdf8',
+        boxShadow: '0 0 30px rgba(56, 189, 248, 0.3), inset 0 0 20px rgba(250, 204, 21, 0.2)',
       }}
     >
       {/* Animated fire particles background */}
