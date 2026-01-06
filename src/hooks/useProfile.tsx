@@ -99,6 +99,19 @@ export const useProfile = () => {
   const syncProfileFromStore = async () => {
     if (!user) return;
     
+    // CRITICAL: Don't sync if gameStore has default/unloaded values
+    // This prevents overwriting real data with empty defaults
+    if (!gameUser.id || gameUser.id === '') {
+      console.warn('Sync aborted: gameStore not loaded from database yet');
+      return;
+    }
+    
+    // Extra safety: don't sync if the profile hasn't been loaded
+    if (!profile) {
+      console.warn('Sync aborted: profile not loaded yet');
+      return;
+    }
+    
     const { error } = await supabase
       .from('profiles')
       .update({
