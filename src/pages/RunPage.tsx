@@ -14,6 +14,7 @@ import { useGameStore, getScoreMultiplier, getExpNeeded, getExpPercentage, calcu
 import { useNotifications } from '@/hooks/useNotifications';
 import { useRuns } from '@/hooks/useRuns';
 import { useProfile } from '@/hooks/useProfile';
+import { useAuth } from '@/hooks/useAuth';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -61,7 +62,7 @@ export default function RunPage() {
   } = useGameStore();
 
   const { saveRun } = useRuns();
-  const { syncProfileFromStore } = useProfile();
+  const { incrementProfileStats, fetchProfile } = useProfile();
   const { isInstallable, isInstalled, install, isIOS } = usePWAInstall();
   const navigate = useNavigate();
 
@@ -330,7 +331,7 @@ export default function RunPage() {
       const finalScoreWithUpgrade = Math.floor(finalScore * (1 + upgradeScoreBonus / 100));
       const expGainedWithUpgrade = Math.floor(expGained * (1 + upgradeExpBonus / 100));
 
-      // Add to local store
+      // Add to local store (for immediate UI update)
       addScore(finalScoreWithUpgrade);
       addExp(expGainedWithUpgrade);
       addCoins(coinsEarned);
@@ -340,11 +341,16 @@ export default function RunPage() {
       
       // Update daily quests progress and get rewards
       const questRewards = updateDailyQuestsProgress(distance);
+      let totalCoinsEarned = coinsEarned;
+      let totalExpEarned = expGainedWithUpgrade;
+      
       if (questRewards.questsCompleted > 0) {
-        // Add quest rewards
+        // Add quest rewards to local store
         addCoins(questRewards.coinsEarned);
         const questExpValue = Math.floor(getExpNeeded(user.level) * (questRewards.expEarned / 100));
         addExp(questExpValue);
+        totalCoinsEarned += questRewards.coinsEarned;
+        totalExpEarned += questExpValue;
         toast.success(`🏆 ${questRewards.questsCompleted} Quest completate! +${questRewards.coinsEarned.toLocaleString()} monete, +${questRewards.expEarned}% EXP`);
       }
 
@@ -355,9 +361,9 @@ export default function RunPage() {
           duration,
           avgSpeed,
           calories: runCalories,
-          scoreEarned: finalScore,
-          expEarned: expGained,
-          coinsEarned,
+          scoreEarned: finalScoreWithUpgrade,
+          expEarned: totalExpEarned,
+          coinsEarned: totalCoinsEarned,
           path
         });
 
@@ -365,11 +371,21 @@ export default function RunPage() {
           console.error('Error saving run:', runError);
           toast.error('Errore nel salvataggio della corsa');
         } else {
-          // Sync profile to database
-          await syncProfileFromStore();
+          // Update profile directly in database with increments
+          const { error: profileError } = await incrementProfileStats({
+            scoreEarned: finalScoreWithUpgrade,
+            expEarned: totalExpEarned,
+            coinsEarned: totalCoinsEarned,
+            distanceRun: distance,
+            reputationEarned: reputationEarned,
+          });
+          
+          if (profileError) {
+            console.error('Error updating profile:', profileError);
+          }
           
           // Show success with earned rewards
-          let message = `🎉 Corsa salvata! Score: ${finalScore.toLocaleString()}, Monete: +${coinsEarned.toLocaleString()}`;
+          let message = `🎉 Corsa salvata! Score: ${finalScoreWithUpgrade.toLocaleString()}, Monete: +${totalCoinsEarned.toLocaleString()}`;
           if (reputationEarned > 0) {
             message += `, Rep: +${reputationEarned}`;
           }
@@ -388,7 +404,7 @@ export default function RunPage() {
     setDistance(0);
     setPath([]);
     setSpeed(0);
-  }, [endRun, score, distance, user.level, user.skillCoins, user.skillScore, ownedShoes, addScore, addExp, addCoins, addReputation, path, saveRun, syncProfileFromStore, updateDailyQuestsProgress, getTotalScoreBonus, getTotalExpBonus]);
+  }, [endRun, score, distance, user.level, user.skillCoins, user.skillScore, ownedShoes, addScore, addExp, addCoins, addReputation, path, saveRun, incrementProfileStats, updateDailyQuestsProgress, getTotalScoreBonus, getTotalExpBonus]);
 
   const calories = calculateCalories(distance);
 

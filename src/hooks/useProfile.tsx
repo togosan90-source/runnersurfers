@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
-import { useGameStore } from '@/store/gameStore';
+import { useGameStore, getExpNeeded } from '@/store/gameStore';
 
 export interface Profile {
   id: string;
@@ -123,5 +123,48 @@ export const useProfile = () => {
     }
   };
 
-  return { profile, loading, fetchProfile, updateProfile, syncProfileFromStore };
+  // Increment profile values directly in database (for run completion)
+  const incrementProfileStats = async (stats: {
+    scoreEarned: number;
+    expEarned: number;
+    coinsEarned: number;
+    distanceRun: number;
+    reputationEarned: number;
+  }) => {
+    if (!user || !profile) return { error: new Error('Not authenticated or no profile') };
+    
+    // Calculate new level based on exp
+    let newExp = profile.exp + stats.expEarned;
+    let newLevel = profile.level;
+    let newSkillPoints = profile.skill_points;
+    
+    while (newExp >= getExpNeeded(newLevel)) {
+      newExp -= getExpNeeded(newLevel);
+      newLevel++;
+      newSkillPoints += 3;
+    }
+    
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        total_score: profile.total_score + stats.scoreEarned,
+        exp: newExp,
+        level: newLevel,
+        skill_points: newSkillPoints,
+        coins: profile.coins + stats.coinsEarned,
+        total_distance: Number(profile.total_distance) + stats.distanceRun,
+        reputation: profile.reputation + stats.reputationEarned,
+        last_run_date: new Date().toISOString().split('T')[0],
+      })
+      .eq('id', user.id);
+    
+    if (!error) {
+      // Refresh profile after update
+      await fetchProfile();
+    }
+    
+    return { error };
+  };
+
+  return { profile, loading, fetchProfile, updateProfile, syncProfileFromStore, incrementProfileStats };
 };
