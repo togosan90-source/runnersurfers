@@ -202,7 +202,7 @@ export const SHOES: Shoe[] = [
     expBonus: 15,
     unlockLevel: 150,
     maxLevel: 300,
-    price: 1,
+    price: 2,
   },
   {
     id: 'woodblas',
@@ -213,7 +213,7 @@ export const SHOES: Shoe[] = [
     expBonus: 30,
     unlockLevel: 300,
     maxLevel: 400,
-    price: 1,
+    price: 3,
   },
   {
     id: 'energy',
@@ -224,7 +224,7 @@ export const SHOES: Shoe[] = [
     expBonus: 50,
     unlockLevel: 400,
     maxLevel: 500,
-    price: 1,
+    price: 4,
   },
   {
     id: 'infinity',
@@ -235,7 +235,7 @@ export const SHOES: Shoe[] = [
     expBonus: 100,
     unlockLevel: 500,
     maxLevel: 600,
-    price: 1,
+    price: 5,
   },
 ];
 
@@ -362,7 +362,7 @@ export const useGameStore = create<GameState>()(
         exp: 0,
         totalScore: 0,
         coins: 50,
-        equippedShoes: 'avalon',
+        equippedShoes: '',
         skillPoints: 0,
         skillCoins: 0,
         skillScore: 0,
@@ -372,7 +372,7 @@ export const useGameStore = create<GameState>()(
         lastRunDate: null,
       },
       avatarId: 1,
-      ownedShoes: ['avalon'],
+      ownedShoes: [],
       activeBoost: null,
       isRunning: false,
       currentRun: null,

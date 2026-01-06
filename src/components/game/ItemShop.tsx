@@ -9,11 +9,6 @@ export function ItemShop() {
   const { user, ownedShoes, purchaseShoe, equipShoe } = useGameStore();
 
   const handlePurchase = (shoeId: string, price: number) => {
-    if (price === 0) {
-      toast.success('Questa scarpa è già inclusa!');
-      return;
-    }
-    
     // In a real app, this would integrate with Stripe
     const confirmed = window.confirm(`Confermi l'acquisto per €${price.toFixed(2)}?`);
     if (confirmed) {
@@ -133,7 +128,7 @@ export function ItemShop() {
                         className="gap-2"
                       >
                         <CreditCard className="w-4 h-4" />
-                        {shoe.price === 0 ? 'GRATIS' : `€${shoe.price.toFixed(2)}`}
+                        €{shoe.price.toFixed(2)}
                       </Button>
                     )}
                   </div>
