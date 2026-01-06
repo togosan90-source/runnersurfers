@@ -522,8 +522,6 @@ export default function RunPage() {
               {/* Active Boost */}
               <ActiveBoostBanner />
 
-              {/* Daily Objective */}
-              <DailyObjective />
 
               {/* Controls */}
               <div className="flex gap-3">
@@ -579,8 +577,6 @@ export default function RunPage() {
           >
             {/* Daily Quests Section */}
             <DailyQuests />
-            
-            <DailyObjective />
 
             {/* Install App Button - Always visible */}
             {!isInstalled && (
