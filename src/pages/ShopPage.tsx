@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, Clock, TrendingUp, Loader2 } from 'lucide-react';
@@ -9,31 +9,70 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { UpgradeShop } from '@/components/shop/UpgradeShop';
 import { supabase } from '@/integrations/supabase/client';
-import { useProfile } from '@/hooks/useProfile';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function ShopPage() {
+  const { user: authUser } = useAuth();
   const { user, purchaseBoost, activateBoost, deactivateBoost, activeBoost, ownedShoes, purchaseShoe, equipShoe } = useGameStore();
   const [loadingShoe, setLoadingShoe] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { syncProfileFromStore } = useProfile();
+  const processedRef = useRef(false);
 
-  // Handle return from Stripe checkout
+  // Handle return from Stripe checkout - update database directly
   useEffect(() => {
     const success = searchParams.get('success');
     const shoeId = searchParams.get('shoe');
     
-    if (success === 'true' && shoeId && !ownedShoes.includes(shoeId)) {
-      purchaseShoe(shoeId);
-      syncProfileFromStore();
-      toast.success('Acquisto completato! Scarpe aggiunte! 🎉');
-      setSearchParams({});
+    // Only process once and if we have auth user
+    if (success === 'true' && shoeId && authUser && !processedRef.current) {
+      processedRef.current = true;
+      
+      const addShoeToProfile = async () => {
+        try {
+          // Get current owned shoes from database
+          const { data: profile, error: fetchError } = await supabase
+            .from('profiles')
+            .select('owned_shoes')
+            .eq('id', authUser.id)
+            .single();
+          
+          if (fetchError) throw fetchError;
+          
+          const currentShoes = profile?.owned_shoes || [];
+          
+          // Only add if not already owned
+          if (!currentShoes.includes(shoeId)) {
+            const newShoes = [...currentShoes, shoeId];
+            
+            const { error: updateError } = await supabase
+              .from('profiles')
+              .update({ owned_shoes: newShoes })
+              .eq('id', authUser.id);
+            
+            if (updateError) throw updateError;
+            
+            // Also update local store
+            purchaseShoe(shoeId);
+            toast.success('Acquisto completato! Scarpe aggiunte! 🎉');
+          } else {
+            toast.info('Scarpe già in tuo possesso!');
+          }
+        } catch (error) {
+          console.error('Error adding shoe to profile:', error);
+          toast.error('Errore nel salvare l\'acquisto. Contatta il supporto.');
+        }
+        
+        setSearchParams({});
+      };
+      
+      addShoeToProfile();
     }
     
     if (searchParams.get('canceled') === 'true') {
       toast.error('Pagamento annullato');
       setSearchParams({});
     }
-  }, [searchParams, ownedShoes, purchaseShoe, syncProfileFromStore, setSearchParams]);
+  }, [searchParams, authUser, purchaseShoe, setSearchParams]);
 
   const handlePurchaseBoost = (boost: typeof BOOSTS[0]) => {
     if (activeBoost) {
