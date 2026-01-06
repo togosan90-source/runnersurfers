@@ -1,14 +1,39 @@
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, Clock, TrendingUp } from 'lucide-react';
+import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, Clock, TrendingUp, Loader2 } from 'lucide-react';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { useGameStore, BOOSTS, SHOES } from '@/store/gameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { UpgradeShop } from '@/components/shop/UpgradeShop';
+import { supabase } from '@/integrations/supabase/client';
+import { useProfile } from '@/hooks/useProfile';
 
 export default function ShopPage() {
   const { user, purchaseBoost, activateBoost, deactivateBoost, activeBoost, ownedShoes, purchaseShoe, equipShoe } = useGameStore();
+  const [loadingShoe, setLoadingShoe] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { syncProfileFromStore } = useProfile();
+
+  // Handle return from Stripe checkout
+  useEffect(() => {
+    const success = searchParams.get('success');
+    const shoeId = searchParams.get('shoe');
+    
+    if (success === 'true' && shoeId && !ownedShoes.includes(shoeId)) {
+      purchaseShoe(shoeId);
+      syncProfileFromStore();
+      toast.success('Acquisto completato! Scarpe aggiunte! 🎉');
+      setSearchParams({});
+    }
+    
+    if (searchParams.get('canceled') === 'true') {
+      toast.error('Pagamento annullato');
+      setSearchParams({});
+    }
+  }, [searchParams, ownedShoes, purchaseShoe, syncProfileFromStore, setSearchParams]);
 
   const handlePurchaseBoost = (boost: typeof BOOSTS[0]) => {
     if (activeBoost) {
@@ -29,17 +54,29 @@ export default function ShopPage() {
     toast.info('Boost disattivato');
   };
 
-  const handlePurchaseShoe = (shoeId: string, price: number) => {
+  const handlePurchaseShoe = async (shoeId: string, price: number) => {
     if (price === 0) {
       toast.success('Questa scarpa è già inclusa!');
       return;
     }
     
-    // In a real app, this would integrate with Stripe
-    const confirmed = window.confirm(`Confermi l'acquisto per €${price.toFixed(2)}?`);
-    if (confirmed) {
-      purchaseShoe(shoeId);
-      toast.success('Acquisto completato! 🎉');
+    setLoadingShoe(shoeId);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-shoe-payment', {
+        body: { shoeId },
+      });
+
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('Errore durante il pagamento');
+    } finally {
+      setLoadingShoe(null);
     }
   };
 
@@ -287,9 +324,14 @@ export default function ShopPage() {
                               <Button
                                 size="sm"
                                 onClick={() => handlePurchaseShoe(shoe.id, shoe.price)}
+                                disabled={loadingShoe === shoe.id}
                                 className="gap-2"
                               >
-                                <CreditCard className="w-4 h-4" />
+                                {loadingShoe === shoe.id ? (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <CreditCard className="w-4 h-4" />
+                                )}
                                 €{shoe.price.toFixed(2)}
                               </Button>
                             )}
