@@ -197,16 +197,29 @@ export function PlayerHeader() {
           </div>
 
           {/* RunnerSurfers Title */}
-          <div className="flex justify-center mt-1">
-            <span 
+          <div className="flex justify-center mt-1 -ml-24 sm:ml-0">
+            <motion.span 
               className="font-varsity text-3xl uppercase tracking-wide"
               style={{
-                color: '#22C55E',
-                textShadow: '2px 2px 0px #15803D, -1px -1px 0px #15803D, 1px -1px 0px #15803D, -1px 1px 0px #15803D',
+                background: 'linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #ec4899)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                backgroundSize: '200% 100%',
+                textShadow: 'none',
+                filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.3))',
+              }}
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear",
               }}
             >
               RunnerSurfers
-            </span>
+            </motion.span>
           </div>
         </div>
       </div>
