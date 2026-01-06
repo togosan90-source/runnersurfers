@@ -21,11 +21,49 @@ export function PlayerHeader() {
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="rounded-2xl p-5 shadow-xl border-2 border-yellow-200/50 overflow-hidden relative"
+      className="rounded-xl overflow-hidden relative"
       style={{
-        background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)',
+        background: 'linear-gradient(180deg, #8B4513 0%, #654321 50%, #3d2817 100%)',
+        padding: '12px',
+        boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.4), 0 8px 20px rgba(0,0,0,0.5)',
+        border: '4px solid #2d1810',
+        borderRadius: '16px',
       }}
     >
+      {/* Wood grain texture overlay */}
+      <div 
+        className="absolute inset-0 opacity-30 pointer-events-none"
+        style={{
+          background: `repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            rgba(0,0,0,0.1) 2px,
+            transparent 4px,
+            rgba(139,69,19,0.2) 8px
+          ), repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(0,0,0,0.05) 20px,
+            transparent 40px
+          )`,
+        }}
+      />
+      
+      {/* Totem carved symbols on corners */}
+      <div className="absolute top-1 left-2 text-xl opacity-60" style={{ color: '#d4a574' }}>☼</div>
+      <div className="absolute top-1 right-2 text-xl opacity-60" style={{ color: '#d4a574' }}>☼</div>
+      <div className="absolute bottom-1 left-2 text-xl opacity-60" style={{ color: '#d4a574' }}>⚡</div>
+      <div className="absolute bottom-1 right-2 text-xl opacity-60" style={{ color: '#d4a574' }}>⚡</div>
+      
+      {/* Inner content area */}
+      <div 
+        className="rounded-lg p-4 relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)',
+          boxShadow: 'inset 0 2px 8px rgba(139,69,19,0.3)',
+          border: '2px solid #a0522d',
+        }}
+      >
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(8)].map((_, i) => (
@@ -239,6 +277,7 @@ export function PlayerHeader() {
             </motion.span>
           </div>
         </div>
+      </div>
       </div>
     </motion.div>
   );
