@@ -35,23 +35,23 @@ serve(async (req) => {
       throw new Error("Missing authorization header");
     }
 
-    // Create Supabase client with auth header
-    const supabaseClient = createClient(
+    // Use service role key to verify the user
+    const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { global: { headers: { Authorization: authHeader } } }
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
     );
 
-    // Validate JWT and get claims
+    // Get user from token
     const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getUser(token);
+    const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(token);
     
-    if (claimsError || !claimsData?.user) {
-      console.error("Auth error:", claimsError);
+    if (userError || !userData?.user) {
+      console.error("Auth error:", userError);
       throw new Error("User not authenticated");
     }
 
-    const user = claimsData.user;
+    const user = userData.user;
     console.log("Authenticated user:", user.id, user.email);
 
     if (!user.email) {
