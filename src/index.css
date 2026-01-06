@@ -1,0 +1,310 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Runner Legends - Gaming Style Design System */
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 25% 27%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.75rem;
+
+    /* Gaming Colors */
+    --gold: 45 93% 47%;
+    --gold-foreground: 45 93% 15%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --energy: 120 60% 50%;
+    --energy-glow: 120 100% 65%;
+    --score: 199 89% 48%;
+    --score-glow: 199 100% 65%;
+    --exp: 199 89% 48%;
+    --exp-background: 220 13% 91%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 15%;
+
+    /* Tier Colors */
+    --tier-iron: 0 0% 50%;
+    --tier-bronze: 30 60% 45%;
+    --tier-silver: 0 0% 75%;
+    --tier-gold: 45 93% 47%;
+    --tier-platinum: 199 89% 48%;
+    --tier-diamond: 195 100% 50%;
+    --tier-emerald: 142 76% 36%;
+    --tier-sapphire: 220 90% 56%;
+    --tier-master: 45 100% 50%;
+    --tier-grandmaster: 280 100% 60%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 142 76% 36%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 199 89% 48%;
+
+    --chart-1: 199 89% 48%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 45 93% 47%;
+    --chart-4: 280 100% 60%;
+    --chart-5: 0 84% 60%;
+
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Orbitron', 'Inter', sans-serif;
+    --font-mono: 'Space Mono', ui-monospace, monospace;
+
+    --shadow-glow-primary: 0 0 30px hsl(199 89% 48% / 0.4);
+    --shadow-glow-accent: 0 0 30px hsl(142 76% 36% / 0.4);
+    --shadow-glow-gold: 0 0 30px hsl(45 93% 47% / 0.4);
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 8%;
+
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 142 76% 40%;
+    --accent-foreground: 222 47% 8%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 199 89% 48%;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 222 47% 8%;
+    --sidebar-accent: 142 76% 40%;
+    --sidebar-accent-foreground: 222 47% 8%;
+    --sidebar-border: 217 32% 17%;
+    --sidebar-ring: 199 89% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .glow-primary {
+    box-shadow: var(--shadow-glow-primary);
+  }
+
+  .glow-accent {
+    box-shadow: var(--shadow-glow-accent);
+  }
+
+  .glow-gold {
+    box-shadow: var(--shadow-glow-gold);
+  }
+
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(45 100% 60%) 50%, hsl(var(--gold)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-hero {
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(220 20% 92%) 50%, hsl(var(--background)) 100%);
+  }
+
+  .bg-gradient-gaming {
+    background: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(220 47% 15%) 50%, hsl(222 47% 11%) 100%);
+  }
+
+  .bg-gradient-energy {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-score-increment {
+    animation: score-pop 0.3s ease-out;
+  }
+
+  .animate-level-up {
+    animation: level-up 0.6s ease-out;
+  }
+
+  .animate-coin-earn {
+    animation: coin-earn 0.5s ease-out;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background-size: 200% 100%;
+  }
+}
+
+@layer utilities {
+  .bg-tier-iron { background-color: hsl(var(--tier-iron)); }
+  .bg-tier-bronze { background-color: hsl(var(--tier-bronze)); }
+  .bg-tier-silver { background-color: hsl(var(--tier-silver)); }
+  .bg-tier-gold { background-color: hsl(var(--tier-gold)); }
+  .bg-tier-platinum { background-color: hsl(var(--tier-platinum)); }
+  .bg-tier-diamond { background-color: hsl(var(--tier-diamond)); }
+  .bg-tier-emerald { background-color: hsl(var(--tier-emerald)); }
+  .bg-tier-sapphire { background-color: hsl(var(--tier-sapphire)); }
+  .bg-tier-master { background-color: hsl(var(--tier-master)); }
+  .bg-tier-grandmaster { background-color: hsl(var(--tier-grandmaster)); }
+
+  .text-tier-iron { color: hsl(var(--tier-iron)); }
+  .text-tier-bronze { color: hsl(var(--tier-bronze)); }
+  .text-tier-silver { color: hsl(var(--tier-silver)); }
+  .text-tier-gold { color: hsl(var(--tier-gold)); }
+  .text-tier-platinum { color: hsl(var(--tier-platinum)); }
+  .text-tier-diamond { color: hsl(var(--tier-diamond)); }
+  .text-tier-emerald { color: hsl(var(--tier-emerald)); }
+  .text-tier-sapphire { color: hsl(var(--tier-sapphire)); }
+  .text-tier-master { color: hsl(var(--tier-master)); }
+  .text-tier-grandmaster { color: hsl(var(--tier-grandmaster)); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.7);
+  }
+}
+
+@keyframes score-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes level-up {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes coin-earn {
+  0% {
+    transform: translateY(20px) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.1);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  @apply rounded-lg;
+}
