@@ -237,22 +237,41 @@ export function PlayerHeader() {
         <div className="flex-1 min-w-0">
           {/* Top row: Username and Coins */}
           <div className="flex items-center justify-between mb-1">
-            <div 
-              className="px-4 py-1.5 rounded-lg shadow-lg border-2 border-black"
+            <motion.div 
+              className="relative px-5 py-2 rounded-xl overflow-hidden"
+              whileHover={{ scale: 1.05 }}
               style={{
-                background: 'linear-gradient(180deg, #B3E5FC 0%, #81D4FA 100%)',
+                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                boxShadow: '0 0 20px rgba(79, 172, 254, 0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
               }}
             >
-              <span 
-                className="font-calligraphy text-xl tracking-wide"
+              {/* Animated border glow */}
+              <div 
+                className="absolute inset-0 rounded-xl opacity-75"
                 style={{
-                  color: '#1e3a5f',
-                  textShadow: '1px 1px 0px #BBDEFB',
+                  background: 'linear-gradient(90deg, transparent, rgba(79, 172, 254, 0.3), transparent)',
+                  animation: 'shimmer 2s ease-in-out infinite',
+                }}
+              />
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400 rounded-tl-lg" />
+              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400 rounded-tr-lg" />
+              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400 rounded-bl-lg" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400 rounded-br-lg" />
+              {/* Username text */}
+              <span 
+                className="relative font-calligraphy text-xl tracking-wider font-bold"
+                style={{
+                  background: 'linear-gradient(180deg, #ffffff 0%, #4facfe 50%, #00f2fe 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 0 20px rgba(79, 172, 254, 0.5)',
+                  filter: 'drop-shadow(0 0 8px rgba(0, 242, 254, 0.3))',
                 }}
               >
                 {user.username}
               </span>
-            </div>
+            </motion.div>
             <div className="flex items-center gap-1.5 bg-white/60 px-3 py-1 rounded-full shadow-sm">
               <img src={coinsGold} alt="Coins" className="w-5 h-5 object-contain" />
               <span className="font-mono font-bold text-slate-700">{user.coins.toLocaleString()}</span>
