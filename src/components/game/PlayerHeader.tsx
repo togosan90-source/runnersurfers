@@ -49,11 +49,68 @@ export function PlayerHeader() {
         }}
       />
       
-      {/* Totem carved symbols on corners */}
-      <div className="absolute top-1 left-2 text-xl opacity-60" style={{ color: '#d4a574' }}>☼</div>
-      <div className="absolute top-1 right-2 text-xl opacity-60" style={{ color: '#d4a574' }}>☼</div>
-      <div className="absolute bottom-1 left-2 text-xl opacity-60" style={{ color: '#d4a574' }}>⚡</div>
-      <div className="absolute bottom-1 right-2 text-xl opacity-60" style={{ color: '#d4a574' }}>⚡</div>
+      {/* Totem carved symbols on corners - animated */}
+      <motion.div 
+        className="absolute top-1 left-2 text-2xl"
+        style={{ color: '#d4a574' }}
+        animate={{
+          textShadow: [
+            '0 0 5px #d4a574, 0 0 10px #fbbf24',
+            '0 0 15px #fbbf24, 0 0 25px #f59e0b, 0 0 35px #ef4444',
+            '0 0 5px #d4a574, 0 0 10px #fbbf24',
+          ],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+      >
+        ☀
+      </motion.div>
+      <motion.div 
+        className="absolute top-1 right-2 text-2xl"
+        style={{ color: '#d4a574' }}
+        animate={{
+          textShadow: [
+            '0 0 5px #d4a574, 0 0 10px #fbbf24',
+            '0 0 15px #fbbf24, 0 0 25px #f59e0b, 0 0 35px #ef4444',
+            '0 0 5px #d4a574, 0 0 10px #fbbf24',
+          ],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+      >
+        🦅
+      </motion.div>
+      <motion.div 
+        className="absolute bottom-1 left-2 text-2xl"
+        style={{ color: '#d4a574' }}
+        animate={{
+          textShadow: [
+            '0 0 5px #d4a574, 0 0 10px #22c55e',
+            '0 0 15px #22c55e, 0 0 25px #3b82f6, 0 0 35px #8b5cf6',
+            '0 0 5px #d4a574, 0 0 10px #22c55e',
+          ],
+          scale: [1, 1.15, 1],
+          rotate: [0, 10, -10, 0],
+        }}
+        transition={{ duration: 1.5, repeat: Infinity, delay: 0.25 }}
+      >
+        ⚡
+      </motion.div>
+      <motion.div 
+        className="absolute bottom-1 right-2 text-2xl"
+        style={{ color: '#d4a574' }}
+        animate={{
+          textShadow: [
+            '0 0 5px #d4a574, 0 0 10px #ef4444',
+            '0 0 15px #ef4444, 0 0 25px #f97316, 0 0 35px #fbbf24',
+            '0 0 5px #d4a574, 0 0 10px #ef4444',
+          ],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{ duration: 2.5, repeat: Infinity, delay: 0.75 }}
+      >
+        🔥
+      </motion.div>
       
       {/* Inner content area */}
       <div 
