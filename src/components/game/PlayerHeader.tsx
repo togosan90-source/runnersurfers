@@ -21,12 +21,86 @@ export function PlayerHeader() {
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="rounded-2xl p-5 shadow-xl border-2 border-yellow-200/50 overflow-hidden"
+      className="rounded-2xl p-5 shadow-xl border-2 border-yellow-200/50 overflow-hidden relative"
       style={{
         background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%)',
       }}
     >
-      <div className="flex items-start gap-4">
+      {/* Animated background particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: Math.random() * 20 + 10,
+              height: Math.random() * 20 + 10,
+              background: `radial-gradient(circle, ${
+                ['#fbbf24', '#f59e0b', '#fcd34d', '#fde68a'][i % 4]
+              }40 0%, transparent 70%)`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+        
+        {/* Shimmer effect */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+          }}
+          animate={{
+            x: ['-100%', '200%'],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatDelay: 2,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Floating sparkles */}
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={`sparkle-${i}`}
+            className="absolute text-yellow-400"
+            style={{
+              left: `${15 + i * 18}%`,
+              top: `${20 + (i % 3) * 25}%`,
+              fontSize: 8 + i * 2,
+            }}
+            animate={{
+              scale: [0, 1, 0],
+              rotate: [0, 180, 360],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              delay: i * 0.5,
+              ease: "easeInOut",
+            }}
+          >
+            ✦
+          </motion.div>
+        ))}
+      </div>
+      
+      <div className="flex items-start gap-4 relative z-10">
         {/* Avatar */}
         <div className="relative flex-shrink-0">
           {profile?.avatar_url ? (
