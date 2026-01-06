@@ -122,6 +122,7 @@ interface GameState {
     distance: number;
     positions: { lat: number; lng: number; timestamp: number }[];
     score: number;
+    speed: number;
     expEarned: number;
     coinsEarned: number;
   } | null;
@@ -149,7 +150,7 @@ interface GameState {
   addReputation: (amount: number) => void;
   addSkillPoint: (type: 'coins' | 'score') => void;
   startRun: () => void;
-  updateRun: (distance: number, lat: number, lng: number) => void;
+  updateRun: (distance: number, lat: number, lng: number, score: number, speed: number) => void;
   endRun: () => Run | null;
   purchaseBoost: (boost: Boost) => boolean;
   activateBoost: (boost: Boost) => void;
@@ -452,17 +453,20 @@ export const useGameStore = create<GameState>()(
           distance: 0,
           positions: [],
           score: 0,
+          speed: 0,
           expEarned: 0,
           coinsEarned: 0,
         },
       }),
 
-      updateRun: (distance, lat, lng) => set((state) => {
+      updateRun: (distance, lat, lng, score, speed) => set((state) => {
         if (!state.currentRun) return state;
         return {
           currentRun: {
             ...state.currentRun,
             distance,
+            score,
+            speed,
             positions: [...state.currentRun.positions, { lat, lng, timestamp: Date.now() }],
           },
         };

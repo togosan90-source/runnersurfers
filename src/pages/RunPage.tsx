@@ -57,6 +57,7 @@ export default function RunPage() {
     updateDailyQuestsProgress,
     getTotalScoreBonus,
     getTotalExpBonus,
+    currentRun,
   } = useGameStore();
 
   const { saveRun } = useRuns();
@@ -88,6 +89,23 @@ export default function RunPage() {
   const lastKmMilestone = useRef(0);
   const previousLevelRef = useRef(user.level);
   const runStartTimeRef = useRef<number>(0);
+
+  // Restore state from global store if run is in progress (e.g., after navigation)
+  useEffect(() => {
+    if (isRunning && currentRun) {
+      setDistance(currentRun.distance);
+      setScore(currentRun.score);
+      setSpeed(currentRun.speed);
+      setPath(currentRun.positions);
+      setGpsEnabled(true);
+      runStartTimeRef.current = currentRun.startTime;
+      if (currentRun.positions.length > 0) {
+        const lastPos = currentRun.positions[currentRun.positions.length - 1];
+        setCurrentPosition({ lat: lastPos.lat, lng: lastPos.lng });
+        lastPositionRef.current = { lat: lastPos.lat, lng: lastPos.lng, time: lastPos.timestamp };
+      }
+    }
+  }, []);
 
   // Calculate multipliers
   const getFullMultiplier = useCallback(() => {
@@ -175,8 +193,9 @@ export default function RunPage() {
             const timeDiff = (Date.now() - lastPositionRef.current.time) / 1000 / 3600; // hours
             const currentSpeed = dist / timeDiff;
             setSpeed(currentSpeed);
-            setDistance(prev => prev + dist);
-            updateRun(distance + dist, newPos.lat, newPos.lng);
+            const newDistance = distance + dist;
+            setDistance(newDistance);
+            updateRun(newDistance, newPos.lat, newPos.lng, score, currentSpeed);
           }
         }
 
@@ -232,6 +251,15 @@ export default function RunPage() {
       }
     };
   }, [isRunning, isPaused, speed, getFullMultiplier]);
+
+  // Sync score to global store periodically
+  useEffect(() => {
+    if (!isRunning || !currentRun) return;
+    // Update the global store with current score whenever it changes
+    if (currentRun.score !== score) {
+      updateRun(distance, currentPosition.lat, currentPosition.lng, score, speed);
+    }
+  }, [score, isRunning, currentRun, distance, currentPosition, speed, updateRun]);
 
   // Kilometer notification effect
   useEffect(() => {
