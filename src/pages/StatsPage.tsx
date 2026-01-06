@@ -6,9 +6,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { WeeklyChart } from '@/components/stats/WeeklyChart';
 import { MonthlyChart } from '@/components/stats/MonthlyChart';
 import { Progress } from '@/components/ui/progress';
+import { useRuns } from '@/hooks/useRuns';
 
 export default function StatsPage() {
-  const { runs, user, ownedShoes, equipShoe } = useGameStore();
+  const { user, ownedShoes, equipShoe } = useGameStore();
+  const { runs: dbRuns } = useRuns();
+
+  // Map dbRuns to the expected format
+  const runs = dbRuns.map(run => ({
+    id: run.id,
+    date: run.created_at,
+    distance: run.distance,
+    duration: run.duration,
+    avgSpeed: run.avg_speed,
+    calories: run.calories,
+    scoreEarned: run.score_earned,
+    expEarned: run.exp_earned,
+    coinsEarned: run.coins_earned,
+  }));
 
   // Calculate weekly stats
   const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
