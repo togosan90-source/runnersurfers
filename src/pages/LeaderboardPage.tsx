@@ -309,82 +309,274 @@ export default function LeaderboardPage() {
 
         {/* Leaderboard */}
         {!loading && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {sortedLeaderboard.map((entry, index) => {
               const rank = getRank(entry.level);
               const repLevel = getReputationLevel(entry.reputation || 0);
               const isUser = entry.id === user?.id;
               const displayRank = index + 1;
+              const isPodium = displayRank <= 3;
+
+              // Dynamic colors based on position
+              const getCardStyle = () => {
+                if (displayRank === 1) {
+                  return {
+                    background: 'linear-gradient(135deg, #78350F 0%, #B45309 50%, #D97706 100%)',
+                    border: '3px solid #FCD34D',
+                    boxShadow: '0 4px 0 0 #451A03, 0 0 30px rgba(252, 211, 77, 0.5), inset 0 1px 0 0 rgba(255,255,255,0.3)',
+                  };
+                }
+                if (displayRank === 2) {
+                  return {
+                    background: 'linear-gradient(135deg, #374151 0%, #6B7280 50%, #9CA3AF 100%)',
+                    border: '3px solid #E5E7EB',
+                    boxShadow: '0 4px 0 0 #1F2937, 0 0 25px rgba(229, 231, 235, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.3)',
+                  };
+                }
+                if (displayRank === 3) {
+                  return {
+                    background: 'linear-gradient(135deg, #78350F 0%, #92400E 50%, #B45309 100%)',
+                    border: '3px solid #F59E0B',
+                    boxShadow: '0 4px 0 0 #451A03, 0 0 25px rgba(245, 158, 11, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.3)',
+                  };
+                }
+                if (isUser) {
+                  return {
+                    background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)',
+                    border: '3px solid #60A5FA',
+                    boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+                  };
+                }
+                return {
+                  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                  border: '2px solid rgba(96, 165, 250, 0.3)',
+                  boxShadow: '0 2px 0 0 rgba(30, 64, 175, 0.3), inset 0 1px 0 0 rgba(255,255,255,0.1)',
+                };
+              };
 
               return (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.02 }}
-                  className={`rounded-xl p-4 flex items-center gap-3 ${
-                    isUser
-                      ? 'bg-primary/10 border-2 border-primary'
-                      : displayRank <= 3
-                      ? 'bg-gradient-to-r from-gold/10 to-transparent border border-gold/30'
-                      : 'bg-card border border-border'
-                  }`}
+                  transition={{ delay: index * 0.03 }}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  className="rounded-xl p-4 relative overflow-hidden cursor-pointer"
+                  style={getCardStyle()}
                 >
-                  {/* Rank */}
-                  <div className="w-10 text-center">
-                    {displayRank <= 3 ? (
-                      <span className="text-2xl">{getRankIcon(displayRank)}</span>
-                    ) : (
-                      <span className="font-display font-bold text-muted-foreground">
-                        #{displayRank}
-                      </span>
-                    )}
-                  </div>
+                  {/* Shine Effect for top 10 */}
+                  {displayRank <= 10 && (
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+                      }}
+                      animate={{
+                        x: ['-100%', '200%'],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: index * 0.2,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  )}
 
-                  {/* User Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className={`font-bold truncate ${isUser ? 'text-primary' : ''}`}>
-                        {isUser ? '👤 ' : ''}{entry.username}
-                      </span>
-                      {displayRank <= 3 && (
-                        <Crown className="w-4 h-4 text-gold" />
+                  {/* Podium special effects */}
+                  {isPodium && (
+                    <>
+                      {/* Floating particles */}
+                      {[...Array(4)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute text-xs pointer-events-none"
+                          initial={{ 
+                            x: `${20 + i * 20}%`, 
+                            y: '100%',
+                            opacity: 0 
+                          }}
+                          animate={{ 
+                            y: [50, -10],
+                            opacity: [0, 1, 0],
+                          }}
+                          transition={{
+                            duration: 2 + Math.random(),
+                            repeat: Infinity,
+                            delay: i * 0.5,
+                          }}
+                        >
+                          {displayRank === 1 ? '✨' : displayRank === 2 ? '💫' : '⭐'}
+                        </motion.div>
+                      ))}
+                    </>
+                  )}
+
+                  <div className="flex items-center gap-3 relative z-10">
+                    {/* Rank Badge */}
+                    <motion.div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center font-bold"
+                      style={{
+                        background: isPodium 
+                          ? displayRank === 1 
+                            ? 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)' 
+                            : displayRank === 2 
+                              ? 'linear-gradient(135deg, #E5E7EB 0%, #9CA3AF 100%)'
+                              : 'linear-gradient(135deg, #F59E0B 0%, #B45309 100%)'
+                          : 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+                        border: isPodium ? '2px solid rgba(255,255,255,0.5)' : '2px solid #60A5FA',
+                        boxShadow: isPodium 
+                          ? '0 2px 0 0 rgba(0,0,0,0.3), 0 0 15px rgba(252, 211, 77, 0.3)'
+                          : '0 2px 0 0 #1E40AF',
+                      }}
+                      animate={isPodium ? {
+                        scale: [1, 1.05, 1],
+                        rotate: displayRank === 1 ? [-2, 2, -2] : 0,
+                      } : {}}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      {displayRank <= 3 ? (
+                        <span className="text-2xl" style={{ filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.3))' }}>
+                          {getRankIcon(displayRank)}
+                        </span>
+                      ) : (
+                        <span 
+                          className="text-lg"
+                          style={{
+                            color: 'white',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                          }}
+                        >
+                          #{displayRank}
+                        </span>
+                      )}
+                    </motion.div>
+
+                    {/* User Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span 
+                          className="font-bold truncate text-lg"
+                          style={{
+                            color: isPodium ? (displayRank === 2 ? '#1F2937' : '#FEF3C7') : (isUser ? '#93C5FD' : 'white'),
+                            textShadow: isPodium ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
+                          }}
+                        >
+                          {isUser ? '👤 ' : ''}{entry.username}
+                        </span>
+                        {isPodium && (
+                          <motion.span
+                            animate={{ rotate: [0, 10, -10, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <Crown 
+                              className="w-5 h-5" 
+                              style={{ 
+                                color: displayRank === 1 ? '#FCD34D' : displayRank === 2 ? '#1F2937' : '#F59E0B',
+                                filter: 'drop-shadow(0 0 4px currentColor)'
+                              }} 
+                            />
+                          </motion.span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span 
+                          className="px-2 py-0.5 rounded-md text-xs font-bold"
+                          style={{
+                            background: 'rgba(59, 130, 246, 0.3)',
+                            color: isPodium ? (displayRank === 2 ? '#1F2937' : '#FDE68A') : '#93C5FD',
+                            border: '1px solid rgba(96, 165, 250, 0.5)',
+                          }}
+                        >
+                          LV.{entry.level}
+                        </span>
+                        <span 
+                          className="text-xs flex items-center gap-1"
+                          style={{
+                            color: isPodium ? (displayRank === 2 ? '#374151' : '#FDE68A') : '#A5B4FC',
+                          }}
+                        >
+                          {rank.icon} {rank.name}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Value based on tab */}
+                    <div className="text-right">
+                      {activeTab === 'score' && (
+                        <div 
+                          className="px-3 py-2 rounded-xl"
+                          style={{
+                            background: isPodium 
+                              ? 'rgba(0,0,0,0.2)' 
+                              : 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)',
+                            border: '2px solid rgba(255,255,255,0.2)',
+                          }}
+                        >
+                          <p 
+                            className="font-display font-bold text-lg"
+                            style={{
+                              color: isPodium ? (displayRank === 2 ? '#1F2937' : '#FCD34D') : '#FCD34D',
+                              textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
+                            }}
+                          >
+                            {entry.total_score.toLocaleString()}
+                          </p>
+                          <p 
+                            className="text-xs"
+                            style={{
+                              color: isPodium ? (displayRank === 2 ? '#374151' : '#FDE68A') : '#93C5FD',
+                            }}
+                          >
+                            punti
+                          </p>
+                        </div>
+                      )}
+                      {activeTab === 'reputation' && (
+                        <div 
+                          className="px-3 py-2 rounded-xl"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)',
+                            border: '2px solid rgba(167, 139, 250, 0.3)',
+                          }}
+                        >
+                          <p 
+                            className="font-display font-bold text-lg"
+                            style={{
+                              color: '#A78BFA',
+                              textShadow: '0 0 10px rgba(167, 139, 250, 0.5)',
+                            }}
+                          >
+                            {(entry.reputation || 0).toLocaleString()}
+                          </p>
+                          <p className="text-xs" style={{ color: '#C4B5FD' }}>{repLevel.name}</p>
+                        </div>
+                      )}
+                      {activeTab === 'distance' && (
+                        <div 
+                          className="px-3 py-2 rounded-xl"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%)',
+                            border: '2px solid rgba(74, 222, 128, 0.3)',
+                          }}
+                        >
+                          <p 
+                            className="font-display font-bold text-lg"
+                            style={{
+                              color: '#4ADE80',
+                              textShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
+                            }}
+                          >
+                            {(entry.total_distance || 0).toFixed(1)}
+                          </p>
+                          <p className="text-xs" style={{ color: '#86EFAC' }}>km</p>
+                        </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>LV.{entry.level}</span>
-                      <span className={getRankColor(rank.color)}>
-                        {rank.icon} {rank.name}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Value based on tab */}
-                  <div className="text-right">
-                    {activeTab === 'score' && (
-                      <>
-                        <p className="font-display font-bold text-foreground">
-                          {entry.total_score.toLocaleString()}
-                        </p>
-                        <p className="text-xs text-muted-foreground">punti</p>
-                      </>
-                    )}
-                    {activeTab === 'reputation' && (
-                      <>
-                        <p className={`font-display font-bold ${getRepColor(repLevel.color)}`}>
-                          {(entry.reputation || 0).toLocaleString()}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{repLevel.name}</p>
-                      </>
-                    )}
-                    {activeTab === 'distance' && (
-                      <>
-                        <p className="font-display font-bold text-primary">
-                          {(entry.total_distance || 0).toFixed(1)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">km</p>
-                      </>
-                    )}
                   </div>
                 </motion.div>
               );
