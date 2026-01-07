@@ -423,62 +423,138 @@ export default function RunPage() {
               exit={{ opacity: 0, scale: 0.9 }}
               className="text-center py-8"
             >
-              <button 
+              <motion.button 
                 onClick={handleStartRun}
-                className="mb-6 rounded-2xl px-6 py-5 mx-auto max-w-sm shadow-lg w-full cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="mb-6 rounded-2xl px-6 py-6 mx-auto max-w-sm w-full cursor-pointer relative overflow-hidden"
                 style={{
-                  background: 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
-                  borderTop: '3px solid rgba(255,255,255,0.4)',
-                  borderBottom: '4px solid #1E3A8A',
-                  borderLeft: '2px solid rgba(255,255,255,0.2)',
-                  borderRight: '2px solid #1E40AF',
+                  background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 50%, #1E1B4B 100%)',
+                  border: '3px solid #3B82F6',
+                  boxShadow: '0 4px 0 0 #1E40AF, 0 0 40px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.1)',
                 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="flex flex-col items-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 mb-3">
-                    <Navigation className="w-8 h-8 text-white" />
-                  </div>
-                  <h2 
-                    className="font-display text-xl font-black text-center mb-1 uppercase tracking-wide"
+                {/* Animated particles */}
+                {[...Array(8)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute text-lg pointer-events-none"
+                    initial={{ 
+                      x: `${10 + i * 12}%`, 
+                      y: '100%',
+                      opacity: 0,
+                    }}
+                    animate={{ 
+                      y: [100, -20],
+                      opacity: [0, 1, 0.8, 0],
+                      rotate: [0, 360],
+                    }}
+                    transition={{
+                      duration: 3 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: i * 0.5,
+                      ease: "easeOut"
+                    }}
                     style={{
-                      color: 'white',
-                      textShadow: '2px 2px 0px #1E40AF, -1px -1px 0px #1E40AF, 1px -1px 0px #1E40AF, -1px 1px 0px #1E40AF',
+                      filter: 'drop-shadow(0 0 6px rgba(74, 222, 128, 0.8))'
                     }}
                   >
-                    ALLACCIA LE SCARPE. SI PARTE
-                  </h2>
-                  <p 
-                    className="text-center text-sm"
-                    style={{
-                      color: 'rgba(255,255,255,0.9)',
-                      textShadow: '1px 1px 0px rgba(0,0,0,0.2)',
-                    }}
-                  >
-                    Attiva il GPS e inizia a guadagnare punti!
-                  </p>
-                </div>
+                    {i % 4 === 0 ? '⚡' : i % 4 === 1 ? '✨' : i % 4 === 2 ? '🏃' : '💨'}
+                  </motion.div>
+                ))}
 
-                {/* Green-Cyan Start Button */}
-                <div 
-                  className="mt-4 rounded-xl px-6 py-3 flex items-center justify-center gap-3 shadow-lg"
+                {/* Shine effect */}
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: 'linear-gradient(90deg, #22C55E 0%, #06B6D4 100%)',
-                    borderTop: '2px solid rgba(255,255,255,0.3)',
-                    borderBottom: '3px solid #047857',
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
                   }}
-                >
-                  <Play className="w-5 h-5 text-white" fill="white" />
-                  <span 
-                    className="font-display font-black text-lg uppercase tracking-wide"
+                  animate={{
+                    x: ['-100%', '200%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+
+                <div className="flex flex-col items-center relative z-10">
+                  {/* Animated GPS Icon */}
+                  <motion.div 
+                    className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
                     style={{
-                      color: 'white',
-                      textShadow: '1px 1px 0px rgba(0,0,0,0.2)',
+                      background: 'linear-gradient(135deg, #22C55E 0%, #06B6D4 100%)',
+                      border: '3px solid #4ADE80',
+                      boxShadow: '0 0 30px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255,255,255,0.3)',
+                    }}
+                    animate={{
+                      scale: [1, 1.1, 1],
+                      boxShadow: [
+                        '0 0 30px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255,255,255,0.3)',
+                        '0 0 50px rgba(74, 222, 128, 0.8), inset 0 2px 0 rgba(255,255,255,0.3)',
+                        '0 0 30px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255,255,255,0.3)',
+                      ],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
                     }}
                   >
-                    INIZIA A CORRERE
-                  </span>
+                    <Navigation className="w-10 h-10" style={{ color: 'white', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' }} />
+                  </motion.div>
+
+                  {/* Title */}
+                  <h2 
+                    className="font-varsity text-2xl text-center mb-2 uppercase tracking-wide"
+                    style={{
+                      background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #FCD34D 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+                    }}
+                  >
+                    ALLACCIA LE SCARPE. SI PARTE!
+                  </h2>
+
+                  {/* Subtitle */}
+                  <p 
+                    className="text-center text-sm font-semibold mb-4"
+                    style={{
+                      color: '#93C5FD',
+                      textShadow: '0 0 10px rgba(147, 197, 253, 0.5)',
+                    }}
+                  >
+                    Attiva il GPS e inizia a guadagnare punti! 🎮
+                  </p>
+
+                  {/* Start Button */}
+                  <motion.div 
+                    className="rounded-xl px-8 py-4 flex items-center justify-center gap-3"
+                    style={{
+                      background: 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)',
+                      border: '3px solid #4ADE80',
+                      boxShadow: '0 4px 0 0 #166534, 0 0 20px rgba(74, 222, 128, 0.4)',
+                    }}
+                    whileHover={{
+                      boxShadow: '0 4px 0 0 #166534, 0 0 35px rgba(74, 222, 128, 0.6)',
+                    }}
+                  >
+                    <Play className="w-6 h-6" style={{ color: 'white', filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.5))' }} fill="white" />
+                    <span 
+                      className="font-varsity text-xl uppercase tracking-wide"
+                      style={{
+                        color: 'white',
+                        textShadow: '2px 2px 0px #166534, 0 0 10px rgba(255,255,255,0.3)',
+                      }}
+                    >
+                      INIZIA A CORRERE
+                    </span>
+                  </motion.div>
                 </div>
-              </button>
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
