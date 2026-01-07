@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { motion } from 'framer-motion';
 
 interface Run {
   id: string;
@@ -45,9 +46,15 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
       const value = payload[0].value;
       const unit = dataKey === 'distance' ? 'km' : 'pts';
       return (
-        <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-lg">
-          <p className="text-sm font-medium text-foreground">{label}</p>
-          <p className="text-sm text-primary font-bold">
+        <div 
+          className="rounded-lg px-3 py-2 shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, #78350F 0%, #92400E 100%)',
+            border: '2px solid #FCD34D',
+          }}
+        >
+          <p className="text-sm font-medium text-amber-100">{label}</p>
+          <p className="text-sm text-yellow-300 font-bold">
             {dataKey === 'distance' ? value.toFixed(2) : value.toLocaleString()} {unit}
           </p>
         </div>
@@ -57,23 +64,114 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
   };
 
   return (
-    <div className="bg-card rounded-xl p-4 border border-border">
-      <h4 className="font-bold mb-4">
+    <div 
+      className="rounded-xl p-4 relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #78350F 0%, #92400E 50%, #B45309 100%)',
+        border: '3px solid #FCD34D',
+        boxShadow: '0 4px 0 0 #451A03, 0 0 25px rgba(252, 211, 77, 0.3), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+      }}
+    >
+      {/* Wind Lines Animation */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute pointer-events-none"
+          style={{
+            width: 40 + Math.random() * 60,
+            height: 2,
+            background: 'linear-gradient(90deg, transparent 0%, rgba(253, 230, 138, 0.6) 50%, transparent 100%)',
+            borderRadius: 2,
+            top: `${15 + i * 10}%`,
+          }}
+          initial={{ 
+            x: '-100%',
+            opacity: 0,
+          }}
+          animate={{ 
+            x: ['0%', '400%'],
+            opacity: [0, 0.8, 0.8, 0],
+          }}
+          transition={{
+            duration: 2 + Math.random() * 1.5,
+            repeat: Infinity,
+            delay: i * 0.3,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+      
+      {/* Floating Dust Particles */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={`dust-${i}`}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            width: 3 + Math.random() * 4,
+            height: 3 + Math.random() * 4,
+            background: 'rgba(253, 230, 138, 0.7)',
+            boxShadow: '0 0 6px rgba(253, 230, 138, 0.5)',
+            top: `${20 + Math.random() * 60}%`,
+          }}
+          initial={{ 
+            x: -20,
+            opacity: 0,
+          }}
+          animate={{ 
+            x: [0, 300],
+            y: [0, -10, 10, -5, 0],
+            opacity: [0, 1, 1, 0],
+          }}
+          transition={{
+            duration: 3 + Math.random() * 2,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+      
+      {/* Wind Icon */}
+      <motion.div
+        className="absolute right-3 top-3 text-2xl pointer-events-none"
+        animate={{ 
+          x: [0, 5, 0],
+          opacity: [0.7, 1, 0.7],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        style={{
+          filter: 'drop-shadow(0 0 8px rgba(253, 230, 138, 0.6))'
+        }}
+      >
+        💨
+      </motion.div>
+      
+      <h4 
+        className="font-varsity text-xl uppercase tracking-wide mb-4 relative z-10"
+        style={{
+          color: '#FEF3C7',
+          textShadow: '2px 2px 0px #78350F',
+        }}
+      >
         📊 {dataKey === 'distance' ? 'Distanza Giornaliera' : 'Score Giornaliero'}
       </h4>
-      <div className="h-48">
+      <div className="h-48 relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <XAxis 
               dataKey="day" 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tick={{ fill: '#FDE68A', fontSize: 12 }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+              tick={{ fill: '#FDE68A', fontSize: 10 }}
               tickFormatter={(value) => dataKey === 'distance' ? `${value}` : `${(value / 1000).toFixed(0)}k`}
             />
             <Tooltip content={<CustomTooltip />} cursor={false} />
@@ -85,7 +183,7 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.isToday ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.5)'}
+                  fill={entry.isToday ? '#FCD34D' : '#F59E0B'}
                 />
               ))}
             </Bar>
