@@ -349,65 +349,146 @@ export default function StatsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="rounded-xl p-5 mb-6"
+          className="rounded-xl p-5 mb-6 relative overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, #4ADE80 0%, #22C55E 100%)',
-            border: '3px solid white',
-            boxShadow: '0 4px 0 0 #15803D, inset 0 1px 0 0 rgba(255,255,255,0.3)',
+            background: 'linear-gradient(180deg, #1E3A5F 0%, #0F172A 100%)',
+            border: '3px solid #60A5FA',
+            boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <Trophy className="w-6 h-6 text-white" />
+          {/* Animated Stars rising from bottom */}
+          {[...Array(10)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-sm pointer-events-none"
+              initial={{ 
+                x: `${5 + i * 10}%`, 
+                y: '100%',
+                opacity: 0,
+                scale: 0.5
+              }}
+              animate={{ 
+                y: [100, -20],
+                opacity: [0, 1, 0.8, 0],
+                scale: [0.5, 1, 0.8],
+                x: [`${5 + i * 10}%`, `${8 + i * 9}%`, `${3 + i * 10}%`]
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.4,
+                ease: "easeOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
+              }}
+            >
+              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
+            </motion.div>
+          ))}
+          
+          {/* Half Moon on the right */}
+          <motion.div
+            className="absolute right-4 top-4 text-3xl pointer-events-none"
+            animate={{ 
+              opacity: [0.7, 1, 0.7],
+              scale: [0.95, 1, 0.95],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{
+              filter: 'drop-shadow(0 0 12px rgba(251, 191, 36, 0.6))'
+            }}
+          >
+            🌙
+          </motion.div>
+          
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <Trophy className="w-6 h-6 text-yellow-300" />
             <span 
               className="font-varsity text-2xl uppercase tracking-wide"
               style={{
                 color: 'white',
-                textShadow: '3px 3px 0px #15803D, -1px -1px 0px #15803D, 1px -1px 0px #15803D, -1px 1px 0px #15803D',
+                textShadow: '3px 3px 0px #1E3A5F, -1px -1px 0px #1E3A5F, 1px -1px 0px #1E3A5F, -1px 1px 0px #1E3A5F',
               }}
             >
               Rango Attuale
             </span>
           </div>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center border-2 border-white/50">
+          <div className="flex items-center gap-4 mb-4 relative z-10">
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: '2px solid rgba(96, 165, 250, 0.5)',
+                boxShadow: '0 0 15px rgba(59, 130, 246, 0.3)'
+              }}
+            >
               <span className="text-3xl">{currentRank.icon}</span>
             </div>
             <div>
               <p 
                 className="font-varsity text-2xl uppercase tracking-wide"
                 style={{
-                  color: 'white',
-                  textShadow: '3px 3px 0px #15803D, -1px -1px 0px #15803D, 1px -1px 0px #15803D, -1px 1px 0px #15803D',
+                  color: '#93C5FD',
+                  textShadow: '2px 2px 0px #1E3A5F',
                 }}
               >
                 {currentRank.name}
               </p>
-              <p className="text-sm text-white/90 font-semibold">Livello {user.level}</p>
+              <p className="text-sm text-sky-200/90 font-semibold">Livello {user.level}</p>
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 relative z-10">
             <div className="flex justify-between text-sm">
               <span 
                 className="font-varsity text-lg uppercase tracking-wide"
                 style={{
                   color: 'white',
-                  textShadow: '2px 2px 0px #15803D, -1px -1px 0px #15803D, 1px -1px 0px #15803D, -1px 1px 0px #15803D',
+                  textShadow: '2px 2px 0px #1E3A5F',
                 }}
               >
                 Progresso verso il prossimo rango
               </span>
-              <span className="font-bold text-white">{rankProgress.toFixed(0)}%</span>
+              <span className="font-bold text-sky-200">{rankProgress.toFixed(0)}%</span>
             </div>
-            <div className="h-4 bg-white/20 rounded-full overflow-hidden">
-              <div 
-                className="h-full rounded-full transition-all duration-500"
+            <div 
+              className="h-5 rounded-full overflow-hidden"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: '2px solid rgba(96, 165, 250, 0.3)'
+              }}
+            >
+              <motion.div 
+                className="h-full rounded-full relative"
+                initial={{ width: 0 }}
+                animate={{ width: `${rankProgress}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
                 style={{
-                  width: `${rankProgress}%`,
-                  background: 'linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%)',
+                  background: 'linear-gradient(90deg, #93C5FD 0%, #60A5FA 50%, #3B82F6 100%)',
+                  boxShadow: '0 0 15px rgba(147, 197, 253, 0.6)'
                 }}
-              />
+              >
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  animate={{
+                    opacity: [0.3, 0.7, 0.3]
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)'
+                  }}
+                />
+              </motion.div>
             </div>
-            <p className="text-sm text-white/90 font-semibold">
+            <p className="text-sm text-sky-200/90 font-semibold">
               Prossimo rango al livello {nextRankLevel}
             </p>
           </div>
