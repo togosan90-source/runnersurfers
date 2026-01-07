@@ -726,39 +726,211 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="bg-card rounded-xl p-4 border border-border mb-6"
+          className="rounded-2xl p-5 mb-6 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 50%, #0C4A6E 100%)',
+            border: '3px solid #38BDF8',
+            boxShadow: '0 4px 0 0 #075985, 0 0 30px rgba(56, 189, 248, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+          }}
         >
-          <h3 className="font-bold mb-3 flex items-center gap-2">
-            👟 Equipaggiamento Attivo
-          </h3>
+          {/* Animated particles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-lg pointer-events-none"
+              initial={{ 
+                x: `${15 + i * 15}%`, 
+                y: '100%',
+                opacity: 0,
+              }}
+              animate={{ 
+                y: [100, -20],
+                opacity: [0, 1, 0.8, 0],
+                rotate: [0, 180],
+              }}
+              transition={{
+                duration: 3.5 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.6,
+                ease: "easeOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 6px rgba(56, 189, 248, 0.8))'
+              }}
+            >
+              {i % 3 === 0 ? '👟' : i % 3 === 1 ? '⚡' : '💨'}
+            </motion.div>
+          ))}
+
+          {/* Shine effect */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+            }}
+            animate={{
+              x: ['-100%', '200%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <motion.div 
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+              style={{
+                background: 'linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%)',
+                border: '2px solid #7DD3FC',
+                boxShadow: '0 0 20px rgba(56, 189, 248, 0.6)',
+              }}
+              animate={{
+                scale: [1, 1.1, 1],
+                rotate: [0, -5, 5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              👟
+            </motion.div>
+            <h3 
+              className="font-varsity text-xl uppercase tracking-wide"
+              style={{
+                color: '#E0F2FE',
+                textShadow: '2px 2px 0px #0C4A6E, 0 0 15px rgba(224, 242, 254, 0.5)',
+              }}
+            >
+              Equipaggiamento Attivo
+            </h3>
+          </div>
+
+          {/* Equipped Shoe */}
           {equippedShoeData && (
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                equippedShoeData.id === 'avalon' ? 'bg-gradient-to-br from-blue-400 to-blue-600' :
-                equippedShoeData.id === 'zeus' ? 'bg-gradient-to-br from-yellow-400 to-orange-500' :
-                equippedShoeData.id === 'woodblas' ? 'bg-gradient-to-br from-green-400 to-emerald-600' :
-                equippedShoeData.id === 'energy' ? 'bg-gradient-to-br from-purple-400 to-pink-500' :
-                'bg-gradient-to-br from-cyan-400 to-blue-500'
-              }`}>
-                <span className="text-2xl">{equippedShoeData.icon}</span>
+            <motion.div 
+              className="flex items-center gap-4 mb-4 rounded-xl p-3 relative z-10"
+              style={{
+                background: 'rgba(0,0,0,0.25)',
+                border: '2px solid rgba(56, 189, 248, 0.4)',
+              }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <div 
+                className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl"
+                style={{
+                  background: equippedShoeData.id === 'avalon' ? 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' :
+                    equippedShoeData.id === 'zeus' ? 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)' :
+                    equippedShoeData.id === 'woodblas' ? 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)' :
+                    equippedShoeData.id === 'energy' ? 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)' :
+                    'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+                  border: '2px solid rgba(255,255,255,0.3)',
+                  boxShadow: '0 0 15px rgba(255,255,255,0.2)',
+                }}
+              >
+                {equippedShoeData.icon}
               </div>
               <div>
-                <p className="font-bold">{equippedShoeData.name}</p>
-                <p className="text-xs text-muted-foreground">
+                <p 
+                  className="font-varsity text-lg uppercase"
+                  style={{
+                    color: '#FEF3C7',
+                    textShadow: '0 0 10px rgba(254, 243, 199, 0.5)',
+                  }}
+                >
+                  {equippedShoeData.name}
+                </p>
+                <p 
+                  className="text-sm font-semibold"
+                  style={{ color: '#7DD3FC' }}
+                >
                   +{equippedShoeData.coinBonus}% Monete, +{equippedShoeData.expBonus}% EXP
                 </p>
               </div>
-            </div>
+            </motion.div>
           )}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-primary/10 rounded-lg p-3 text-center">
-              <p className="text-xl font-bold text-primary">+{shoeBonus.coinBonus}%</p>
-              <p className="text-xs text-muted-foreground">Bonus Monete Totale</p>
-            </div>
-            <div className="bg-accent/10 rounded-lg p-3 text-center">
-              <p className="text-xl font-bold text-accent">+{shoeBonus.expBonus}%</p>
-              <p className="text-xs text-muted-foreground">Bonus EXP Totale</p>
-            </div>
+
+          {/* Bonus Stats Grid */}
+          <div className="grid grid-cols-2 gap-3 relative z-10">
+            {/* Bonus Monete */}
+            <motion.div 
+              className="rounded-xl p-4 text-center relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(252, 211, 77, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%)',
+                border: '2px solid #FCD34D',
+                boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.3)',
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(252, 211, 77, 0.2) 50%, transparent 100%)',
+                }}
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+              />
+              <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center relative z-10">
+                <Coins className="w-7 h-7" style={{ color: '#FCD34D', filter: 'drop-shadow(0 0 8px rgba(252, 211, 77, 0.6))' }} />
+              </div>
+              <p 
+                className="font-display text-2xl font-bold relative z-10"
+                style={{
+                  color: '#FEF3C7',
+                  textShadow: '0 0 10px rgba(254, 243, 199, 0.5)',
+                }}
+              >
+                +{shoeBonus.coinBonus}%
+              </p>
+              <p 
+                className="text-xs font-semibold uppercase relative z-10"
+                style={{ color: '#FCD34D' }}
+              >
+                Bonus Monete
+              </p>
+            </motion.div>
+
+            {/* Bonus EXP */}
+            <motion.div 
+              className="rounded-xl p-4 text-center relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.25) 0%, rgba(34, 197, 94, 0.25) 100%)',
+                border: '2px solid #4ADE80',
+                boxShadow: '0 2px 0 0 #166534, 0 0 15px rgba(74, 222, 128, 0.3)',
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(74, 222, 128, 0.2) 50%, transparent 100%)',
+                }}
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+              />
+              <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center relative z-10">
+                <Zap className="w-7 h-7" style={{ color: '#4ADE80', filter: 'drop-shadow(0 0 8px rgba(74, 222, 128, 0.6))' }} />
+              </div>
+              <p 
+                className="font-display text-2xl font-bold relative z-10"
+                style={{
+                  color: '#86EFAC',
+                  textShadow: '0 0 10px rgba(134, 239, 172, 0.5)',
+                }}
+              >
+                +{shoeBonus.expBonus}%
+              </p>
+              <p 
+                className="text-xs font-semibold uppercase relative z-10"
+                style={{ color: '#4ADE80' }}
+              >
+                Bonus EXP
+              </p>
+            </motion.div>
           </div>
         </motion.div>
 
