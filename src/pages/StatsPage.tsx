@@ -376,24 +376,100 @@ export default function StatsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="bg-card rounded-2xl p-5 mb-6 border border-border"
+          className="rounded-xl p-5 mb-6 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%)',
+            border: '3px solid #FED7AA',
+            boxShadow: '0 4px 0 0 #9A3412, 0 0 20px rgba(249, 115, 22, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.3)',
+          }}
         >
-          <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-5 h-5 text-accent" />
-            <span className="font-display font-bold">Equipaggiamento</span>
+          {/* Animated Falling Leaves */}
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-2xl pointer-events-none"
+              initial={{ 
+                x: `${10 + i * 12}%`, 
+                y: -20,
+                rotate: 0,
+                opacity: 0.7
+              }}
+              animate={{ 
+                y: ['0%', '120%'],
+                x: [`${10 + i * 12}%`, `${15 + i * 10}%`, `${5 + i * 12}%`],
+                rotate: [0, 180, 360],
+                opacity: [0.7, 0.9, 0.5]
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.6,
+                ease: "easeInOut"
+              }}
+              style={{
+                filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.3))'
+              }}
+            >
+              🍂
+            </motion.div>
+          ))}
+          
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <Zap className="w-6 h-6 text-white" />
+            <span 
+              className="font-varsity text-2xl uppercase tracking-wide"
+              style={{
+                color: 'white',
+                textShadow: '3px 3px 0px #9A3412, -1px -1px 0px #9A3412, 1px -1px 0px #9A3412, -1px 1px 0px #9A3412',
+              }}
+            >
+              Equipaggiamento
+            </span>
           </div>
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="bg-primary/10 rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-primary">+{shoeBonus.coinBonus}%</p>
-              <p className="text-xs text-muted-foreground">Bonus Monete</p>
+          
+          <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
+            <div 
+              className="rounded-lg p-3 text-center"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(4px)',
+                border: '2px solid rgba(255,255,255,0.3)'
+              }}
+            >
+              <p 
+                className="text-2xl font-bold"
+                style={{
+                  color: '#FEF3C7',
+                  textShadow: '2px 2px 0px rgba(0,0,0,0.3)'
+                }}
+              >
+                +{shoeBonus.coinBonus}%
+              </p>
+              <p className="text-xs text-white/90 font-semibold">Bonus Monete</p>
             </div>
-            <div className="bg-accent/10 rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-accent">+{shoeBonus.expBonus}%</p>
-              <p className="text-xs text-muted-foreground">Bonus EXP</p>
+            <div 
+              className="rounded-lg p-3 text-center"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(4px)',
+                border: '2px solid rgba(255,255,255,0.3)'
+              }}
+            >
+              <p 
+                className="text-2xl font-bold"
+                style={{
+                  color: '#FEF3C7',
+                  textShadow: '2px 2px 0px rgba(0,0,0,0.3)'
+                }}
+              >
+                +{shoeBonus.expBonus}%
+              </p>
+              <p className="text-xs text-white/90 font-semibold">Bonus EXP</p>
             </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Scarpe possedute:</p>
+          
+          <div className="space-y-2 relative z-10">
+            <p className="text-sm font-semibold text-white/90">Scarpe possedute:</p>
             <div className="flex flex-wrap gap-2">
               {ownedShoes.map(shoeId => {
                 const shoe = SHOES.find(s => s.id === shoeId);
@@ -403,11 +479,14 @@ export default function StatsPage() {
                   <button
                     key={shoeId}
                     onClick={() => equipShoe(shoeId)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
-                      isEquipped 
-                        ? 'bg-primary text-primary-foreground ring-2 ring-primary' 
-                        : 'bg-muted hover:bg-muted/80'
-                    }`}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all"
+                    style={{
+                      backgroundColor: isEquipped ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.25)',
+                      color: isEquipped ? '#9A3412' : 'white',
+                      border: isEquipped ? '2px solid #FEF3C7' : '2px solid rgba(255,255,255,0.3)',
+                      fontWeight: isEquipped ? 'bold' : 'normal',
+                      boxShadow: isEquipped ? '0 2px 8px rgba(0,0,0,0.2)' : 'none'
+                    }}
                   >
                     <span>{shoe.icon}</span>
                     <span>{shoe.name.split(' ')[0]}</span>
