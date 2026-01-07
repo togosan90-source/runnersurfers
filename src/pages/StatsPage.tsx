@@ -961,31 +961,119 @@ export default function StatsPage() {
             transition={{ delay: 0.2 }}
             className="mt-6"
           >
-            <h3 className="font-bold mb-3">Corse Recenti</h3>
-            <div className="space-y-2">
-              {runs.slice(-5).reverse().map((run) => (
-                <div 
-                  key={run.id}
-                  className="bg-card rounded-lg p-3 border border-border flex items-center justify-between"
+            <div 
+              className="rounded-xl p-5 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)',
+                border: '3px solid #60A5FA',
+                boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+              }}
+            >
+              {/* Animated Running Icons */}
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute text-xl pointer-events-none opacity-30"
+                  initial={{ x: '-10%', y: `${15 + i * 18}%` }}
+                  animate={{ 
+                    x: ['0%', '110%'],
+                  }}
+                  transition={{
+                    duration: 4 + Math.random() * 2,
+                    repeat: Infinity,
+                    delay: i * 0.8,
+                    ease: "linear"
+                  }}
                 >
-                  <div>
-                    <p className="text-sm font-medium">
-                      {run.distance.toFixed(2)} km
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(run.date).toLocaleDateString('it-IT')}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-primary">
-                      +{run.scoreEarned.toLocaleString()} pts
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {run.avgSpeed.toFixed(1)} km/h
-                    </p>
-                  </div>
-                </div>
+                  🏃
+                </motion.div>
               ))}
+              
+              <h3 
+                className="font-varsity text-xl uppercase tracking-wide mb-4 relative z-10 flex items-center gap-2"
+                style={{
+                  color: 'white',
+                  textShadow: '2px 2px 0px #1E3A5F',
+                }}
+              >
+                <span className="text-2xl">🏅</span> Corse Recenti
+              </h3>
+              
+              <div className="space-y-3 relative z-10">
+                {runs.slice(-5).reverse().map((run, index) => (
+                  <motion.div 
+                    key={run.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="rounded-xl p-4 flex items-center justify-between relative overflow-hidden"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)',
+                      border: '2px solid rgba(96, 165, 250, 0.5)',
+                      boxShadow: '0 2px 0 0 rgba(30, 64, 175, 0.5), inset 0 1px 0 0 rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    {/* Shine Effect */}
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
+                      }}
+                      animate={{
+                        x: ['-100%', '200%'],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: index * 0.5,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    
+                    <div className="flex items-center gap-3 relative z-10">
+                      <div 
+                        className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                        style={{
+                          background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+                          border: '2px solid #A5B4FC',
+                          boxShadow: '0 2px 0 0 #1E40AF, 0 0 15px rgba(139, 92, 246, 0.4)',
+                        }}
+                      >
+                        👟
+                      </div>
+                      <div>
+                        <p 
+                          className="text-lg font-bold"
+                          style={{
+                            color: '#93C5FD',
+                            textShadow: '0 0 10px rgba(147, 197, 253, 0.5)',
+                          }}
+                        >
+                          {run.distance.toFixed(2)} km
+                        </p>
+                        <p className="text-xs text-blue-300/80 flex items-center gap-1">
+                          <span>📅</span> {new Date(run.date).toLocaleDateString('it-IT')}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-right relative z-10">
+                      <p 
+                        className="text-lg font-bold flex items-center gap-1 justify-end"
+                        style={{
+                          color: '#FCD34D',
+                          textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
+                        }}
+                      >
+                        <span className="text-sm">⚡</span> +{run.scoreEarned.toLocaleString()} pts
+                      </p>
+                      <p className="text-xs text-blue-300/80 flex items-center gap-1 justify-end">
+                        <span>🚀</span> {run.avgSpeed.toFixed(1)} km/h
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

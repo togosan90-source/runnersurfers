@@ -177,13 +177,54 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
             <Tooltip content={<CustomTooltip />} cursor={false} />
             <Bar 
               dataKey={dataKey} 
-              radius={[6, 6, 0, 0]}
-              maxBarSize={40}
+              radius={[8, 8, 4, 4]}
+              maxBarSize={45}
+              label={({ x, y, width, value }) => (
+                <g>
+                  <rect
+                    x={x - 2}
+                    y={y - 28}
+                    width={width + 4}
+                    height={22}
+                    rx={6}
+                    fill={value > 0 ? "url(#labelGradient)" : "transparent"}
+                    stroke={value > 0 ? "#FCD34D" : "transparent"}
+                    strokeWidth={1.5}
+                    filter="url(#glow)"
+                  />
+                  <text
+                    x={x + width / 2}
+                    y={y - 13}
+                    fill="#FEF3C7"
+                    textAnchor="middle"
+                    fontSize={10}
+                    fontWeight="bold"
+                    style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}
+                  >
+                    {value > 0 ? (dataKey === 'distance' ? `${value.toFixed(2)} km` : value.toLocaleString()) : ''}
+                  </text>
+                </g>
+              )}
             >
+              <defs>
+                <linearGradient id="labelGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#B45309" />
+                  <stop offset="100%" stopColor="#78350F" />
+                </linearGradient>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={entry.isToday ? '#FCD34D' : '#F59E0B'}
+                  stroke={entry.isToday ? '#FEF3C7' : '#FCD34D'}
+                  strokeWidth={2}
                 />
               ))}
             </Bar>
