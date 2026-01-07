@@ -231,41 +231,115 @@ export default function StatsPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl p-5 mb-6"
+          className="rounded-xl p-5 mb-6 relative overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
-            border: '3px solid white',
-            boxShadow: '0 4px 0 0 #1E40AF, inset 0 1px 0 0 rgba(255,255,255,0.3)',
+            background: 'linear-gradient(135deg, #065F46 0%, #047857 50%, #059669 100%)',
+            border: '3px solid #6EE7B7',
+            boxShadow: '0 4px 0 0 #064E3B, 0 0 30px rgba(16, 185, 129, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          <div className="flex items-center gap-3 mb-3">
-            <Ruler className="w-6 h-6 text-white" />
+          {/* Animated Energy Particles */}
+          {[...Array(10)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                width: 4 + Math.random() * 6,
+                height: 4 + Math.random() * 6,
+                background: 'radial-gradient(circle, rgba(167, 243, 208, 1) 0%, rgba(52, 211, 153, 0.5) 100%)',
+                boxShadow: '0 0 10px rgba(167, 243, 208, 0.8)',
+              }}
+              initial={{ 
+                x: `${Math.random() * 100}%`, 
+                y: `${Math.random() * 100}%`,
+                opacity: 0,
+                scale: 0
+              }}
+              animate={{ 
+                opacity: [0, 1, 0],
+                scale: [0, 1.5, 0],
+                y: [`${50 + Math.random() * 50}%`, `${Math.random() * 30}%`],
+              }}
+              transition={{
+                duration: 2 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.3,
+                ease: "easeOut"
+              }}
+            />
+          ))}
+          
+          {/* Energy Icon Glow */}
+          <motion.div
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-4xl pointer-events-none"
+            animate={{ 
+              opacity: [0.6, 1, 0.6],
+              scale: [0.9, 1.1, 0.9],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(167, 243, 208, 0.8)) drop-shadow(0 0 30px rgba(52, 211, 153, 0.5))'
+            }}
+          >
+            ⚡
+          </motion.div>
+          
+          <div className="flex items-center gap-3 mb-3 relative z-10">
+            <Ruler className="w-6 h-6 text-emerald-200" />
             <span 
               className="font-varsity text-2xl uppercase tracking-wide"
               style={{
                 color: 'white',
-                textShadow: '3px 3px 0px #1E40AF, -1px -1px 0px #1E40AF, 1px -1px 0px #1E40AF, -1px 1px 0px #1E40AF',
+                textShadow: '3px 3px 0px #064E3B, -1px -1px 0px #064E3B, 1px -1px 0px #064E3B, -1px 1px 0px #064E3B',
               }}
             >
               Distanza Totale
             </span>
           </div>
-          <div className="mb-2">
+          <div className="mb-2 relative z-10">
             <div className="flex justify-between text-sm mb-1">
-              <span className="font-bold text-white">{user.totalDistance.toFixed(1)} km</span>
-              <span className="text-white/80">{maxDistance.toLocaleString()} km</span>
+              <span className="font-bold text-emerald-100">{user.totalDistance.toFixed(1)} km</span>
+              <span className="text-emerald-200/80">{maxDistance.toLocaleString()} km</span>
             </div>
-            <div className="h-4 bg-white/20 rounded-full overflow-hidden">
-              <div 
-                className="h-full rounded-full transition-all duration-500"
+            <div 
+              className="h-5 rounded-full overflow-hidden"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: '2px solid rgba(167, 243, 208, 0.3)'
+              }}
+            >
+              <motion.div 
+                className="h-full rounded-full relative"
+                initial={{ width: 0 }}
+                animate={{ width: `${distanceProgress}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
                 style={{
-                  width: `${distanceProgress}%`,
-                  background: 'linear-gradient(90deg, #22C55E 0%, #16A34A 100%)',
+                  background: 'linear-gradient(90deg, #A7F3D0 0%, #6EE7B7 50%, #34D399 100%)',
+                  boxShadow: '0 0 15px rgba(167, 243, 208, 0.6)'
                 }}
-              />
+              >
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  animate={{
+                    opacity: [0.3, 0.7, 0.3]
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)'
+                  }}
+                />
+              </motion.div>
             </div>
           </div>
-          <p className="text-sm text-white/90">
+          <p className="text-sm text-emerald-100 relative z-10">
             🎯 Prossimo milestone: {Math.ceil(user.totalDistance / 5) * 5} km = +{Math.ceil(user.totalDistance / 5) * 5} monete bonus
           </p>
         </motion.div>
