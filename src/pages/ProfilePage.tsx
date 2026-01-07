@@ -550,21 +550,174 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-purple-500/10 to-violet-500/10 rounded-xl p-4 border border-purple-500/20 mb-6"
+          className="rounded-2xl p-5 mb-6 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #7C3AED 0%, #4C1D95 50%, #2E1065 100%)',
+            border: '3px solid #A78BFA',
+            boxShadow: '0 4px 0 0 #5B21B6, 0 0 30px rgba(167, 139, 250, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+          }}
         >
-          <div className="flex items-center gap-2 mb-3">
-            <Star className="w-5 h-5 text-purple-400" />
-            <span className="font-bold">Reputazione</span>
-          </div>
-          <div className="flex items-center justify-between">
+          {/* Animated particles */}
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-sm pointer-events-none"
+              initial={{ 
+                x: `${10 + i * 12}%`, 
+                y: '100%',
+                opacity: 0,
+              }}
+              animate={{ 
+                y: [100, -20],
+                opacity: [0, 1, 0.8, 0],
+                rotate: [0, 360],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.5,
+                ease: "easeOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 6px rgba(167, 139, 250, 0.8))'
+              }}
+            >
+              {i % 4 === 0 ? '⭐' : i % 4 === 1 ? '✨' : i % 4 === 2 ? '💎' : '🌟'}
+            </motion.div>
+          ))}
+
+          {/* Shine effect */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+            }}
+            animate={{
+              x: ['-100%', '200%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <motion.div 
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)',
+                border: '2px solid #C4B5FD',
+                boxShadow: '0 0 20px rgba(167, 139, 250, 0.6)',
+              }}
+              animate={{
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Star className="w-7 h-7" style={{ color: '#FEF3C7', filter: 'drop-shadow(0 0 8px rgba(254, 243, 199, 0.8))' }} />
+            </motion.div>
             <div>
-              <p className="font-display text-xl font-bold text-purple-400">{reputationLevel.name}</p>
-              <p className="text-sm text-muted-foreground">{user.reputation.toLocaleString()} punti</p>
+              <h3 
+                className="font-varsity text-xl uppercase tracking-wide"
+                style={{
+                  color: '#E9D5FF',
+                  textShadow: '2px 2px 0px #4C1D95, 0 0 15px rgba(233, 213, 255, 0.5)',
+                }}
+              >
+                Reputazione
+              </h3>
+              <motion.span 
+                className="px-2 py-0.5 rounded-md text-xs font-bold uppercase"
+                style={{
+                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                  color: '#78350F',
+                  boxShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
+                }}
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                }}
+              >
+                LV.{reputationLevel.level}
+              </motion.span>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Livello</p>
-              <p className="font-display text-2xl font-bold text-purple-400">{reputationLevel.level}</p>
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center justify-between relative z-10">
+            <div 
+              className="rounded-xl px-4 py-3"
+              style={{
+                background: 'rgba(0,0,0,0.3)',
+                border: '2px solid rgba(167, 139, 250, 0.4)',
+              }}
+            >
+              <p 
+                className="font-varsity text-2xl uppercase"
+                style={{
+                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #FCD34D 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  filter: 'drop-shadow(0 0 10px rgba(252, 211, 77, 0.5))',
+                }}
+              >
+                {reputationLevel.name}
+              </p>
+              <p 
+                className="text-sm font-semibold"
+                style={{ color: '#C4B5FD' }}
+              >
+                {user.reputation.toLocaleString()} punti
+              </p>
             </div>
+
+            {/* Level Circle */}
+            <motion.div 
+              className="w-16 h-16 rounded-full flex flex-col items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)',
+                border: '3px solid #C4B5FD',
+                boxShadow: '0 0 25px rgba(167, 139, 250, 0.6), inset 0 2px 0 rgba(255,255,255,0.2)',
+              }}
+              animate={{
+                boxShadow: [
+                  '0 0 25px rgba(167, 139, 250, 0.6), inset 0 2px 0 rgba(255,255,255,0.2)',
+                  '0 0 40px rgba(167, 139, 250, 0.8), inset 0 2px 0 rgba(255,255,255,0.2)',
+                  '0 0 25px rgba(167, 139, 250, 0.6), inset 0 2px 0 rgba(255,255,255,0.2)',
+                ],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            >
+              <span 
+                className="font-display text-2xl font-bold"
+                style={{
+                  color: 'white',
+                  textShadow: '0 0 10px rgba(255,255,255,0.5)',
+                }}
+              >
+                {reputationLevel.level}
+              </span>
+              <span 
+                className="text-[10px] uppercase font-bold"
+                style={{ color: '#E9D5FF' }}
+              >
+                Livello
+              </span>
+            </motion.div>
           </div>
         </motion.div>
 
