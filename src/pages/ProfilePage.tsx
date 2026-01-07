@@ -94,14 +94,61 @@ export default function ProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl p-6 mb-6"
+          className="rounded-2xl p-6 mb-6 relative overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%)',
-            border: '1px solid hsl(var(--border))',
+            background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)',
+            border: '3px solid #60A5FA',
+            boxShadow: '0 4px 0 0 #1E40AF, 0 0 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
+          {/* Animated Stars */}
+          {[...Array(10)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-sm pointer-events-none"
+              initial={{ 
+                x: `${5 + i * 10}%`, 
+                y: '100%',
+                opacity: 0,
+                scale: 0.5
+              }}
+              animate={{ 
+                y: [100, -20],
+                opacity: [0, 1, 0.8, 0],
+                scale: [0.5, 1, 0.8],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.4,
+                ease: "easeOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
+              }}
+            >
+              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
+            </motion.div>
+          ))}
+
+          {/* Shine effect */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
+            }}
+            animate={{
+              x: ['-100%', '200%'],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
           {/* Avatar and Name */}
-          <div className="flex items-start gap-4 mb-6">
+          <div className="flex items-start gap-4 mb-6 relative z-10">
             <div className="relative">
               {/* Hidden file input */}
               <input
@@ -121,10 +168,15 @@ export default function ProfilePage() {
               />
               
               {/* Avatar with click to change */}
-              <button
+              <motion.button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-card shadow-lg group cursor-pointer"
+                className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg group cursor-pointer"
+                style={{
+                  border: '4px solid #60A5FA',
+                  boxShadow: '0 0 20px rgba(96, 165, 250, 0.5)',
+                }}
+                whileHover={{ scale: 1.05 }}
               >
                 {profile?.avatar_url ? (
                   <img 
@@ -149,27 +201,47 @@ export default function ProfilePage() {
                     <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   </div>
                 )}
-              </button>
+              </motion.button>
               
-              <div className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full bg-card border-2 border-border flex items-center justify-center text-xl shadow-md">
+              <motion.div 
+                className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-md"
+                style={{
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+                  border: '2px solid #93C5FD',
+                  boxShadow: '0 0 15px rgba(59, 130, 246, 0.5)',
+                }}
+                animate={{
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
                 {rank.icon}
-              </div>
+              </motion.div>
             </div>
 
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <h1 
-                  className="font-gothic text-2xl italic"
+                  className="font-varsity text-2xl uppercase tracking-wide"
                   style={{
-                    color: 'hsl(var(--foreground))',
-                    textShadow: '2px 2px 0px rgba(0,0,0,0.5), -1px -1px 0px rgba(255,255,255,0.3)',
+                    color: '#93C5FD',
+                    textShadow: '2px 2px 0px #1E3A5F, 0 0 10px rgba(147, 197, 253, 0.5)',
                   }}
                 >
                   {user.username}
                 </h1>
                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-6 w-6"
+                      style={{ color: '#93C5FD' }}
+                    >
                       <Edit2 className="w-3 h-3" />
                     </Button>
                   </DialogTrigger>
@@ -191,104 +263,224 @@ export default function ProfilePage() {
                 </Dialog>
               </div>
               
-              <div 
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full font-gothic text-xl italic"
+              <motion.div 
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl"
                 style={{
-                  color: 'hsl(var(--foreground))',
-                  textShadow: '2px 2px 0px rgba(0,0,0,0.5), -1px -1px 0px rgba(255,255,255,0.3)',
-                  backgroundColor: 'hsla(var(--muted), 0.3)',
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.3) 100%)',
+                  border: '2px solid rgba(96, 165, 250, 0.5)',
                 }}
               >
-                {rank.icon} {rank.name}
-              </div>
-
-              <div className="mt-4 flex items-center gap-3">
-                <span className="text-primary font-bold text-sm">LV.{user.level}</span>
-                <span className="flex items-center gap-1 text-sm">
-                  {rank.icon} <span className="font-semibold">{rank.name}</span>
-                </span>
+                <span className="text-xl">{rank.icon}</span>
                 <span 
-                  className="ml-auto font-varsity text-sm uppercase px-3 py-1 rounded-md"
+                  className="font-varsity text-lg uppercase"
                   style={{
-                    background: 'linear-gradient(180deg, #4ADE80 0%, #22C55E 100%)',
-                    border: '3px solid #15803D',
-                    boxShadow: '0 3px 0 0 #166534, inset 0 1px 0 0 rgba(255,255,255,0.3)',
+                    color: '#FCD34D',
+                    textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
+                  }}
+                >
+                  {rank.name}
+                </span>
+              </motion.div>
+
+              <div className="mt-4 flex items-center gap-3 flex-wrap">
+                <motion.span 
+                  className="px-3 py-1.5 rounded-lg font-bold text-sm"
+                  style={{
+                    background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+                    border: '2px solid #60A5FA',
                     color: 'white',
-                    textShadow: '2px 2px 0px #15803D, -1px -1px 0px #15803D, 1px -1px 0px #15803D, -1px 1px 0px #15803D',
+                    boxShadow: '0 2px 0 0 #1E3A5F, 0 0 10px rgba(59, 130, 246, 0.4)',
+                  }}
+                >
+                  LV.{user.level}
+                </motion.span>
+                <span 
+                  className="flex items-center gap-1 text-sm font-semibold"
+                  style={{ color: '#93C5FD' }}
+                >
+                  {rank.icon} {rank.name}
+                </span>
+                <motion.span 
+                  className="ml-auto font-varsity text-sm uppercase px-3 py-1.5 rounded-lg"
+                  style={{
+                    background: 'linear-gradient(135deg, #4ADE80 0%, #22C55E 100%)',
+                    border: '2px solid #86EFAC',
+                    boxShadow: '0 2px 0 0 #166534, 0 0 15px rgba(74, 222, 128, 0.4)',
+                    color: 'white',
+                    textShadow: '1px 1px 0px #15803D',
+                  }}
+                  animate={{
+                    scale: [1, 1.02, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
                   }}
                 >
                   {user.exp}/{user.level * 100} EXP
-                </span>
+                </motion.span>
               </div>
-              <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
-                <div 
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${(user.exp / (user.level * 100)) * 100}%`,
-                    background: 'linear-gradient(90deg, hsl(var(--muted-foreground)) 0%, hsl(var(--muted-foreground)) 100%)',
-                  }}
-                />
-              </div>
-              <span 
-                className="font-varsity text-xs uppercase px-3 py-1 rounded-md mt-2 inline-block"
+
+              {/* EXP Progress Bar */}
+              <div 
+                className="mt-3 h-3 rounded-full overflow-hidden relative"
                 style={{
-                  background: 'linear-gradient(180deg, #4ADE80 0%, #22C55E 100%)',
-                  border: '3px solid #15803D',
-                  boxShadow: '0 3px 0 0 #166534, inset 0 1px 0 0 rgba(255,255,255,0.3)',
-                  color: 'white',
-                  textShadow: '2px 2px 0px #15803D, -1px -1px 0px #15803D, 1px -1px 0px #15803D, -1px 1px 0px #15803D',
+                  background: 'rgba(0,0,0,0.3)',
+                  border: '2px solid rgba(96, 165, 250, 0.3)',
                 }}
               >
+                <motion.div 
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${(user.exp / (user.level * 100)) * 100}%`,
+                    background: 'linear-gradient(90deg, #4ADE80 0%, #22C55E 50%, #16A34A 100%)',
+                    boxShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(user.exp / (user.level * 100)) * 100}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                />
+              </div>
+
+              <motion.span 
+                className="font-bold text-xs px-3 py-1 rounded-lg mt-2 inline-flex items-center gap-1"
+                style={{
+                  background: 'rgba(74, 222, 128, 0.2)',
+                  border: '1px solid #4ADE80',
+                  color: '#4ADE80',
+                }}
+              >
+                <TrendingUp className="w-3 h-3" />
                 {((user.exp / (user.level * 100)) * 100).toFixed(0)}% - Prossimo livello
-              </span>
+              </motion.span>
             </div>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-4 text-center mt-6">
-            <div className="flex flex-col items-center">
-              <img src={trophyGold} alt="Trophy" className="w-12 h-12 object-contain mb-2" />
-              <p 
-                className="font-gothic text-sm"
+          <div className="grid grid-cols-3 gap-3 text-center relative z-10">
+            {/* Score */}
+            <motion.div 
+              className="rounded-xl p-4 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(252, 211, 77, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%)',
+                border: '2px solid #FCD34D',
+                boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.3)',
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  color: 'hsl(var(--foreground))',
-                  textShadow: '1px 1px 0px rgba(0,0,0,0.3)',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(252, 211, 77, 0.2) 50%, transparent 100%)',
+                }}
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+              />
+              <img src={trophyGold} alt="Trophy" className="w-12 h-12 object-contain mb-2 mx-auto relative z-10" style={{ filter: 'drop-shadow(0 0 10px rgba(252, 211, 77, 0.5))' }} />
+              <p 
+                className="font-varsity text-lg uppercase relative z-10"
+                style={{
+                  color: '#FCD34D',
+                  textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
                 }}
               >
                 Score Totale
               </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <img src={coinsGold} alt="Coins" className="w-12 h-12 object-contain mb-2" />
               <p 
-                className="font-gothic text-sm"
+                className="font-display text-xl font-bold relative z-10"
                 style={{
-                  color: 'hsl(var(--foreground))',
-                  textShadow: '1px 1px 0px rgba(0,0,0,0.3)',
+                  color: '#FEF3C7',
+                  textShadow: '0 0 10px rgba(254, 243, 199, 0.5)',
+                }}
+              >
+                {user.totalScore.toLocaleString()}
+              </p>
+            </motion.div>
+
+            {/* Coins */}
+            <motion.div 
+              className="rounded-xl p-4 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)',
+                border: '2px solid #4ADE80',
+                boxShadow: '0 2px 0 0 #166534, 0 0 15px rgba(74, 222, 128, 0.3)',
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(74, 222, 128, 0.2) 50%, transparent 100%)',
+                }}
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+              />
+              <img src={coinsGold} alt="Coins" className="w-12 h-12 object-contain mb-2 mx-auto relative z-10" style={{ filter: 'drop-shadow(0 0 10px rgba(74, 222, 128, 0.5))' }} />
+              <p 
+                className="font-varsity text-lg uppercase relative z-10"
+                style={{
+                  color: '#4ADE80',
+                  textShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
                 }}
               >
                 Monete
               </p>
-            </div>
-            <div className="flex flex-col items-center">
               <p 
-                className="font-varsity text-3xl text-accent"
+                className="font-display text-xl font-bold relative z-10"
                 style={{
-                  textShadow: '2px 2px 0px hsl(var(--accent) / 0.5)',
+                  color: '#86EFAC',
+                  textShadow: '0 0 10px rgba(134, 239, 172, 0.5)',
                 }}
               >
-                {runs.length}
+                {user.coins.toLocaleString()}
               </p>
-              <p 
-                className="font-gothic text-sm"
+            </motion.div>
+
+            {/* Runs */}
+            <motion.div 
+              className="rounded-xl p-4 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)',
+                border: '2px solid #A78BFA',
+                boxShadow: '0 2px 0 0 #6D28D9, 0 0 15px rgba(167, 139, 250, 0.3)',
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  color: 'hsl(var(--foreground))',
-                  textShadow: '1px 1px 0px rgba(0,0,0,0.3)',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(167, 139, 250, 0.2) 50%, transparent 100%)',
+                }}
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
+              />
+              <motion.span 
+                className="text-4xl block mb-2 relative z-10"
+                animate={{ rotate: [-5, 5, -5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                style={{ filter: 'drop-shadow(0 0 10px rgba(167, 139, 250, 0.5))' }}
+              >
+                🏃
+              </motion.span>
+              <p 
+                className="font-varsity text-lg uppercase relative z-10"
+                style={{
+                  color: '#A78BFA',
+                  textShadow: '0 0 10px rgba(167, 139, 250, 0.5)',
                 }}
               >
                 Corse
               </p>
-            </div>
+              <p 
+                className="font-display text-xl font-bold relative z-10"
+                style={{
+                  color: '#C4B5FD',
+                  textShadow: '0 0 10px rgba(196, 181, 253, 0.5)',
+                }}
+              >
+                {runs.length}
+              </p>
+            </motion.div>
           </div>
         </motion.div>
 
