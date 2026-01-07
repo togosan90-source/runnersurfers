@@ -104,27 +104,160 @@ export default function LeaderboardPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-4 mb-6 border border-primary/20"
+            className="rounded-2xl p-5 mb-6 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)',
+              border: '3px solid #60A5FA',
+              boxShadow: '0 4px 0 0 #1E40AF, 0 0 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+            }}
           >
-            <div className="flex items-center justify-between">
+            {/* Animated Stars */}
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute text-sm pointer-events-none"
+                initial={{ 
+                  x: `${10 + i * 12}%`, 
+                  y: '100%',
+                  opacity: 0,
+                  scale: 0.5
+                }}
+                animate={{ 
+                  y: [100, -20],
+                  opacity: [0, 1, 0.8, 0],
+                  scale: [0.5, 1, 0.8],
+                }}
+                transition={{
+                  duration: 3 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: i * 0.4,
+                  ease: "easeOut"
+                }}
+                style={{
+                  filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
+                }}
+              >
+                {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
+              </motion.div>
+            ))}
+            
+            {/* Trophy Icon */}
+            <motion.div
+              className="absolute right-4 top-4 text-4xl pointer-events-none"
+              animate={{ 
+                rotate: [-5, 5, -5],
+                scale: [0.95, 1.05, 0.95],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 15px rgba(252, 211, 77, 0.6))'
+              }}
+            >
+              🏆
+            </motion.div>
+            
+            <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-sm text-muted-foreground">La tua posizione</p>
-                <p className="font-display text-3xl font-bold text-primary">#{userRank}</p>
+                <p 
+                  className="text-sm font-semibold mb-1"
+                  style={{ color: '#93C5FD' }}
+                >
+                  📍 La tua posizione
+                </p>
+                <div className="flex items-center gap-2">
+                  <motion.p 
+                    className="font-display text-4xl font-bold"
+                    style={{
+                      color: '#FCD34D',
+                      textShadow: '0 0 20px rgba(252, 211, 77, 0.6), 2px 2px 0px #78350F',
+                    }}
+                    animate={{
+                      scale: [1, 1.02, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    #{userRank}
+                  </motion.p>
+                  <div 
+                    className="px-2 py-1 rounded-lg text-xs font-bold"
+                    style={{
+                      background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+                      border: '2px solid #A5B4FC',
+                      color: 'white',
+                      boxShadow: '0 2px 0 0 #1E40AF',
+                    }}
+                  >
+                    TOP {Math.ceil((userRank / leaderboard.length) * 100)}%
+                  </div>
+                </div>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">Score totale</p>
-                <p className="font-display text-xl font-bold text-foreground">
+                <p 
+                  className="text-sm font-semibold mb-1"
+                  style={{ color: '#93C5FD' }}
+                >
+                  ⚡ Score totale
+                </p>
+                <p 
+                  className="font-display text-2xl font-bold"
+                  style={{
+                    color: 'white',
+                    textShadow: '0 0 10px rgba(255,255,255,0.3)',
+                  }}
+                >
                   {userEntry.total_score.toLocaleString()}
                 </p>
               </div>
             </div>
+            
             {pointsToNext && pointsToNext > 0 && (
-              <div className="mt-3 flex items-center gap-2 text-sm">
-                <TrendingUp className="w-4 h-4 text-accent" />
-                <span className="text-muted-foreground">
-                  Punti da #{userRank - 1}: <span className="font-bold text-accent">{pointsToNext.toLocaleString()}</span> Score
-                </span>
-              </div>
+              <motion.div 
+                className="mt-4 rounded-xl p-3 flex items-center gap-3 relative z-10"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)',
+                  border: '2px solid rgba(96, 165, 250, 0.4)',
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <motion.div
+                  animate={{ 
+                    y: [-2, 2, -2],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <TrendingUp className="w-5 h-5 text-green-400" />
+                </motion.div>
+                <div className="flex-1">
+                  <p className="text-xs text-blue-300">Per superare #{userRank - 1}</p>
+                  <p className="font-bold text-white">
+                    <span 
+                      className="text-lg"
+                      style={{
+                        color: '#4ADE80',
+                        textShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
+                      }}
+                    >
+                      {pointsToNext.toLocaleString()}
+                    </span>
+                    <span className="text-sm text-blue-300 ml-1">punti</span>
+                  </p>
+                </div>
+                <span className="text-2xl">🎯</span>
+              </motion.div>
             )}
           </motion.div>
         )}
