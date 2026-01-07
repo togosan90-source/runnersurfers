@@ -717,23 +717,14 @@ export default function ProfilePage() {
           {/* Bonus Stats Grid */}
           <div className="grid grid-cols-2 gap-3 relative z-10">
             {/* Bonus Monete */}
-            <motion.div 
-              className="rounded-xl p-4 text-center relative overflow-hidden"
+            <div 
+              className="rounded-xl p-4 text-center relative overflow-hidden hover:scale-105 transition-transform"
               style={{
                 background: 'linear-gradient(135deg, rgba(252, 211, 77, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%)',
                 border: '2px solid #FCD34D',
                 boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.3)',
               }}
-              whileHover={{ scale: 1.05 }}
             >
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(252, 211, 77, 0.2) 50%, transparent 100%)',
-                }}
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0 }}
-              />
               <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center relative z-10">
                 <Coins className="w-7 h-7" style={{ color: '#FCD34D', filter: 'drop-shadow(0 0 8px rgba(252, 211, 77, 0.6))' }} />
               </div>
@@ -752,26 +743,17 @@ export default function ProfilePage() {
               >
                 Bonus Monete
               </p>
-            </motion.div>
+            </div>
 
             {/* Bonus EXP */}
-            <motion.div 
-              className="rounded-xl p-4 text-center relative overflow-hidden"
+            <div 
+              className="rounded-xl p-4 text-center relative overflow-hidden hover:scale-105 transition-transform"
               style={{
                 background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.25) 0%, rgba(34, 197, 94, 0.25) 100%)',
                 border: '2px solid #4ADE80',
                 boxShadow: '0 2px 0 0 #166534, 0 0 15px rgba(74, 222, 128, 0.3)',
               }}
-              whileHover={{ scale: 1.05 }}
             >
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(74, 222, 128, 0.2) 50%, transparent 100%)',
-                }}
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-              />
               <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center relative z-10">
                 <Zap className="w-7 h-7" style={{ color: '#4ADE80', filter: 'drop-shadow(0 0 8px rgba(74, 222, 128, 0.6))' }} />
               </div>
@@ -790,7 +772,7 @@ export default function ProfilePage() {
               >
                 Bonus EXP
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -922,88 +904,35 @@ export default function ProfilePage() {
                   <p className="text-xs" style={{ color: '#FCD34D' }}>Streak</p>
                 </div>
               </div>
-        </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Badges */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <div
           className="rounded-2xl p-5 mb-6 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #EC4899 0%, #BE185D 50%, #831843 100%)',
             border: '3px solid #F472B6',
-            boxShadow: '0 4px 0 0 #9D174D, 0 0 30px rgba(244, 114, 182, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+            boxShadow: '0 4px 0 0 #9D174D, 0 0 30px rgba(244, 114, 182, 0.4)',
           }}
         >
-          {/* Animated particles */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-lg pointer-events-none"
-              initial={{ 
-                x: `${15 + i * 15}%`, 
-                y: '100%',
-                opacity: 0,
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.6,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 6px rgba(244, 114, 182, 0.8))'
-              }}
-            >
-              {i % 3 === 0 ? '🏅' : i % 3 === 1 ? '🎖️' : '🌟'}
-            </motion.div>
-          ))}
-
-          {/* Shine effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
-            }}
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          {/* Static decorative elements */}
+          <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '15%', top: '20%', filter: 'drop-shadow(0 0 6px rgba(244, 114, 182, 0.8))' }}>🏅</div>
+          <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '75%', top: '15%', filter: 'drop-shadow(0 0 6px rgba(244, 114, 182, 0.8))' }}>🎖️</div>
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-4 relative z-10">
-            <motion.div 
+            <div 
               className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
               style={{
                 background: 'linear-gradient(135deg, #F472B6 0%, #EC4899 100%)',
                 border: '2px solid #FBCFE8',
                 boxShadow: '0 0 20px rgba(244, 114, 182, 0.6)',
               }}
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
             >
               🏅
-            </motion.div>
+            </div>
             <h3 
               className="font-varsity text-xl uppercase tracking-wide"
               style={{
@@ -1074,7 +1003,7 @@ export default function ProfilePage() {
               {badges.filter(b => b.unlocked).length}/{badges.length} Sbloccati
             </p>
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Actions */}
         <motion.div
