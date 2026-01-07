@@ -648,16 +648,83 @@ export default function StatsPage() {
               animate={{ opacity: 1 }}
               className="space-y-4"
             >
-              <div className="bg-card/50 rounded-2xl p-5 border border-border/30 shadow-lg">
-                <h3 className="font-calligraphy text-xl text-foreground mb-4 italic">Resoconto Ultimi 7 Giorni</h3>
-                <StatsGrid stats={{
-                  distance: weeklyDistance,
-                  calories: weeklyCalories,
-                  duration: weeklyDuration,
-                  score: weeklyScore,
-                  runsCount: weeklyRuns.length,
-                  avgSpeed: weeklyAvgSpeed,
-                }} />
+              <div 
+                className="rounded-xl p-5 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(180deg, #1E3A5F 0%, #0F172A 100%)',
+                  border: '3px solid #60A5FA',
+                  boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+                }}
+              >
+                {/* Animated Stars rising from bottom */}
+                {[...Array(10)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute text-sm pointer-events-none"
+                    initial={{ 
+                      x: `${5 + i * 10}%`, 
+                      y: '100%',
+                      opacity: 0,
+                      scale: 0.5
+                    }}
+                    animate={{ 
+                      y: [100, -20],
+                      opacity: [0, 1, 0.8, 0],
+                      scale: [0.5, 1, 0.8],
+                      x: [`${5 + i * 10}%`, `${8 + i * 9}%`, `${3 + i * 10}%`]
+                    }}
+                    transition={{
+                      duration: 3 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: i * 0.5,
+                      ease: "easeOut"
+                    }}
+                    style={{
+                      filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
+                    }}
+                  >
+                    {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
+                  </motion.div>
+                ))}
+                
+                {/* Half Moon on the right */}
+                <motion.div
+                  className="absolute right-3 top-4 text-3xl pointer-events-none"
+                  animate={{ 
+                    opacity: [0.7, 1, 0.7],
+                    scale: [0.95, 1, 0.95],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  style={{
+                    filter: 'drop-shadow(0 0 10px rgba(251, 191, 36, 0.6))'
+                  }}
+                >
+                  🌙
+                </motion.div>
+                
+                <h3 
+                  className="font-varsity text-xl uppercase tracking-wide mb-4 relative z-10"
+                  style={{
+                    color: 'white',
+                    textShadow: '2px 2px 0px #1E3A5F',
+                  }}
+                >
+                  Resoconto Ultimi 7 Giorni
+                </h3>
+                <div className="relative z-10">
+                  <StatsGrid stats={{
+                    distance: weeklyDistance,
+                    calories: weeklyCalories,
+                    duration: weeklyDuration,
+                    score: weeklyScore,
+                    runsCount: weeklyRuns.length,
+                    avgSpeed: weeklyAvgSpeed,
+                  }} />
+                </div>
               </div>
 
               {/* Weekly Distance Chart */}
