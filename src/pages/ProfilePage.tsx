@@ -376,7 +376,9 @@ export default function ProfilePage() {
                 animate={{ x: ['-100%', '200%'] }}
                 transition={{ duration: 2, repeat: Infinity, delay: 0 }}
               />
-              <img src={trophyGold} alt="Trophy" className="w-12 h-12 object-contain mb-2 mx-auto relative z-10" style={{ filter: 'drop-shadow(0 0 10px rgba(252, 211, 77, 0.5))' }} />
+              <div className="w-12 h-12 mb-2 mx-auto relative z-10 flex items-center justify-center">
+                <Trophy className="w-10 h-10" style={{ color: '#FCD34D', filter: 'drop-shadow(0 0 10px rgba(252, 211, 77, 0.5))' }} />
+              </div>
               <p 
                 className="font-varsity text-lg uppercase relative z-10"
                 style={{
@@ -415,7 +417,9 @@ export default function ProfilePage() {
                 animate={{ x: ['-100%', '200%'] }}
                 transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
               />
-              <img src={coinsGold} alt="Coins" className="w-12 h-12 object-contain mb-2 mx-auto relative z-10" style={{ filter: 'drop-shadow(0 0 10px rgba(74, 222, 128, 0.5))' }} />
+              <div className="w-12 h-12 mb-2 mx-auto relative z-10 flex items-center justify-center">
+                <Coins className="w-10 h-10" style={{ color: '#4ADE80', filter: 'drop-shadow(0 0 10px rgba(74, 222, 128, 0.5))' }} />
+              </div>
               <p 
                 className="font-varsity text-lg uppercase relative z-10"
                 style={{
