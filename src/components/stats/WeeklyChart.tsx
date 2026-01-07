@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { motion } from 'framer-motion';
 
 interface Run {
   id: string;
@@ -14,7 +13,7 @@ interface WeeklyChartProps {
   dataKey: 'distance' | 'score';
 }
 
-export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
+export const WeeklyChart = memo(function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
   const chartData = useMemo(() => {
     const days = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
     const today = new Date();
@@ -41,7 +40,7 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
     return data;
   }, [runs]);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = useCallback(({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const value = payload[0].value;
       const unit = dataKey === 'distance' ? 'km' : 'pts';
@@ -61,7 +60,7 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
       );
     }
     return null;
-  };
+  }, [dataKey]);
 
   return (
     <div 
@@ -69,88 +68,18 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
       style={{
         background: 'linear-gradient(135deg, #78350F 0%, #92400E 50%, #B45309 100%)',
         border: '3px solid #FCD34D',
-        boxShadow: '0 4px 0 0 #451A03, 0 0 25px rgba(252, 211, 77, 0.3), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+        boxShadow: '0 4px 0 0 #451A03, 0 0 25px rgba(252, 211, 77, 0.3)',
       }}
     >
-      {/* Wind Lines Animation */}
-      {[...Array(8)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute pointer-events-none"
-          style={{
-            width: 40 + Math.random() * 60,
-            height: 2,
-            background: 'linear-gradient(90deg, transparent 0%, rgba(253, 230, 138, 0.6) 50%, transparent 100%)',
-            borderRadius: 2,
-            top: `${15 + i * 10}%`,
-          }}
-          initial={{ 
-            x: '-100%',
-            opacity: 0,
-          }}
-          animate={{ 
-            x: ['0%', '400%'],
-            opacity: [0, 0.8, 0.8, 0],
-          }}
-          transition={{
-            duration: 2 + Math.random() * 1.5,
-            repeat: Infinity,
-            delay: i * 0.3,
-            ease: "easeInOut"
-          }}
-        />
-      ))}
-      
-      {/* Floating Dust Particles */}
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={`dust-${i}`}
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: 3 + Math.random() * 4,
-            height: 3 + Math.random() * 4,
-            background: 'rgba(253, 230, 138, 0.7)',
-            boxShadow: '0 0 6px rgba(253, 230, 138, 0.5)',
-            top: `${20 + Math.random() * 60}%`,
-          }}
-          initial={{ 
-            x: -20,
-            opacity: 0,
-          }}
-          animate={{ 
-            x: [0, 300],
-            y: [0, -10, 10, -5, 0],
-            opacity: [0, 1, 1, 0],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: i * 0.5,
-            ease: "easeInOut"
-          }}
-        />
-      ))}
-      
-      {/* Wind Icon */}
-      <motion.div
-        className="absolute right-3 top-3 text-2xl pointer-events-none"
-        animate={{ 
-          x: [0, 5, 0],
-          opacity: [0.7, 1, 0.7],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        style={{
-          filter: 'drop-shadow(0 0 8px rgba(253, 230, 138, 0.6))'
-        }}
+      {/* Static wind icon */}
+      <div
+        className="absolute right-3 top-3 text-2xl pointer-events-none opacity-80"
+        style={{ filter: 'drop-shadow(0 0 8px rgba(253, 230, 138, 0.6))' }}
       >
         💨
-      </motion.div>
+      </div>
       
-      <h4 
+      <h4
         className="font-varsity text-xl uppercase tracking-wide mb-4 relative z-10"
         style={{
           color: '#FEF3C7',
@@ -233,4 +162,4 @@ export function WeeklyChart({ runs, dataKey }: WeeklyChartProps) {
       </div>
     </div>
   );
-}
+});
