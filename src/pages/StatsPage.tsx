@@ -110,14 +110,50 @@ export default function StatsPage() {
     unit: string;
     color: string;
   }) => (
-    <div className="bg-background rounded-2xl p-4 border border-border/50 shadow-sm">
-      <div className={`flex items-center gap-2 ${color} mb-3`}>
-        <Icon className="w-5 h-5" />
-        <span className="text-xs font-semibold uppercase tracking-wider">{label}</span>
+    <div 
+      className="rounded-xl p-4 relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, rgba(30, 58, 95, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
+        border: '2px solid rgba(96, 165, 250, 0.5)',
+        boxShadow: '0 2px 0 0 #1E40AF, 0 0 15px rgba(59, 130, 246, 0.2), inset 0 1px 0 0 rgba(255,255,255,0.1)',
+      }}
+    >
+      {/* Mini star decorations */}
+      <motion.div
+        className="absolute top-2 right-2 text-xs pointer-events-none"
+        animate={{ 
+          opacity: [0.4, 1, 0.4],
+          scale: [0.8, 1, 0.8],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        ✨
+      </motion.div>
+      
+      <div className="flex items-center gap-2 mb-3 relative z-10">
+        <Icon className="w-5 h-5 text-sky-300" />
+        <span 
+          className="text-xs font-semibold uppercase tracking-wider"
+          style={{ color: '#93C5FD' }}
+        >
+          {label}
+        </span>
       </div>
-      <div className="flex items-baseline gap-1">
-        <span className="font-display text-3xl font-bold text-foreground">{value}</span>
-        <span className="text-base text-muted-foreground">{unit}</span>
+      <div className="flex items-baseline gap-1 relative z-10">
+        <span 
+          className="font-display text-3xl font-bold"
+          style={{
+            color: 'white',
+            textShadow: '0 0 10px rgba(147, 197, 253, 0.5)'
+          }}
+        >
+          {value}
+        </span>
+        <span className="text-base text-sky-200/80">{unit}</span>
       </div>
     </div>
   );
