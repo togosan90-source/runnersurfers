@@ -175,39 +175,135 @@ export default function ShopPage() {
           </h1>
         </motion.div>
 
-        {/* Coins Display */}
+        {/* Coins Display - Enhanced Golden Design */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-gradient-to-r from-gold/20 to-warning/10 rounded-xl p-4 mb-6 border border-gold/30 flex items-center justify-between"
+          className="relative rounded-2xl p-6 mb-6 overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, hsl(var(--gold) / 0.15) 0%, hsl(var(--warning) / 0.1) 50%, hsl(var(--gold) / 0.2) 100%)',
+            boxShadow: '0 0 30px hsl(var(--gold) / 0.3), 0 0 60px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.3)',
+            border: '2px solid hsl(var(--gold) / 0.4)',
+          }}
         >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center">
-              <Coins className="w-6 h-6 text-gold" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Le tue monete</p>
-              <p className="font-display text-2xl font-bold text-gold">
-                {user.coins.toLocaleString()}
-              </p>
-            </div>
+          {/* Animated golden particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  width: Math.random() * 6 + 3,
+                  height: Math.random() * 6 + 3,
+                  background: `radial-gradient(circle, hsl(var(--gold)) 0%, hsl(var(--gold) / 0.5) 100%)`,
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  boxShadow: '0 0 8px hsl(var(--gold) / 0.8)',
+                }}
+                animate={{
+                  y: [0, -30, 0],
+                  x: [0, Math.random() * 20 - 10, 0],
+                  opacity: [0.3, 1, 0.3],
+                  scale: [0.8, 1.2, 0.8],
+                }}
+                transition={{
+                  duration: 2 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
           </div>
-          {activeBoost && (
-            <div className="text-right">
-              <p className="text-xs text-muted-foreground">Boost attivo</p>
-              <p className="font-bold text-accent">
-                {activeBoost.boost.icon} {activeBoost.boost.name}
-              </p>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="mt-1 h-6 text-xs"
-                onClick={handleDeactivateBoost}
+
+          {/* Corner accents */}
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold/60 rounded-tl-2xl" />
+          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-gold/60 rounded-tr-2xl" />
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold/60 rounded-bl-2xl" />
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold/60 rounded-br-2xl" />
+
+          {/* Shimmer effect */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.1) 50%, transparent 100%)',
+            }}
+            animate={{
+              x: ['-100%', '200%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatDelay: 2,
+              ease: "easeInOut",
+            }}
+          />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Enhanced coin icon with glow */}
+              <motion.div 
+                className="relative w-16 h-16 rounded-full flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--warning)) 100%)',
+                  boxShadow: '0 0 20px hsl(var(--gold) / 0.6), 0 0 40px hsl(var(--gold) / 0.3), inset 0 2px 4px hsl(0 0% 100% / 0.3)',
+                }}
+                animate={{
+                  boxShadow: [
+                    '0 0 20px hsl(var(--gold) / 0.6), 0 0 40px hsl(var(--gold) / 0.3)',
+                    '0 0 30px hsl(var(--gold) / 0.8), 0 0 60px hsl(var(--gold) / 0.4)',
+                    '0 0 20px hsl(var(--gold) / 0.6), 0 0 40px hsl(var(--gold) / 0.3)',
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               >
-                Disattiva
-              </Button>
+                <Coins className="w-8 h-8 text-gold-foreground drop-shadow-lg" />
+                {/* Rotating ring */}
+                <motion.div
+                  className="absolute inset-0 rounded-full border-2 border-dashed border-gold-foreground/30"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                />
+              </motion.div>
+              
+              <div>
+                <p className="text-sm text-gold/80 font-medium tracking-wide uppercase">Le tue monete</p>
+                <motion.p 
+                  className="font-display text-4xl font-bold"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--warning)) 50%, hsl(var(--gold)) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    textShadow: '0 0 30px hsl(var(--gold) / 0.5)',
+                    filter: 'drop-shadow(0 2px 4px hsl(var(--gold) / 0.3))',
+                  }}
+                >
+                  {user.coins.toLocaleString()}
+                </motion.p>
+              </div>
             </div>
-          )}
+            
+            {activeBoost && (
+              <div className="text-right">
+                <p className="text-xs text-gold/70 uppercase tracking-wide">Boost attivo</p>
+                <p className="font-bold text-lg text-gold">
+                  {activeBoost.boost.icon} {activeBoost.boost.name}
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="mt-2 h-7 text-xs border-gold/40 text-gold hover:bg-gold/20"
+                  onClick={handleDeactivateBoost}
+                >
+                  Disattiva
+                </Button>
+              </div>
+            )}
+          </div>
         </motion.div>
 
         {/* Tabs */}
