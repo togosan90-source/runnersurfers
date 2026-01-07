@@ -498,6 +498,7 @@ export default function RunPage() {
                   center={currentPosition}
                   path={path}
                   isRunning={!isPaused}
+                  speed={speed}
                 />
               </div>
 
