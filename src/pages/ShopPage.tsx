@@ -601,73 +601,305 @@ export default function ShopPage() {
                   const isEquipped = user.equippedShoes === shoe.id;
                   const isUnlocked = user.level >= shoe.unlockLevel;
 
+                  // Enhanced shoe styles based on id
+                  const getShoeStyles = () => {
+                    const styles: Record<string, { bg: string; border: string; shadow: string; glow: string; textColor: string; iconBg: string }> = {
+                      avalon: {
+                        bg: 'linear-gradient(135deg, #1E3A5F 0%, #1E40AF 50%, #3B82F6 100%)',
+                        border: '#60A5FA',
+                        shadow: '0 4px 0 0 #1E3A5F, 0 0 25px rgba(59, 130, 246, 0.4)',
+                        glow: 'rgba(96, 165, 250, 0.6)',
+                        textColor: '#93C5FD',
+                        iconBg: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+                      },
+                      zeus: {
+                        bg: 'linear-gradient(135deg, #78350F 0%, #B45309 50%, #F59E0B 100%)',
+                        border: '#FCD34D',
+                        shadow: '0 4px 0 0 #78350F, 0 0 30px rgba(252, 211, 77, 0.5)',
+                        glow: 'rgba(252, 211, 77, 0.7)',
+                        textColor: '#FEF3C7',
+                        iconBg: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                      },
+                      woodblas: {
+                        bg: 'linear-gradient(135deg, #14532D 0%, #166534 50%, #22C55E 100%)',
+                        border: '#4ADE80',
+                        shadow: '0 4px 0 0 #14532D, 0 0 25px rgba(74, 222, 128, 0.4)',
+                        glow: 'rgba(74, 222, 128, 0.6)',
+                        textColor: '#86EFAC',
+                        iconBg: 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)',
+                      },
+                      energy: {
+                        bg: 'linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #8B5CF6 100%)',
+                        border: '#A78BFA',
+                        shadow: '0 4px 0 0 #4C1D95, 0 0 25px rgba(139, 92, 246, 0.4)',
+                        glow: 'rgba(167, 139, 250, 0.6)',
+                        textColor: '#C4B5FD',
+                        iconBg: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                      },
+                      infinity: {
+                        bg: 'linear-gradient(135deg, #164E63 0%, #0891B2 30%, #06B6D4 50%, #0891B2 70%, #164E63 100%)',
+                        border: '#22D3EE',
+                        shadow: '0 4px 0 0 #164E63, 0 0 35px rgba(6, 182, 212, 0.5)',
+                        glow: 'rgba(34, 211, 238, 0.7)',
+                        textColor: '#A5F3FC',
+                        iconBg: 'linear-gradient(135deg, #22D3EE 0%, #06B6D4 100%)',
+                      },
+                    };
+                    return styles[shoe.id] || styles.avalon;
+                  };
+
+                  const style = getShoeStyles();
+                  const isInfinity = shoe.id === 'infinity';
+
                   return (
                     <motion.div
                       key={shoe.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className={`bg-card rounded-xl border overflow-hidden ${
-                        isEquipped ? 'border-primary ring-2 ring-primary/20' : 'border-border'
-                      }`}
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      className="rounded-xl overflow-hidden relative cursor-pointer"
+                      style={{
+                        background: style.bg,
+                        border: isEquipped ? `4px solid #FCD34D` : `3px solid ${style.border}`,
+                        boxShadow: `${style.shadow}, inset 0 1px 0 0 rgba(255,255,255,0.2)`,
+                      }}
                     >
-                      <div className="flex">
-                        <div className={`w-24 h-24 bg-gradient-to-br ${getShoeGradient(shoe.id)} flex items-center justify-center`}>
-                          <span className="text-4xl">{shoe.icon}</span>
-                        </div>
+                      {/* Animated shine effect */}
+                      <motion.div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+                        }}
+                        animate={{
+                          x: ['-100%', '200%'],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          delay: index * 0.3,
+                          ease: "easeInOut"
+                        }}
+                      />
+
+                      {/* Floating particles for infinity */}
+                      {isInfinity && (
+                        <>
+                          {[...Array(6)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="absolute text-sm pointer-events-none"
+                              initial={{ 
+                                x: `${10 + i * 15}%`, 
+                                y: '100%',
+                                opacity: 0 
+                              }}
+                              animate={{ 
+                                y: [60, -20],
+                                opacity: [0, 1, 0],
+                              }}
+                              transition={{
+                                duration: 2 + Math.random(),
+                                repeat: Infinity,
+                                delay: i * 0.4,
+                              }}
+                            >
+                              ✨
+                            </motion.div>
+                          ))}
+                        </>
+                      )}
+
+                      <div className="flex relative z-10">
+                        {/* Icon Section */}
+                        <motion.div 
+                          className="w-28 h-28 flex items-center justify-center relative"
+                          style={{
+                            background: 'rgba(0,0,0,0.2)',
+                          }}
+                          animate={isInfinity ? {
+                            scale: [1, 1.05, 1],
+                          } : {}}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          {/* Glow ring */}
+                          <motion.div
+                            className="absolute inset-4 rounded-full"
+                            style={{
+                              background: style.iconBg,
+                              boxShadow: `0 0 30px ${style.glow}`,
+                            }}
+                            animate={{
+                              scale: [0.9, 1, 0.9],
+                              opacity: [0.6, 1, 0.6],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                          />
+                          <span 
+                            className="text-5xl relative z-10"
+                            style={{ 
+                              filter: `drop-shadow(0 0 15px ${style.glow})`,
+                            }}
+                          >
+                            {shoe.icon}
+                          </span>
+                        </motion.div>
+
+                        {/* Content Section */}
                         <div className="flex-1 p-4">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h4 className="font-bold text-sm">{shoe.name}</h4>
-                              <p className="text-xs text-muted-foreground">{shoe.description}</p>
+                              <h4 
+                                className="font-varsity text-lg uppercase tracking-wide"
+                                style={{
+                                  color: style.textColor,
+                                  textShadow: `0 2px 4px rgba(0,0,0,0.5), 0 0 10px ${style.glow}`,
+                                }}
+                              >
+                                {shoe.name}
+                              </h4>
+                              <p 
+                                className="text-xs mt-0.5"
+                                style={{ color: `${style.textColor}99` }}
+                              >
+                                {shoe.description}
+                              </p>
                             </div>
                             {isOwned && (
-                              <span className="bg-accent text-accent-foreground text-[10px] px-2 py-0.5 rounded font-bold">
-                                OWNED
-                              </span>
+                              <motion.span 
+                                className="px-2 py-1 rounded-lg text-xs font-bold"
+                                style={{
+                                  background: isEquipped 
+                                    ? 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)'
+                                    : 'rgba(74, 222, 128, 0.3)',
+                                  color: isEquipped ? '#78350F' : '#4ADE80',
+                                  border: isEquipped ? '2px solid #FEF3C7' : '1px solid #4ADE80',
+                                  boxShadow: isEquipped ? '0 2px 0 0 #B45309, 0 0 10px rgba(252, 211, 77, 0.5)' : 'none',
+                                }}
+                                animate={isEquipped ? {
+                                  scale: [1, 1.05, 1],
+                                } : {}}
+                                transition={{
+                                  duration: 1.5,
+                                  repeat: Infinity,
+                                }}
+                              >
+                                {isEquipped ? '⭐ EQUIPPED' : '✓ OWNED'}
+                              </motion.span>
                             )}
                           </div>
-                          <div className="flex gap-3 mt-2 text-xs mb-3">
-                            <span className="text-primary font-bold">+{shoe.coinBonus}% Monete</span>
-                            <span className="text-accent font-bold">+{shoe.expBonus}% EXP</span>
+
+                          {/* Stats Badges */}
+                          <div className="flex gap-2 mt-2 mb-3">
+                            <div 
+                              className="px-3 py-1.5 rounded-lg flex items-center gap-1.5"
+                              style={{
+                                background: 'rgba(0,0,0,0.3)',
+                                border: `1px solid ${style.border}50`,
+                              }}
+                            >
+                              <span className="text-lg">💰</span>
+                              <span 
+                                className="font-bold text-sm"
+                                style={{ color: style.textColor }}
+                              >
+                                +{shoe.coinBonus}% Monete
+                              </span>
+                            </div>
+                            <div 
+                              className="px-3 py-1.5 rounded-lg flex items-center gap-1.5"
+                              style={{
+                                background: 'rgba(0,0,0,0.3)',
+                                border: `1px solid ${style.border}50`,
+                              }}
+                            >
+                              <span className="text-lg">⚡</span>
+                              <span 
+                                className="font-bold text-sm"
+                                style={{ color: style.textColor }}
+                              >
+                                +{shoe.expBonus}% EXP
+                              </span>
+                            </div>
                           </div>
-                          <div className="text-xs text-muted-foreground mb-2">
-                            Livelli: {shoe.unlockLevel} - {shoe.maxLevel}
+
+                          {/* Level Range */}
+                          <div 
+                            className="text-xs mb-3 flex items-center gap-1"
+                            style={{ color: `${style.textColor}99` }}
+                          >
+                            <span>📊</span> Livelli: {shoe.unlockLevel} - {shoe.maxLevel}
                           </div>
+
+                          {/* Action Button */}
                           <div>
                             {!isUnlocked ? (
-                              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                                <Lock className="w-4 h-4" />
-                                <span>Sblocca al livello {shoe.unlockLevel}</span>
+                              <div 
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg"
+                                style={{
+                                  background: 'rgba(0,0,0,0.3)',
+                                  border: '1px solid rgba(255,255,255,0.1)',
+                                }}
+                              >
+                                <Lock className="w-4 h-4" style={{ color: style.textColor }} />
+                                <span style={{ color: style.textColor }}>
+                                  Sblocca al livello {shoe.unlockLevel}
+                                </span>
                               </div>
                             ) : isOwned ? (
                               <Button
-                                size="sm"
-                                variant={isEquipped ? 'secondary' : 'default'}
+                                size="lg"
+                                className="w-full gap-2 font-bold"
+                                style={{
+                                  background: isEquipped 
+                                    ? 'rgba(100,100,100,0.5)'
+                                    : `linear-gradient(135deg, ${style.border}CC 0%, ${style.border} 100%)`,
+                                  border: `2px solid ${style.border}`,
+                                  color: isEquipped ? '#9CA3AF' : '#1F2937',
+                                  boxShadow: isEquipped 
+                                    ? 'none'
+                                    : `0 3px 0 0 rgba(0,0,0,0.3), 0 0 15px ${style.glow}`,
+                                }}
                                 onClick={() => equipShoe(shoe.id)}
                                 disabled={isEquipped}
-                                className="gap-2"
                               >
                                 {isEquipped ? (
                                   <>
-                                    <Check className="w-4 h-4" />
+                                    <Check className="w-5 h-5" />
                                     Equipaggiato
                                   </>
                                 ) : (
-                                  'Equipaggia'
+                                  <>
+                                    <span>👟</span>
+                                    Equipaggia
+                                  </>
                                 )}
                               </Button>
                             ) : (
                               <Button
-                                size="sm"
+                                size="lg"
+                                className="w-full gap-2 font-bold"
+                                style={{
+                                  background: `linear-gradient(135deg, ${style.border}CC 0%, ${style.border} 100%)`,
+                                  border: `2px solid ${style.border}`,
+                                  color: '#1F2937',
+                                  boxShadow: `0 3px 0 0 rgba(0,0,0,0.3), 0 0 15px ${style.glow}`,
+                                }}
                                 onClick={() => handlePurchaseShoe(shoe.id, shoe.price)}
                                 disabled={loadingShoe === shoe.id}
-                                className="gap-2"
                               >
                                 {loadingShoe === shoe.id ? (
-                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                  <Loader2 className="w-5 h-5 animate-spin" />
                                 ) : (
-                                  <CreditCard className="w-4 h-4" />
+                                  <CreditCard className="w-5 h-5" />
                                 )}
                                 €{shoe.price.toFixed(2)}
                               </Button>
