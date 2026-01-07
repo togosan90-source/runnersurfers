@@ -1,26 +1,19 @@
+import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
 import { useGameStore, getTier } from '@/store/gameStore';
 import { useProfile } from '@/hooks/useProfile';
-import trophyNew from '@/assets/trophy-new.png';
-import frameGold from '@/assets/frame-gold.png';
-import frameBlue from '@/assets/frame-blue.png';
 import coinsGold from '@/assets/coins-gold.png';
 import avatarSora from '@/assets/avatar-sora.png';
 
-export function PlayerHeader() {
+export const PlayerHeader = memo(function PlayerHeader() {
   const user = useGameStore((state) => state.user);
   const { profile } = useProfile();
-  const tier = getTier(user.level);
-  const expProgress = Math.min((user.exp / 100) * 100, 100);
-
-  // Use profile avatar if available, otherwise use default
-  const avatarUrl = profile?.avatar_url || avatarSora;
+  const tier = useMemo(() => getTier(user.level), [user.level]);
+  const expProgress = useMemo(() => Math.min((user.exp / 100) * 100, 100), [user.exp]);
 
   return (
-    <motion.div
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+    <div
       className="rounded-xl overflow-hidden relative"
       style={{
         background: 'linear-gradient(180deg, #8B4513 0%, #654321 50%, #3d2817 100%)',
@@ -49,68 +42,11 @@ export function PlayerHeader() {
         }}
       />
       
-      {/* Totem carved symbols on corners - animated */}
-      <motion.div 
-        className="absolute top-1 left-2 text-2xl"
-        style={{ color: '#d4a574' }}
-        animate={{
-          textShadow: [
-            '0 0 5px #d4a574, 0 0 10px #fbbf24',
-            '0 0 15px #fbbf24, 0 0 25px #f59e0b, 0 0 35px #ef4444',
-            '0 0 5px #d4a574, 0 0 10px #fbbf24',
-          ],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{ duration: 2, repeat: Infinity, delay: 0 }}
-      >
-        ☀
-      </motion.div>
-      <motion.div 
-        className="absolute top-1 right-2 text-2xl"
-        style={{ color: '#d4a574' }}
-        animate={{
-          textShadow: [
-            '0 0 5px #d4a574, 0 0 10px #fbbf24',
-            '0 0 15px #fbbf24, 0 0 25px #f59e0b, 0 0 35px #ef4444',
-            '0 0 5px #d4a574, 0 0 10px #fbbf24',
-          ],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-      >
-        🦅
-      </motion.div>
-      <motion.div 
-        className="absolute bottom-1 left-2 text-2xl"
-        style={{ color: '#d4a574' }}
-        animate={{
-          textShadow: [
-            '0 0 5px #d4a574, 0 0 10px #22c55e',
-            '0 0 15px #22c55e, 0 0 25px #3b82f6, 0 0 35px #8b5cf6',
-            '0 0 5px #d4a574, 0 0 10px #22c55e',
-          ],
-          scale: [1, 1.15, 1],
-          rotate: [0, 10, -10, 0],
-        }}
-        transition={{ duration: 1.5, repeat: Infinity, delay: 0.25 }}
-      >
-        ⚡
-      </motion.div>
-      <motion.div 
-        className="absolute bottom-1 right-2 text-2xl"
-        style={{ color: '#d4a574' }}
-        animate={{
-          textShadow: [
-            '0 0 5px #d4a574, 0 0 10px #ef4444',
-            '0 0 15px #ef4444, 0 0 25px #f97316, 0 0 35px #fbbf24',
-            '0 0 5px #d4a574, 0 0 10px #ef4444',
-          ],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{ duration: 2.5, repeat: Infinity, delay: 0.75 }}
-      >
-        🔥
-      </motion.div>
+      {/* Static corner symbols - no animation for performance */}
+      <div className="absolute top-1 left-2 text-2xl" style={{ color: '#d4a574', textShadow: '0 0 10px #fbbf24' }}>☀</div>
+      <div className="absolute top-1 right-2 text-2xl" style={{ color: '#d4a574', textShadow: '0 0 10px #fbbf24' }}>🦅</div>
+      <div className="absolute bottom-1 left-2 text-2xl" style={{ color: '#d4a574', textShadow: '0 0 10px #22c55e' }}>⚡</div>
+      <div className="absolute bottom-1 right-2 text-2xl" style={{ color: '#d4a574', textShadow: '0 0 10px #ef4444' }}>🔥</div>
       
       {/* Inner content area */}
       <div 
@@ -121,79 +57,6 @@ export function PlayerHeader() {
           border: '2px solid #a0522d',
         }}
       >
-      {/* Animated background particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              width: Math.random() * 20 + 10,
-              height: Math.random() * 20 + 10,
-              background: `radial-gradient(circle, ${
-                ['#fbbf24', '#f59e0b', '#fcd34d', '#fde68a'][i % 4]
-              }40 0%, transparent 70%)`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.6, 0.3],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: i * 0.3,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-        
-        {/* Shimmer effect */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
-          }}
-          animate={{
-            x: ['-100%', '200%'],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatDelay: 2,
-            ease: "easeInOut",
-          }}
-        />
-        
-        {/* Floating sparkles */}
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={`sparkle-${i}`}
-            className="absolute text-yellow-400"
-            style={{
-              left: `${15 + i * 18}%`,
-              top: `${20 + (i % 3) * 25}%`,
-              fontSize: 8 + i * 2,
-            }}
-            animate={{
-              scale: [0, 1, 0],
-              rotate: [0, 180, 360],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: i * 0.5,
-              ease: "easeInOut",
-            }}
-          >
-            ✦
-          </motion.div>
-        ))}
-      </div>
       
       <div className="flex items-start gap-4 relative z-10">
         {/* Avatar */}
@@ -320,6 +183,6 @@ export function PlayerHeader() {
         </div>
       </div>
       </div>
-    </motion.div>
+    </div>
   );
-}
+});

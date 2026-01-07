@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import { User, Settings, Award, Ruler, Flame, Clock, TrendingUp, LogOut, Edit2, Star, Zap, Trophy, Coins, Camera } from 'lucide-react';
 import trophyGold from '@/assets/trophy-gold.png';
@@ -91,9 +91,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Profile Card */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="rounded-2xl p-6 mb-6 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)',
@@ -101,51 +99,10 @@ export default function ProfilePage() {
             boxShadow: '0 4px 0 0 #1E40AF, 0 0 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          {/* Animated Stars */}
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-sm pointer-events-none"
-              initial={{ 
-                x: `${5 + i * 10}%`, 
-                y: '100%',
-                opacity: 0,
-                scale: 0.5
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                scale: [0.5, 1, 0.8],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.4,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
-              }}
-            >
-              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
-            </motion.div>
-          ))}
-
-          {/* Shine effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
-            }}
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          {/* Static decorative stars */}
+          <div className="absolute text-sm pointer-events-none opacity-60" style={{ left: '10%', top: '20%' }}>✨</div>
+          <div className="absolute text-sm pointer-events-none opacity-60" style={{ left: '80%', top: '15%' }}>⭐</div>
+          <div className="absolute text-sm pointer-events-none opacity-60" style={{ left: '50%', top: '80%' }}>🌟</div>
 
           {/* Avatar and Name */}
           <div className="flex items-start gap-4 mb-6 relative z-10">
@@ -486,7 +443,7 @@ export default function ProfilePage() {
               </p>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Skill Points Section - Always visible to show invested points */}
         {(user.skillPoints > 0 || user.skillCoins > 0 || user.skillScore > 0) && (
@@ -546,61 +503,17 @@ export default function ProfilePage() {
         )}
 
         {/* Reputation Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+        <div
           className="rounded-2xl p-5 mb-6 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #7C3AED 0%, #4C1D95 50%, #2E1065 100%)',
             border: '3px solid #A78BFA',
-            boxShadow: '0 4px 0 0 #5B21B6, 0 0 30px rgba(167, 139, 250, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+            boxShadow: '0 4px 0 0 #5B21B6, 0 0 30px rgba(167, 139, 250, 0.4)',
           }}
         >
-          {/* Animated particles */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-sm pointer-events-none"
-              initial={{ 
-                x: `${10 + i * 12}%`, 
-                y: '100%',
-                opacity: 0,
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.5,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 6px rgba(167, 139, 250, 0.8))'
-              }}
-            >
-              {i % 4 === 0 ? '⭐' : i % 4 === 1 ? '✨' : i % 4 === 2 ? '💎' : '🌟'}
-            </motion.div>
-          ))}
-
-          {/* Shine effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
-            }}
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          {/* Static decorative elements */}
+          <div className="absolute text-sm pointer-events-none opacity-50" style={{ left: '15%', top: '20%', filter: 'drop-shadow(0 0 6px rgba(167, 139, 250, 0.8))' }}>⭐</div>
+          <div className="absolute text-sm pointer-events-none opacity-50" style={{ left: '75%', top: '30%', filter: 'drop-shadow(0 0 6px rgba(167, 139, 250, 0.8))' }}>✨</div>
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-4 relative z-10">
@@ -719,87 +632,34 @@ export default function ProfilePage() {
               </span>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Equipped Gear */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
+        <div
           className="rounded-2xl p-5 mb-6 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 50%, #0C4A6E 100%)',
             border: '3px solid #38BDF8',
-            boxShadow: '0 4px 0 0 #075985, 0 0 30px rgba(56, 189, 248, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+            boxShadow: '0 4px 0 0 #075985, 0 0 30px rgba(56, 189, 248, 0.4)',
           }}
         >
-          {/* Animated particles */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-lg pointer-events-none"
-              initial={{ 
-                x: `${15 + i * 15}%`, 
-                y: '100%',
-                opacity: 0,
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                rotate: [0, 180],
-              }}
-              transition={{
-                duration: 3.5 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.6,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 6px rgba(56, 189, 248, 0.8))'
-              }}
-            >
-              {i % 3 === 0 ? '👟' : i % 3 === 1 ? '⚡' : '💨'}
-            </motion.div>
-          ))}
-
-          {/* Shine effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
-            }}
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          {/* Static decorative elements */}
+          <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '20%', top: '25%', filter: 'drop-shadow(0 0 6px rgba(56, 189, 248, 0.8))' }}>👟</div>
+          <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '70%', top: '15%', filter: 'drop-shadow(0 0 6px rgba(56, 189, 248, 0.8))' }}>⚡</div>
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-4 relative z-10">
-            <motion.div 
+            <div 
               className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
               style={{
                 background: 'linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%)',
                 border: '2px solid #7DD3FC',
                 boxShadow: '0 0 20px rgba(56, 189, 248, 0.6)',
               }}
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, -5, 5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
             >
               👟
-            </motion.div>
-            <h3 
+            </div>
+            <h3
               className="font-varsity text-xl uppercase tracking-wide"
               style={{
                 color: '#E0F2FE',
@@ -932,86 +792,33 @@ export default function ProfilePage() {
               </p>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Total Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+        <div
           className="rounded-2xl p-5 mb-6 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #92400E 100%)',
             border: '3px solid #FCD34D',
-            boxShadow: '0 4px 0 0 #78350F, 0 0 30px rgba(252, 211, 77, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+            boxShadow: '0 4px 0 0 #78350F, 0 0 30px rgba(252, 211, 77, 0.4)',
           }}
         >
-          {/* Animated particles */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-lg pointer-events-none"
-              initial={{ 
-                x: `${10 + i * 12}%`, 
-                y: '100%',
-                opacity: 0,
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.5,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 6px rgba(252, 211, 77, 0.8))'
-              }}
-            >
-              {i % 4 === 0 ? '🏆' : i % 4 === 1 ? '⭐' : i % 4 === 2 ? '🔥' : '💪'}
-            </motion.div>
-          ))}
-
-          {/* Shine effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
-            }}
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          {/* Static decorative elements */}
+          <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '15%', top: '15%', filter: 'drop-shadow(0 0 6px rgba(252, 211, 77, 0.8))' }}>🏆</div>
+          <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '80%', top: '25%', filter: 'drop-shadow(0 0 6px rgba(252, 211, 77, 0.8))' }}>⭐</div>
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-4 relative z-10">
-            <motion.div 
+            <div 
               className="w-12 h-12 rounded-xl flex items-center justify-center"
               style={{
                 background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
                 border: '2px solid #FEF3C7',
                 boxShadow: '0 0 20px rgba(252, 211, 77, 0.6)',
               }}
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
             >
-              <Award className="w-7 h-7" style={{ color: '#78350F', filter: 'drop-shadow(0 0 4px rgba(254, 243, 199, 0.8))' }} />
-            </motion.div>
+              <Award className="w-7 h-7" style={{ color: '#78350F', filter: 'drop-shadow(0 0 8px rgba(252, 211, 77, 0.8))' }} />
+            </div>
             <h3 
               className="font-varsity text-xl uppercase tracking-wide"
               style={{
@@ -1115,7 +922,7 @@ export default function ProfilePage() {
                   <p className="text-xs" style={{ color: '#FCD34D' }}>Streak</p>
                 </div>
               </div>
-            </motion.div>
+        </div>
           </div>
         </motion.div>
 

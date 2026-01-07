@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface Run {
@@ -13,7 +13,7 @@ interface MonthlyChartProps {
   dataKey: 'distance' | 'score';
 }
 
-export function MonthlyChart({ runs, dataKey }: MonthlyChartProps) {
+export const MonthlyChart = memo(function MonthlyChart({ runs, dataKey }: MonthlyChartProps) {
   const chartData = useMemo(() => {
     const today = new Date();
     const data = [];
@@ -98,4 +98,4 @@ export function MonthlyChart({ runs, dataKey }: MonthlyChartProps) {
       </div>
     </div>
   );
-}
+});
