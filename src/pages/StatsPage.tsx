@@ -503,24 +503,134 @@ export default function StatsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-6 mb-6 border border-primary/20"
+          className="rounded-xl p-6 mb-6 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(180deg, #1E3A5F 0%, #0F172A 100%)',
+            border: '3px solid #60A5FA',
+            boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+          }}
         >
-          <div className="flex items-center gap-2 mb-4">
-            <Award className="w-5 h-5 text-gold" />
-            <span className="font-display font-bold">Statistiche Totali</span>
+          {/* Animated Stars rising from bottom */}
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-lg pointer-events-none"
+              initial={{ 
+                x: `${5 + i * 8}%`, 
+                y: '100%',
+                opacity: 0,
+                scale: 0.5
+              }}
+              animate={{ 
+                y: [100, -20],
+                opacity: [0, 1, 0.8, 0],
+                scale: [0.5, 1, 0.8],
+                x: [`${5 + i * 8}%`, `${8 + i * 7}%`, `${3 + i * 8}%`]
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.4,
+                ease: "easeOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
+              }}
+            >
+              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
+            </motion.div>
+          ))}
+          
+          {/* Half Moon on the right */}
+          <motion.div
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl pointer-events-none"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ 
+              opacity: [0.7, 1, 0.7],
+              scale: [0.95, 1, 0.95],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(251, 191, 36, 0.6)) drop-shadow(0 0 30px rgba(251, 191, 36, 0.3))'
+            }}
+          >
+            🌙
+          </motion.div>
+          
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <Award className="w-6 h-6 text-yellow-300" />
+            <span 
+              className="font-varsity text-2xl uppercase tracking-wide"
+              style={{
+                color: 'white',
+                textShadow: '3px 3px 0px #1E3A5F, -1px -1px 0px #1E3A5F, 1px -1px 0px #1E3A5F, -1px 1px 0px #1E3A5F',
+              }}
+            >
+              Statistiche Totali
+            </span>
           </div>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <p className="font-display text-2xl font-bold text-primary">{user.level}</p>
-              <p className="text-xs text-muted-foreground">Livello</p>
+          
+          <div className="grid grid-cols-3 gap-4 text-center relative z-10">
+            <div 
+              className="rounded-lg p-3"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                backdropFilter: 'blur(4px)',
+                border: '2px solid rgba(96, 165, 250, 0.4)'
+              }}
+            >
+              <p 
+                className="font-display text-2xl font-bold"
+                style={{
+                  color: '#93C5FD',
+                  textShadow: '0 0 10px rgba(147, 197, 253, 0.5)'
+                }}
+              >
+                {user.level}
+              </p>
+              <p className="text-xs text-white/80 font-semibold">Livello</p>
             </div>
-            <div>
-              <p className="font-display text-2xl font-bold text-accent">{runs.length}</p>
-              <p className="text-xs text-muted-foreground">Corse</p>
+            <div 
+              className="rounded-lg p-3"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                backdropFilter: 'blur(4px)',
+                border: '2px solid rgba(96, 165, 250, 0.4)'
+              }}
+            >
+              <p 
+                className="font-display text-2xl font-bold"
+                style={{
+                  color: '#A5B4FC',
+                  textShadow: '0 0 10px rgba(165, 180, 252, 0.5)'
+                }}
+              >
+                {runs.length}
+              </p>
+              <p className="text-xs text-white/80 font-semibold">Corse</p>
             </div>
-            <div>
-              <p className="font-display text-2xl font-bold text-gold">{user.totalScore.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">Score</p>
+            <div 
+              className="rounded-lg p-3"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                backdropFilter: 'blur(4px)',
+                border: '2px solid rgba(96, 165, 250, 0.4)'
+              }}
+            >
+              <p 
+                className="font-display text-2xl font-bold"
+                style={{
+                  color: '#FCD34D',
+                  textShadow: '0 0 10px rgba(252, 211, 77, 0.5)'
+                }}
+              >
+                {user.totalScore.toLocaleString()}
+              </p>
+              <p className="text-xs text-white/80 font-semibold">Score</p>
             </div>
           </div>
         </motion.div>
