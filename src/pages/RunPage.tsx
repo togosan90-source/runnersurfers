@@ -517,6 +517,7 @@ export default function RunPage() {
                 score={score}
                 pointsPerSecond={pointsPerSecond}
                 isRunning={!isPaused}
+                speed={speed}
               />
 
               {/* Active Boost */}
