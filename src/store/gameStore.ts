@@ -239,16 +239,19 @@ export const SHOES: Shoe[] = [
   },
 ];
 
-// NEW EXP System - Progressive scaling (base: 1 KM = 25% EXP)
+// NEW EXP System - Progressive scaling for 15.000 levels (~7.5 years target)
 // The percentages are reduced at higher levels
 export function getExpPerKm(level: number): number {
-  if (level <= 50) return 20; // 20% per km (levels 1-50) - 5 km to level up
-  if (level <= 100) return 15; // 15% per km (levels 51-100)
-  if (level <= 200) return 10; // 10% per km (levels 101-200)
-  if (level <= 300) return 7; // 7% per km (levels 201-300)
-  if (level <= 400) return 5; // 5% per km (levels 301-400)
-  if (level <= 500) return 3; // 3% per km (levels 401-500)
-  return 1; // 1% per km (levels 501-600)
+  if (level <= 100) return 20;   // 20% per km (levels 1-100) - 5 km to level up
+  if (level <= 300) return 15;   // 15% per km (levels 101-300)
+  if (level <= 600) return 12;   // 12% per km (levels 301-600)
+  if (level <= 1000) return 10;  // 10% per km (levels 601-1000)
+  if (level <= 2000) return 8;   // 8% per km (levels 1001-2000)
+  if (level <= 4000) return 6;   // 6% per km (levels 2001-4000)
+  if (level <= 7000) return 5;   // 5% per km (levels 4001-7000)
+  if (level <= 10000) return 4;  // 4% per km (levels 7001-10000)
+  if (level <= 13000) return 3;  // 3% per km (levels 10001-13000)
+  return 2;                      // 2% per km (levels 13001-15000)
 }
 
 // EXP needed to level up (fixed at 100 for simplicity, represents 100%)
@@ -256,26 +259,32 @@ export function getExpNeeded(level: number): number {
   return 100; // 100 EXP = 100%
 }
 
-// NEW Coins System - Progressive earnings per km
+// NEW Coins System - Progressive earnings per km (extended for 15.000 levels)
 export function getCoinsPerKm(level: number): number {
   if (level < 10) return 100;
-  if (level <= 50) return 250 + (level - 10) * 60;
-  if (level <= 100) return 250 + 40 * 60 + (level - 50) * 80;
-  if (level <= 200) return 250 + 40 * 60 + 50 * 80 + (level - 100) * 120;
-  if (level <= 300) return 250 + 40 * 60 + 50 * 80 + 100 * 120 + (level - 200) * 150;
-  if (level <= 400) return 250 + 40 * 60 + 50 * 80 + 100 * 120 + 100 * 150 + (level - 300) * 180;
-  if (level <= 500) return 250 + 40 * 60 + 50 * 80 + 100 * 120 + 100 * 150 + 100 * 180 + (level - 400) * 200;
-  return 250 + 40 * 60 + 50 * 80 + 100 * 120 + 100 * 150 + 100 * 180 + 100 * 200 + (level - 500) * 250;
+  if (level <= 100) return 100 + level * 10;
+  if (level <= 500) return 1100 + (level - 100) * 15;
+  if (level <= 1000) return 7100 + (level - 500) * 20;
+  if (level <= 2000) return 17100 + (level - 1000) * 25;
+  if (level <= 5000) return 42100 + (level - 2000) * 30;
+  if (level <= 10000) return 132100 + (level - 5000) * 35;
+  return 307100 + (level - 10000) * 40;
 }
 
-// NEW Ranking System
+// NEW Ranking System - Extended for 15.000 levels
 export function getRank(level: number): { name: string; icon: string; color: string } {
-  if (level >= 450) return { name: 'MYTHICAL RUNNER', icon: '⚡', color: 'mythical' };
-  if (level >= 350) return { name: 'MYTHIC RUNNER', icon: '✨', color: 'mythic' };
-  if (level >= 200) return { name: 'EPIC RUNNER', icon: '🔥', color: 'epic' };
-  if (level >= 100) return { name: 'GRAN MASTER RUNNER', icon: '👑👑', color: 'grandmaster' };
-  if (level >= 60) return { name: 'MASTER RUNNER', icon: '👑', color: 'master' };
-  if (level >= 20) return { name: 'ELITE RUNNER', icon: '⭐', color: 'elite' };
+  if (level >= 14000) return { name: 'DIVINE RUNNER', icon: '🌟', color: 'divine' };
+  if (level >= 12000) return { name: 'IMMORTAL RUNNER', icon: '💫', color: 'immortal' };
+  if (level >= 10000) return { name: 'ETERNAL RUNNER', icon: '🔱', color: 'eternal' };
+  if (level >= 8000) return { name: 'CELESTIAL RUNNER', icon: '☀️', color: 'celestial' };
+  if (level >= 6000) return { name: 'TRANSCENDENT RUNNER', icon: '🌀', color: 'transcendent' };
+  if (level >= 4000) return { name: 'LEGENDARY RUNNER', icon: '⚡', color: 'legendary' };
+  if (level >= 2500) return { name: 'MYTHICAL RUNNER', icon: '✨', color: 'mythical' };
+  if (level >= 1500) return { name: 'MYTHIC RUNNER', icon: '🔥', color: 'mythic' };
+  if (level >= 800) return { name: 'EPIC RUNNER', icon: '💎', color: 'epic' };
+  if (level >= 400) return { name: 'GRAN MASTER RUNNER', icon: '👑👑', color: 'grandmaster' };
+  if (level >= 200) return { name: 'MASTER RUNNER', icon: '👑', color: 'master' };
+  if (level >= 50) return { name: 'ELITE RUNNER', icon: '⭐', color: 'elite' };
   return { name: 'WARRIOR RUNNER', icon: '🥋', color: 'warrior' };
 }
 
