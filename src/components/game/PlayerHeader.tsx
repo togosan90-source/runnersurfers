@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { User } from 'lucide-react';
-import { useGameStore, getTier } from '@/store/gameStore';
+import { MapPin } from 'lucide-react';
+import { useGameStore, getTier, getExpPerKm, getExpNeeded } from '@/store/gameStore';
 import { useProfile } from '@/hooks/useProfile';
 import coinsGold from '@/assets/coins-gold.png';
 import avatarSora from '@/assets/avatar-sora.png';
@@ -11,6 +11,13 @@ export const PlayerHeader = memo(function PlayerHeader() {
   const { profile } = useProfile();
   const tier = useMemo(() => getTier(user.level), [user.level]);
   const expProgress = useMemo(() => Math.min((user.exp / 100) * 100, 100), [user.exp]);
+  
+  // Calculate km progress
+  const expPerKm = useMemo(() => getExpPerKm(user.level), [user.level]);
+  const expNeeded = useMemo(() => getExpNeeded(user.level + 1), [user.level]);
+  const kmCurrent = useMemo(() => user.exp / expPerKm, [user.exp, expPerKm]);
+  const kmNeeded = useMemo(() => expNeeded / expPerKm, [expNeeded, expPerKm]);
+  const kmPercentage = useMemo(() => (kmCurrent / kmNeeded) * 100, [kmCurrent, kmNeeded]);
 
   return (
     <div
@@ -153,6 +160,87 @@ export const PlayerHeader = memo(function PlayerHeader() {
             <p className="text-right text-xs text-slate-500">
               {expProgress.toFixed(0)}% - Prossimo livello
             </p>
+          </div>
+
+          {/* KM Progress Bar - New! */}
+          <div 
+            className="relative p-2.5 rounded-xl overflow-hidden mb-2"
+            style={{
+              background: 'linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e293b 100%)',
+              border: '2px solid #3b82f6',
+              boxShadow: '0 0 15px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
+            }}
+          >
+            {/* Decorative stars */}
+            <div className="absolute top-1 left-2 text-xs opacity-60">✨</div>
+            <div className="absolute top-1 right-2 text-xs opacity-60">⭐</div>
+            
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <div className="flex items-center gap-1.5">
+                <div 
+                  className="w-5 h-5 rounded-full flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                    boxShadow: '0 0 8px rgba(34, 197, 94, 0.6)',
+                  }}
+                >
+                  <MapPin className="w-3 h-3 text-white" />
+                </div>
+                <span className="font-medium text-cyan-300">Distanza per LV.{user.level + 1}</span>
+              </div>
+              <span 
+                className="font-mono font-bold px-2 py-0.5 rounded"
+                style={{
+                  background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 0 10px rgba(251, 191, 36, 0.5)',
+                }}
+              >
+                {kmCurrent.toFixed(2)} / {kmNeeded.toFixed(2)} km
+              </span>
+            </div>
+            
+            {/* KM Progress bar */}
+            <div className="relative h-4 bg-slate-800/80 rounded-full overflow-hidden shadow-inner">
+              <motion.div
+                className="absolute inset-y-0 left-0 rounded-full"
+                style={{
+                  background: 'linear-gradient(90deg, #22c55e 0%, #3b82f6 50%, #8b5cf6 100%)',
+                  backgroundSize: '200% 100%',
+                }}
+                initial={{ width: 0 }}
+                animate={{ 
+                  width: `${kmPercentage}%`,
+                  backgroundPosition: ['0% 0%', '100% 0%', '0% 0%']
+                }}
+                transition={{ 
+                  width: { duration: 0.6, ease: 'easeOut' },
+                  backgroundPosition: { duration: 3, repeat: Infinity, ease: 'linear' }
+                }}
+              />
+              {/* Glow effect */}
+              <motion.div
+                className="absolute inset-y-0 left-0 rounded-full opacity-40 blur-sm"
+                style={{
+                  background: 'linear-gradient(90deg, #22c55e, #3b82f6)',
+                }}
+                initial={{ width: 0 }}
+                animate={{ width: `${kmPercentage}%` }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+              />
+              {/* Shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent rounded-full" />
+            </div>
+            
+            <div className="flex items-center justify-between mt-1.5">
+              <p className="text-[10px] text-slate-400">
+                🏃 {expPerKm}% EXP/km
+              </p>
+              <p className="text-[10px] font-medium text-emerald-400">
+                {(kmNeeded - kmCurrent).toFixed(2)} km rimanenti
+              </p>
+            </div>
           </div>
 
           {/* RunnerSurfers Title */}
