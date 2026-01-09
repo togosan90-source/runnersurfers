@@ -106,21 +106,34 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Profile Card */}
+        {/* Cyberpunk Profile Card */}
         <div
-          className="rounded-2xl p-6 mb-6 relative overflow-hidden"
+          className="relative p-4 sm:p-6 mb-6 overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)',
-            border: '3px solid #60A5FA',
-            boxShadow: '0 4px 0 0 #1E40AF, 0 0 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(6, 182, 212, 0.1) 100%)',
+            clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))'
           }}
         >
-          {/* Static decorative stars */}
-          <div className="absolute text-sm pointer-events-none opacity-60" style={{ left: '10%', top: '20%' }}>✨</div>
-          <div className="absolute text-sm pointer-events-none opacity-60" style={{ left: '80%', top: '15%' }}>⭐</div>
-          <div className="absolute text-sm pointer-events-none opacity-60" style={{ left: '50%', top: '80%' }}>🌟</div>
+          {/* Animated scan lines */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent animate-pulse" style={{ top: '20%' }} />
+            <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-pulse" style={{ top: '60%' }} />
+          </div>
 
-          {/* Avatar and Name */}
-          <div className="flex items-start gap-4 mb-6 relative z-10">
+          {/* Corner decorations */}
+          <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-cyan-500/80" />
+          <div className="absolute top-0 right-4 w-4 h-4 border-r-2 border-t-2 border-cyan-500/80" />
+          <div className="absolute bottom-0 left-4 w-4 h-4 border-l-2 border-b-2 border-cyan-500/80" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-cyan-500/80" />
+
+          {/* Glowing border lines */}
+          <div className="absolute top-0 left-5 right-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+          <div className="absolute bottom-0 left-5 right-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+          <div className="absolute left-0 top-5 bottom-5 w-[1px] bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent" />
+          <div className="absolute right-0 top-5 bottom-5 w-[1px] bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent" />
+
+          {/* Avatar Section */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 mb-6 relative z-10">
             <div className="relative">
               {/* Hidden file input */}
               <input
@@ -139,69 +152,66 @@ export default function ProfilePage() {
                 }}
               />
               
-              {/* Avatar with click to change */}
+              {/* Avatar with hexagonal glow */}
               <motion.button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg group cursor-pointer"
+                className="relative w-24 h-24 sm:w-28 sm:h-28 overflow-hidden group cursor-pointer"
                 style={{
-                  border: '4px solid #60A5FA',
-                  boxShadow: '0 0 20px rgba(96, 165, 250, 0.5)',
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
                 }}
                 whileHover={{ scale: 1.05 }}
               >
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/50 to-purple-500/50 animate-pulse" />
                 {profile?.avatar_url ? (
                   <img 
                     src={profile.avatar_url} 
                     alt="Avatar" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover relative z-10"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                    <User className="w-12 h-12 text-primary-foreground" />
+                  <div className="w-full h-full bg-gradient-to-br from-cyan-900 to-slate-900 flex items-center justify-center relative z-10">
+                    <User className="w-12 h-12 text-cyan-400" />
                   </div>
                 )}
                 
-                {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Camera className="w-8 h-8 text-white" />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
+                  <Camera className="w-8 h-8 text-cyan-400" />
                 </div>
                 
                 {/* Loading indicator */}
                 {uploading && (
-                  <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-30">
+                    <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
                   </div>
                 )}
               </motion.button>
-              
+
+              {/* Level badge */}
               <motion.div 
-                className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-md"
+                className="absolute -bottom-2 -right-2 px-3 py-1 flex items-center justify-center font-mono text-sm font-bold"
                 style={{
-                  background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
-                  border: '2px solid #93C5FD',
-                  boxShadow: '0 0 15px rgba(59, 130, 246, 0.5)',
+                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%)',
+                  clipPath: 'polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%)',
+                  color: 'white',
+                  textShadow: '0 0 10px rgba(34, 211, 238, 0.8)',
                 }}
-                animate={{
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
               >
-                {rank.icon}
+                LV.{user.level}
               </motion.div>
             </div>
 
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
+            {/* User Info */}
+            <div className="flex-1 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
                 <h1 
-                  className="font-varsity text-2xl uppercase tracking-wide"
+                  className="font-mono text-xl sm:text-2xl font-bold tracking-wider uppercase"
                   style={{
-                    color: '#93C5FD',
-                    textShadow: '2px 2px 0px #1E3A5F, 0 0 10px rgba(147, 197, 253, 0.5)',
+                    color: '#22D3EE',
+                    textShadow: '0 0 20px rgba(34, 211, 238, 0.6), 0 0 40px rgba(34, 211, 238, 0.3)',
                   }}
                 >
                   {user.username}
@@ -211,8 +221,7 @@ export default function ProfilePage() {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="h-6 w-6"
-                      style={{ color: '#93C5FD' }}
+                      className="h-6 w-6 text-cyan-400 hover:text-cyan-300"
                     >
                       <Edit2 className="w-3 h-3" />
                     </Button>
@@ -235,16 +244,18 @@ export default function ProfilePage() {
                 </Dialog>
               </div>
               
-              <motion.div 
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl"
+              {/* Rank Badge - Cyberpunk Style */}
+              <div 
+                className="inline-flex items-center gap-2 px-4 py-2 mb-3"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.3) 100%)',
-                  border: '2px solid rgba(96, 165, 250, 0.5)',
+                  background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%)',
+                  clipPath: 'polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%)',
+                  border: '1px solid rgba(251, 191, 36, 0.5)',
                 }}
               >
-                <span className="text-xl">{rank.icon}</span>
+                <span className="text-lg">{rank.icon}</span>
                 <span 
-                  className="font-varsity text-lg uppercase"
+                  className="font-mono text-sm font-bold uppercase tracking-wider"
                   style={{
                     color: '#FCD34D',
                     textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
@@ -252,210 +263,172 @@ export default function ProfilePage() {
                 >
                   {rank.name}
                 </span>
-              </motion.div>
-
-              <div className="mt-4 flex items-center gap-3 flex-wrap">
-                <motion.span 
-                  className="px-3 py-1.5 rounded-lg font-bold text-sm"
-                  style={{
-                    background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
-                    border: '2px solid #60A5FA',
-                    color: 'white',
-                    boxShadow: '0 2px 0 0 #1E3A5F, 0 0 10px rgba(59, 130, 246, 0.4)',
-                  }}
-                >
-                  LV.{user.level}
-                </motion.span>
-                <span 
-                  className="flex items-center gap-1 text-sm font-semibold"
-                  style={{ color: '#93C5FD' }}
-                >
-                  {rank.icon} {rank.name}
-                </span>
-                <motion.span 
-                  className="ml-auto font-varsity text-sm uppercase px-3 py-1.5 rounded-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, #4ADE80 0%, #22C55E 100%)',
-                    border: '2px solid #86EFAC',
-                    boxShadow: '0 2px 0 0 #166534, 0 0 15px rgba(74, 222, 128, 0.4)',
-                    color: 'white',
-                    textShadow: '1px 1px 0px #15803D',
-                  }}
-                  animate={{
-                    scale: [1, 1.02, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                >
-                  {user.exp}/{user.level * 100} EXP
-                </motion.span>
+                <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" style={{ boxShadow: '0 0 8px rgba(251, 191, 36, 0.8)' }} />
               </div>
 
-              {/* EXP Progress Bar */}
-              <div 
-                className="mt-3 h-3 rounded-full overflow-hidden relative"
-                style={{
-                  background: 'rgba(0,0,0,0.3)',
-                  border: '2px solid rgba(96, 165, 250, 0.3)',
-                }}
-              >
-                <motion.div 
-                  className="h-full rounded-full"
+              {/* EXP Bar - Cyberpunk Style */}
+              <div className="relative mt-3">
+                <div 
+                  className="h-6 overflow-hidden relative"
                   style={{
-                    width: `${(user.exp / (user.level * 100)) * 100}%`,
-                    background: 'linear-gradient(90deg, #4ADE80 0%, #22C55E 50%, #16A34A 100%)',
-                    boxShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    clipPath: 'polygon(4px 0%, calc(100% - 4px) 0%, 100% 50%, calc(100% - 4px) 100%, 4px 100%, 0% 50%)',
+                    border: '1px solid rgba(34, 211, 238, 0.3)',
                   }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(user.exp / (user.level * 100)) * 100}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                />
+                >
+                  <motion.div 
+                    className="h-full relative"
+                    style={{
+                      width: `${(user.exp / (user.level * 100)) * 100}%`,
+                      background: 'linear-gradient(90deg, #06B6D4 0%, #22D3EE 50%, #67E8F9 100%)',
+                    }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(user.exp / (user.level * 100)) * 100}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                  >
+                    {/* Shine effect */}
+                    <motion.div
+                      className="absolute inset-0"
+                      style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)' }}
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                  </motion.div>
+                  
+                  {/* EXP Text overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="font-mono text-xs font-bold text-white" style={{ textShadow: '0 0 4px rgba(0,0,0,0.8)' }}>
+                      {user.exp}/{user.level * 100} EXP
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between mt-1">
+                  <span className="font-mono text-xs text-cyan-400/70">
+                    <TrendingUp className="w-3 h-3 inline mr-1" />
+                    {((user.exp / (user.level * 100)) * 100).toFixed(0)}%
+                  </span>
+                  <span className="font-mono text-xs text-cyan-400/70">Prossimo livello</span>
+                </div>
               </div>
-
-              <motion.span 
-                className="font-bold text-xs px-3 py-1 rounded-lg mt-2 inline-flex items-center gap-1"
-                style={{
-                  background: 'rgba(74, 222, 128, 0.2)',
-                  border: '1px solid #4ADE80',
-                  color: '#4ADE80',
-                }}
-              >
-                <TrendingUp className="w-3 h-3" />
-                {((user.exp / (user.level * 100)) * 100).toFixed(0)}% - Prossimo livello
-              </motion.span>
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-3 text-center relative z-10">
+          {/* Stats Grid - Cyberpunk Cards */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 relative z-10">
             {/* Score */}
             <motion.div 
-              className="rounded-xl p-4 relative overflow-hidden"
+              className="relative p-3 sm:p-4 overflow-hidden text-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(252, 211, 77, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%)',
-                border: '2px solid #FCD34D',
-                boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.3)',
+                background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))'
               }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(252, 211, 77, 0.2) 50%, transparent 100%)',
-                }}
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0 }}
-              />
-              <div className="w-12 h-12 mb-2 mx-auto relative z-10 flex items-center justify-center">
-                <Trophy className="w-10 h-10" style={{ color: '#FCD34D', filter: 'drop-shadow(0 0 10px rgba(252, 211, 77, 0.5))' }} />
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-amber-500/60" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-amber-500/60" />
+              
+              {/* Scan line */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <motion.div 
+                  className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"
+                  animate={{ top: ['0%', '100%', '0%'] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
               </div>
-              <p 
-                className="font-varsity text-lg uppercase relative z-10"
-                style={{
-                  color: '#FCD34D',
-                  textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
-                }}
-              >
-                Score Totale
-              </p>
-              <p 
-                className="font-display text-xl font-bold relative z-10"
-                style={{
-                  color: '#FEF3C7',
-                  textShadow: '0 0 10px rgba(254, 243, 199, 0.5)',
-                }}
-              >
-                {user.totalScore.toLocaleString()}
-              </p>
+              
+              <div className="relative z-10">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center"
+                  style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
+                  <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-amber-400" style={{ filter: 'drop-shadow(0 0 8px rgba(251, 191, 36, 0.6))' }} />
+                </div>
+                <p className="font-mono text-[10px] sm:text-xs uppercase tracking-wider text-amber-400/80 mb-1">Score</p>
+                <p className="font-mono text-sm sm:text-lg font-bold text-amber-300" style={{ textShadow: '0 0 10px rgba(251, 191, 36, 0.5)' }}>
+                  {user.totalScore.toLocaleString()}
+                </p>
+              </div>
+              
+              {/* Status LED */}
+              <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" style={{ boxShadow: '0 0 6px rgba(251, 191, 36, 0.8)' }} />
             </motion.div>
 
             {/* Coins */}
             <motion.div 
-              className="rounded-xl p-4 relative overflow-hidden"
+              className="relative p-3 sm:p-4 overflow-hidden text-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)',
-                border: '2px solid #4ADE80',
-                boxShadow: '0 2px 0 0 #166534, 0 0 15px rgba(74, 222, 128, 0.3)',
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))'
               }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(74, 222, 128, 0.2) 50%, transparent 100%)',
-                }}
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-              />
-              <div className="w-12 h-12 mb-2 mx-auto relative z-10 flex items-center justify-center">
-                <Coins className="w-10 h-10" style={{ color: '#4ADE80', filter: 'drop-shadow(0 0 10px rgba(74, 222, 128, 0.5))' }} />
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-green-500/60" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-green-500/60" />
+              
+              {/* Scan line */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <motion.div 
+                  className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-green-400/40 to-transparent"
+                  animate={{ top: ['0%', '100%', '0%'] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                />
               </div>
-              <p 
-                className="font-varsity text-lg uppercase relative z-10"
-                style={{
-                  color: '#4ADE80',
-                  textShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
-                }}
-              >
-                Monete
-              </p>
-              <p 
-                className="font-display text-xl font-bold relative z-10"
-                style={{
-                  color: '#86EFAC',
-                  textShadow: '0 0 10px rgba(134, 239, 172, 0.5)',
-                }}
-              >
-                {user.coins.toLocaleString()}
-              </p>
+              
+              <div className="relative z-10">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center"
+                  style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
+                  <Coins className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" style={{ filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.6))' }} />
+                </div>
+                <p className="font-mono text-[10px] sm:text-xs uppercase tracking-wider text-green-400/80 mb-1">Monete</p>
+                <p className="font-mono text-sm sm:text-lg font-bold text-green-300" style={{ textShadow: '0 0 10px rgba(34, 197, 94, 0.5)' }}>
+                  {user.coins.toLocaleString()}
+                </p>
+              </div>
+              
+              {/* Status LED */}
+              <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" style={{ boxShadow: '0 0 6px rgba(34, 197, 94, 0.8)' }} />
             </motion.div>
 
             {/* Runs */}
             <motion.div 
-              className="rounded-xl p-4 relative overflow-hidden"
+              className="relative p-3 sm:p-4 overflow-hidden text-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)',
-                border: '2px solid #A78BFA',
-                boxShadow: '0 2px 0 0 #6D28D9, 0 0 15px rgba(167, 139, 250, 0.3)',
+                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))'
               }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(167, 139, 250, 0.2) 50%, transparent 100%)',
-                }}
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
-              />
-              <motion.span 
-                className="text-4xl block mb-2 relative z-10"
-                animate={{ rotate: [-5, 5, -5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                style={{ filter: 'drop-shadow(0 0 10px rgba(167, 139, 250, 0.5))' }}
-              >
-                🏃
-              </motion.span>
-              <p 
-                className="font-varsity text-lg uppercase relative z-10"
-                style={{
-                  color: '#A78BFA',
-                  textShadow: '0 0 10px rgba(167, 139, 250, 0.5)',
-                }}
-              >
-                Corse
-              </p>
-              <p 
-                className="font-display text-xl font-bold relative z-10"
-                style={{
-                  color: '#C4B5FD',
-                  textShadow: '0 0 10px rgba(196, 181, 253, 0.5)',
-                }}
-              >
-                {runs.length}
-              </p>
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-purple-500/60" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-purple-500/60" />
+              
+              {/* Scan line */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <motion.div 
+                  className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-purple-400/40 to-transparent"
+                  animate={{ top: ['0%', '100%', '0%'] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                />
+              </div>
+              
+              <div className="relative z-10">
+                <motion.div 
+                  className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center text-2xl sm:text-3xl"
+                  animate={{ rotate: [-5, 5, -5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  style={{ filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.6))' }}
+                >
+                  🏃
+                </motion.div>
+                <p className="font-mono text-[10px] sm:text-xs uppercase tracking-wider text-purple-400/80 mb-1">Corse</p>
+                <p className="font-mono text-sm sm:text-lg font-bold text-purple-300" style={{ textShadow: '0 0 10px rgba(168, 85, 247, 0.5)' }}>
+                  {runs.length}
+                </p>
+              </div>
+              
+              {/* Status LED */}
+              <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" style={{ boxShadow: '0 0 6px rgba(168, 85, 247, 0.8)' }} />
             </motion.div>
           </div>
         </div>
