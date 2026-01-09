@@ -47,6 +47,48 @@ export type Database = {
         }
         Relationships: []
       }
+      marathon_events: {
+        Row: {
+          completed: boolean
+          created_at: string
+          distance_completed: number
+          event_date: string
+          event_type: string
+          id: string
+          reward_amount: number
+          reward_claimed: boolean
+          target_distance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          distance_completed?: number
+          event_date?: string
+          event_type: string
+          id?: string
+          reward_amount: number
+          reward_claimed?: boolean
+          target_distance: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          distance_completed?: number
+          event_date?: string
+          event_type?: string
+          id?: string
+          reward_amount?: number
+          reward_claimed?: boolean
+          target_distance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       monthly_stats: {
         Row: {
           coins_earned: number
