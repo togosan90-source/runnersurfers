@@ -173,12 +173,26 @@ export default function RunPage() {
     );
   }, [startRun]);
 
-  // GPS tracking effect
+  // Speed thresholds for anti-cheat
+  const MIN_SPEED_THRESHOLD = 2; // km/h - minimum speed to be considered moving (walking)
+  const MAX_SPEED_THRESHOLD = 20; // km/h - maximum human running speed (above = vehicle)
+  const SCORE_ACTIVATION_SECONDS = 60; // 1 minute to activate score
+  const GPS_ACCURACY_THRESHOLD = 20; // meters - reject readings with worse accuracy
+
+  // GPS tracking effect with improved precision and anti-cheat
   useEffect(() => {
     if (!isRunning || isPaused || !gpsEnabled) return;
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       (position) => {
+        const accuracy = position.coords.accuracy;
+        
+        // Reject low accuracy GPS readings
+        if (accuracy > GPS_ACCURACY_THRESHOLD) {
+          console.log(`GPS accuracy too low: ${accuracy.toFixed(1)}m (max: ${GPS_ACCURACY_THRESHOLD}m)`);
+          return;
+        }
+
         const newPos = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -195,20 +209,43 @@ export default function RunPage() {
             newPos.lng
           );
           
-          if (dist > 0.001) { // Filter noise (< 1 meter)
-            const timeDiff = (Date.now() - lastPositionRef.current.time) / 1000 / 3600; // hours
-            const currentSpeed = dist / timeDiff;
-            setSpeed(currentSpeed);
-            const newDistance = distance + dist;
-            setDistance(newDistance);
-            updateRun(newDistance, newPos.lat, newPos.lng, score, currentSpeed);
+          const timeDiff = (Date.now() - lastPositionRef.current.time) / 1000; // seconds
+          
+          // Filter GPS noise (< 2 meters or < 1 second)
+          if (dist > 0.002 && timeDiff >= 1) {
+            const currentSpeed = (dist / timeDiff) * 3600; // km/h
+            
+            // Anti-cheat: Ignore unrealistic speeds (vehicle detection)
+            if (currentSpeed > MAX_SPEED_THRESHOLD) {
+              console.log(`Speed too high (vehicle detected): ${currentSpeed.toFixed(1)} km/h`);
+              setSpeed(0);
+              setIsMoving(false);
+              lastPositionRef.current = { ...newPos, time: Date.now() };
+              return;
+            }
+            
+            // Only count distance at human speeds
+            if (currentSpeed >= MIN_SPEED_THRESHOLD && currentSpeed <= MAX_SPEED_THRESHOLD) {
+              setSpeed(currentSpeed);
+              const newDistance = distance + dist;
+              setDistance(newDistance);
+              updateRun(newDistance, newPos.lat, newPos.lng, score, currentSpeed);
+            } else if (currentSpeed < MIN_SPEED_THRESHOLD) {
+              // User is stationary or moving very slowly
+              setSpeed(currentSpeed);
+            }
           }
         }
 
         lastPositionRef.current = { ...newPos, time: Date.now() };
       },
       (error) => console.error('GPS tracking error:', error),
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+      { 
+        enableHighAccuracy: true, 
+        maximumAge: 0, 
+        timeout: 10000,
+        // Request best possible accuracy
+      }
     );
 
     return () => {
@@ -216,9 +253,9 @@ export default function RunPage() {
         navigator.geolocation.clearWatch(watchIdRef.current);
       }
     };
-  }, [isRunning, isPaused, gpsEnabled, distance, updateRun]);
+  }, [isRunning, isPaused, gpsEnabled, distance, updateRun, score]);
 
-  // Detect if user is moving based on speed
+  // Detect if user is moving at human pace (walking/running)
   useEffect(() => {
     if (!isRunning || isPaused) {
       setIsMoving(false);
@@ -227,19 +264,19 @@ export default function RunPage() {
       return;
     }
 
-    const MOVEMENT_THRESHOLD = 2; // km/h - minimum speed to be considered moving
-    const isCurrentlyMoving = speed >= MOVEMENT_THRESHOLD;
+    // Valid movement: speed between walking pace and max running speed
+    const isValidHumanMovement = speed >= MIN_SPEED_THRESHOLD && speed <= MAX_SPEED_THRESHOLD;
     
-    setIsMoving(isCurrentlyMoving);
+    setIsMoving(isValidHumanMovement);
     
-    // Reset moving timer when user stops
-    if (!isCurrentlyMoving) {
+    // Reset moving timer when user stops or goes too fast
+    if (!isValidHumanMovement) {
       setMovingSeconds(0);
       setScoreActive(false);
     }
   }, [speed, isRunning, isPaused]);
 
-  // Timer to track continuous movement (10 seconds to activate score)
+  // Timer to track continuous movement (60 seconds / 1 minute to activate score)
   useEffect(() => {
     if (!isRunning || isPaused || !isMoving) {
       if (movingTimerRef.current) {
@@ -252,10 +289,11 @@ export default function RunPage() {
     movingTimerRef.current = setInterval(() => {
       setMovingSeconds(prev => {
         const newValue = prev + 1;
-        // Activate score after 10 seconds of continuous movement
-        if (newValue >= 10 && !scoreActive) {
+        // Activate score after 60 seconds (1 minute) of continuous human-pace movement
+        if (newValue >= SCORE_ACTIVATION_SECONDS && !scoreActive) {
           setScoreActive(true);
-          console.log('Score activated after 10 seconds of movement');
+          toast.success('⭐ Score attivato! Continua a correre!');
+          console.log('Score activated after 60 seconds of movement');
         }
         return newValue;
       });
@@ -269,7 +307,7 @@ export default function RunPage() {
     };
   }, [isRunning, isPaused, isMoving, scoreActive]);
 
-  // Score increment effect - only when moving AND score is active
+  // Score increment effect - only when moving at human pace AND score is active
   useEffect(() => {
     if (!isRunning || isPaused || !scoreActive || !isMoving) {
       if (scoreIntervalRef.current) {
@@ -283,19 +321,19 @@ export default function RunPage() {
     console.log('Starting score increment - Speed:', speed, 'ScoreActive:', scoreActive, 'IsMoving:', isMoving);
 
     scoreIntervalRef.current = setInterval(() => {
-      // Double check we're still moving
-      if (speed < 2) {
+      // Double check we're still moving at human pace
+      if (speed < MIN_SPEED_THRESHOLD || speed > MAX_SPEED_THRESHOLD) {
         setPointsPerSecond(0);
         return;
       }
 
       const multiplier = getFullMultiplier();
       
-      // Base score formula: speed-based scoring
+      // Base score formula: speed-based scoring (only for human speeds 2-20 km/h)
       // Walking (2-6 km/h): ~5-15 pts/sec
       // Jogging (6-10 km/h): ~15-40 pts/sec
       // Running (10-15 km/h): ~40-80 pts/sec
-      // Sprinting (15+ km/h): ~80-150 pts/sec
+      // Fast running (15-20 km/h): ~80-120 pts/sec
       const speedBonus = Math.pow(speed, 1.3);
       const baseIncrement = speedBonus * 0.8;
       const increment = Math.floor(baseIncrement * multiplier);
