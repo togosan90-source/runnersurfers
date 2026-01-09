@@ -189,6 +189,9 @@ interface GameState {
   ownedShoes: string[];
   shoeUpgrades: ShoeUpgrade[]; // Track upgrade levels for each shoe
   
+  // Score Upgrade Level (permanent +1 to +10 system)
+  scoreUpgradeLevel: number;
+  
   // Boosts
   activeBoost: ActiveBoost | null;
   
@@ -248,6 +251,9 @@ interface GameState {
   getShoeUpgradeLevel: (shoeId: string) => number;
   attemptShoeUpgrade: (shoeId: string) => { success: boolean; newLevel: number; cost: number };
   getTotalShoeBonus: () => { coinBonus: number; expBonus: number };
+  
+  // Score Upgrade Actions
+  attemptScoreUpgrade: () => { success: boolean; newLevel: number; cost: number };
 }
 
 // NEW Boosts - Premium System (Levels 1-50)
@@ -511,6 +517,9 @@ export const useGameStore = create<GameState>()((set, get) => ({
       
       // Shoe Upgrades
       shoeUpgrades: [],
+      
+      // Score Upgrade Level (permanent +1 to +10 system)
+      scoreUpgradeLevel: 0,
 
       setUser: (userData) => set((state) => ({ 
         user: { ...state.user, ...userData } 
@@ -832,8 +841,53 @@ export const useGameStore = create<GameState>()((set, get) => ({
       const upgradeBonus = getShoeUpgradeBonus(upgradeLevel);
       
       return {
-        coinBonus: shoe.coinBonus + upgradeBonus.coinBonus,
+      coinBonus: shoe.coinBonus + upgradeBonus.coinBonus,
         expBonus: shoe.expBonus + upgradeBonus.expBonus,
       };
+    },
+    
+    // Score Upgrade Actions (+1 to +10 permanent system)
+    attemptScoreUpgrade: () => {
+      const state = get();
+      const currentLevel = state.scoreUpgradeLevel;
+      const targetLevel = currentLevel + 1;
+      
+      if (targetLevel > 10) {
+        return { success: false, newLevel: currentLevel, cost: 0 };
+      }
+      
+      // Success rates for score upgrades (same as shoe upgrades)
+      const successRates: Record<number, number> = {
+        1: 100, 2: 100, 3: 65, 4: 60, 5: 55,
+        6: 50, 7: 30, 8: 8, 9: 5, 10: 2,
+      };
+      
+      // Cost calculation
+      const baseCost = 5000;
+      const coinMultiplier = 1 + (state.user.level - 1) * 0.01;
+      const levelMultipliers: Record<number, number> = {
+        1: 1, 2: 2, 3: 5, 4: 10, 5: 25,
+        6: 50, 7: 150, 8: 400, 9: 1000, 10: 3000,
+      };
+      const cost = Math.floor(baseCost * coinMultiplier * (levelMultipliers[targetLevel] || 1));
+      
+      if (state.user.coins < cost) {
+        return { success: false, newLevel: currentLevel, cost };
+      }
+      
+      // Deduct coins
+      set({ user: { ...state.user, coins: state.user.coins - cost } });
+      
+      // Check success rate
+      const successRate = successRates[targetLevel] || 0;
+      const roll = Math.random() * 100;
+      const success = roll < successRate;
+      
+      if (success) {
+        set({ scoreUpgradeLevel: targetLevel });
+        return { success: true, newLevel: targetLevel, cost };
+      }
+      
+      return { success: false, newLevel: currentLevel, cost };
     },
   }));

@@ -1,20 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, Clock, TrendingUp, Loader2, ArrowUp } from 'lucide-react';
+import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, TrendingUp, Loader2, ArrowUp } from 'lucide-react';
 import { BottomNav } from '@/components/layout/BottomNav';
-import { useGameStore, BOOSTS, SHOES } from '@/store/gameStore';
+import { useGameStore, SHOES } from '@/store/gameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { UpgradeShop } from '@/components/shop/UpgradeShop';
 import { ShoeUpgradeShop } from '@/components/shop/ShoeUpgradeShop';
+import { ScoreUpgradeShop } from '@/components/shop/ScoreUpgradeShop';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function ShopPage() {
   const { user: authUser } = useAuth();
-  const { user, purchaseBoost, activateBoost, deactivateBoost, activeBoost, ownedShoes, purchaseShoe, equipShoe } = useGameStore();
+  const { user, activeBoost, deactivateBoost, ownedShoes, purchaseShoe, equipShoe } = useGameStore();
   const [loadingShoe, setLoadingShoe] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const processedRef = useRef(false);
@@ -75,20 +76,6 @@ export default function ShopPage() {
     }
   }, [searchParams, authUser, purchaseShoe, setSearchParams]);
 
-  const handlePurchaseBoost = (boost: typeof BOOSTS[0]) => {
-    if (activeBoost) {
-      toast.error('Hai già un boost attivo!');
-      return;
-    }
-    
-    if (purchaseBoost(boost)) {
-      activateBoost(boost);
-      toast.success(`${boost.icon} ${boost.name} Boost attivato!`);
-    } else {
-      toast.error('Monete insufficienti!');
-    }
-  };
-
   const handleDeactivateBoost = () => {
     deactivateBoost();
     toast.info('Boost disattivato');
@@ -120,21 +107,6 @@ export default function ShopPage() {
     }
   };
 
-  const getBoostColor = (color: string) => {
-    const colors: Record<string, string> = {
-      yellow: 'from-yellow-400 to-amber-500',
-      green: 'from-green-400 to-emerald-500',
-      blue: 'from-blue-400 to-cyan-500',
-      purple: 'from-purple-400 to-violet-500',
-      orange: 'from-orange-400 to-red-500',
-      brown: 'from-amber-600 to-yellow-700',
-      cyan: 'from-cyan-400 to-blue-500',
-      lime: 'from-lime-400 to-green-500',
-      legendary: 'from-yellow-300 via-amber-400 to-yellow-500',
-    };
-    return colors[color] || 'from-gray-400 to-gray-500';
-  };
-
   const getShoeGradient = (id: string) => {
     switch (id) {
       case 'avalon':
@@ -150,15 +122,6 @@ export default function ShopPage() {
       default:
         return 'from-gray-400 to-gray-600';
     }
-  };
-
-  const formatDuration = (minutes: number) => {
-    if (minutes >= 60) {
-      const hours = Math.floor(minutes / 60);
-      const mins = minutes % 60;
-      return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-    }
-    return `${minutes} min`;
   };
 
   return (
@@ -329,262 +292,7 @@ export default function ShopPage() {
           </TabsList>
 
           <TabsContent value="boosts">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <p className="text-sm text-muted-foreground mb-4">
-                Boost temporanei - Aumenta il tuo score durante la corsa! (Disponibili lv. 1-50)
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {BOOSTS.map((boost, index) => {
-                  // Enhanced color styles for each boost
-                  const getBoostStyles = () => {
-                    const styles: Record<string, { bg: string; border: string; shadow: string; glow: string; textColor: string }> = {
-                      green: {
-                        bg: 'linear-gradient(135deg, #14532D 0%, #166534 50%, #22C55E 100%)',
-                        border: '#4ADE80',
-                        shadow: '0 4px 0 0 #14532D, 0 0 25px rgba(74, 222, 128, 0.4)',
-                        glow: 'rgba(74, 222, 128, 0.6)',
-                        textColor: '#86EFAC',
-                      },
-                      blue: {
-                        bg: 'linear-gradient(135deg, #1E3A5F 0%, #1E40AF 50%, #3B82F6 100%)',
-                        border: '#60A5FA',
-                        shadow: '0 4px 0 0 #1E3A5F, 0 0 25px rgba(59, 130, 246, 0.4)',
-                        glow: 'rgba(96, 165, 250, 0.6)',
-                        textColor: '#93C5FD',
-                      },
-                      purple: {
-                        bg: 'linear-gradient(135deg, #4C1D95 0%, #6D28D9 50%, #8B5CF6 100%)',
-                        border: '#A78BFA',
-                        shadow: '0 4px 0 0 #4C1D95, 0 0 25px rgba(139, 92, 246, 0.4)',
-                        glow: 'rgba(167, 139, 250, 0.6)',
-                        textColor: '#C4B5FD',
-                      },
-                      orange: {
-                        bg: 'linear-gradient(135deg, #7C2D12 0%, #C2410C 50%, #F97316 100%)',
-                        border: '#FB923C',
-                        shadow: '0 4px 0 0 #7C2D12, 0 0 25px rgba(249, 115, 22, 0.4)',
-                        glow: 'rgba(251, 146, 60, 0.6)',
-                        textColor: '#FDBA74',
-                      },
-                      brown: {
-                        bg: 'linear-gradient(135deg, #451A03 0%, #78350F 50%, #A16207 100%)',
-                        border: '#CA8A04',
-                        shadow: '0 4px 0 0 #451A03, 0 0 25px rgba(202, 138, 4, 0.4)',
-                        glow: 'rgba(202, 138, 4, 0.6)',
-                        textColor: '#FDE047',
-                      },
-                      cyan: {
-                        bg: 'linear-gradient(135deg, #164E63 0%, #0E7490 50%, #06B6D4 100%)',
-                        border: '#22D3EE',
-                        shadow: '0 4px 0 0 #164E63, 0 0 25px rgba(6, 182, 212, 0.4)',
-                        glow: 'rgba(34, 211, 238, 0.6)',
-                        textColor: '#67E8F9',
-                      },
-                      lime: {
-                        bg: 'linear-gradient(135deg, #365314 0%, #4D7C0F 50%, #84CC16 100%)',
-                        border: '#A3E635',
-                        shadow: '0 4px 0 0 #365314, 0 0 25px rgba(132, 204, 22, 0.4)',
-                        glow: 'rgba(163, 230, 53, 0.6)',
-                        textColor: '#D9F99D',
-                      },
-                      legendary: {
-                        bg: 'linear-gradient(135deg, #78350F 0%, #B45309 30%, #FCD34D 50%, #B45309 70%, #78350F 100%)',
-                        border: '#FCD34D',
-                        shadow: '0 4px 0 0 #451A03, 0 0 40px rgba(252, 211, 77, 0.6)',
-                        glow: 'rgba(252, 211, 77, 0.8)',
-                        textColor: '#FEF3C7',
-                      },
-                    };
-                    return styles[boost.color] || styles.green;
-                  };
-
-                  const style = getBoostStyles();
-                  const isLegendary = boost.id === 9;
-
-                  return (
-                    <motion.div
-                      key={boost.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      className="relative rounded-xl overflow-hidden cursor-pointer"
-                      style={{
-                        background: style.bg,
-                        border: `3px solid ${style.border}`,
-                        boxShadow: `${style.shadow}, inset 0 1px 0 0 rgba(255,255,255,0.2)`,
-                      }}
-                    >
-                      {/* Animated shine effect */}
-                      <motion.div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{
-                          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%)',
-                        }}
-                        animate={{
-                          x: ['-100%', '200%'],
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          delay: index * 0.2,
-                          ease: "easeInOut"
-                        }}
-                      />
-
-                      {/* Floating particles for legendary */}
-                      {isLegendary && (
-                        <>
-                          {[...Array(6)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="absolute text-sm pointer-events-none"
-                              initial={{ 
-                                x: `${10 + i * 15}%`, 
-                                y: '100%',
-                                opacity: 0 
-                              }}
-                              animate={{ 
-                                y: [80, -20],
-                                opacity: [0, 1, 0],
-                              }}
-                              transition={{
-                                duration: 2 + Math.random(),
-                                repeat: Infinity,
-                                delay: i * 0.4,
-                              }}
-                            >
-                              ✨
-                            </motion.div>
-                          ))}
-                        </>
-                      )}
-
-                      <div className="p-4 relative z-10">
-                        <div className="flex items-start justify-between mb-3">
-                          {/* Icon with glow */}
-                          <motion.div 
-                            className="w-14 h-14 rounded-xl flex items-center justify-center"
-                            style={{
-                              background: 'rgba(0,0,0,0.3)',
-                              border: `2px solid ${style.border}`,
-                              boxShadow: `0 0 20px ${style.glow}`,
-                            }}
-                            animate={isLegendary ? {
-                              scale: [1, 1.1, 1],
-                              rotate: [-5, 5, -5],
-                            } : {}}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          >
-                            <span 
-                              className="text-3xl"
-                              style={{ filter: `drop-shadow(0 0 10px ${style.glow})` }}
-                            >
-                              {boost.icon}
-                            </span>
-                          </motion.div>
-
-                          {/* Badge */}
-                          {isLegendary && (
-                            <motion.span 
-                              className="px-2 py-1 rounded-lg text-xs font-bold"
-                              style={{
-                                background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
-                                color: '#78350F',
-                                boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.5)',
-                              }}
-                              animate={{
-                                scale: [1, 1.05, 1],
-                              }}
-                              transition={{
-                                duration: 1.5,
-                                repeat: Infinity,
-                              }}
-                            >
-                              ⭐ ULTIMATE
-                            </motion.span>
-                          )}
-                        </div>
-
-                        {/* Name */}
-                        <h4 
-                          className="font-varsity text-xl uppercase tracking-wide mb-2"
-                          style={{
-                            color: style.textColor,
-                            textShadow: `0 2px 4px rgba(0,0,0,0.5), 0 0 10px ${style.glow}`,
-                          }}
-                        >
-                          {boost.name}
-                        </h4>
-
-                        {/* Stats */}
-                        <div className="flex items-center gap-3 mb-4">
-                          <div 
-                            className="px-3 py-1.5 rounded-lg flex items-center gap-1.5"
-                            style={{
-                              background: 'rgba(0,0,0,0.3)',
-                              border: `1px solid ${style.border}50`,
-                            }}
-                          >
-                            <span className="text-lg">⚡</span>
-                            <span 
-                              className="font-bold text-sm"
-                              style={{ color: style.textColor }}
-                            >
-                              +{boost.scoreBonus}% Score
-                            </span>
-                          </div>
-                          <div 
-                            className="px-3 py-1.5 rounded-lg flex items-center gap-1.5"
-                            style={{
-                              background: 'rgba(0,0,0,0.3)',
-                              border: `1px solid ${style.border}50`,
-                            }}
-                          >
-                            <Clock className="w-4 h-4" style={{ color: style.textColor }} />
-                            <span 
-                              className="font-bold text-sm"
-                              style={{ color: style.textColor }}
-                            >
-                              {formatDuration(boost.duration)}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Purchase Button */}
-                        <Button
-                          size="lg"
-                          className="w-full gap-2 font-bold text-base relative overflow-hidden"
-                          style={{
-                            background: user.coins >= boost.cost 
-                              ? `linear-gradient(135deg, ${style.border}CC 0%, ${style.border} 100%)`
-                              : 'rgba(100,100,100,0.5)',
-                            border: `2px solid ${style.border}`,
-                            color: user.coins >= boost.cost ? '#1F2937' : '#9CA3AF',
-                            boxShadow: user.coins >= boost.cost 
-                              ? `0 3px 0 0 rgba(0,0,0,0.3), 0 0 15px ${style.glow}`
-                              : 'none',
-                          }}
-                          disabled={user.coins < boost.cost || !!activeBoost}
-                          onClick={() => handlePurchaseBoost(boost)}
-                        >
-                          <Coins className="w-5 h-5" />
-                          {boost.cost.toLocaleString()}
-                        </Button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
+            <ScoreUpgradeShop />
           </TabsContent>
 
           <TabsContent value="upgrades">
