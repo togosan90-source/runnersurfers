@@ -386,21 +386,73 @@ export function getCoinsPerLevelUp(level: number): number {
   return Math.floor(5000 * getCoinMultiplier(level));
 }
 
-// NEW Ranking System - Extended for 15.000 levels
+// NEW Ranking System - Level-based ranks with score bonuses
+// Each rank covers 50 levels and gives +5% score bonus
+export interface RankInfo {
+  rank: number;
+  name: string;
+  icon: string;
+  color: string;
+  minLevel: number;
+  maxLevel: number;
+  scoreBonus: number; // percentage
+}
+
+// Generate all ranks from 1 to 300 (covering levels 1-15000)
+export function getAllRanks(): RankInfo[] {
+  const ranks: RankInfo[] = [];
+  const rankNames = [
+    { tier: 'Bronze', icon: '🥉', color: 'bronze' },
+    { tier: 'Silver', icon: '🥈', color: 'silver' },
+    { tier: 'Gold', icon: '🥇', color: 'gold' },
+    { tier: 'Platinum', icon: '💠', color: 'platinum' },
+    { tier: 'Diamond', icon: '💎', color: 'diamond' },
+    { tier: 'Master', icon: '👑', color: 'master' },
+    { tier: 'GrandMaster', icon: '👑👑', color: 'grandmaster' },
+    { tier: 'Champion', icon: '🏆', color: 'champion' },
+    { tier: 'Legend', icon: '⭐', color: 'legend' },
+    { tier: 'Mythic', icon: '🔥', color: 'mythic' },
+    { tier: 'Immortal', icon: '💫', color: 'immortal' },
+    { tier: 'Divine', icon: '🌟', color: 'divine' },
+  ];
+
+  for (let i = 0; i < 300; i++) {
+    const rankNum = i + 1;
+    const tierIndex = Math.min(Math.floor(i / 25), rankNames.length - 1);
+    const tierData = rankNames[tierIndex];
+    const subRank = (i % 25) + 1;
+    
+    ranks.push({
+      rank: rankNum,
+      name: `${tierData.tier} ${subRank}`,
+      icon: tierData.icon,
+      color: tierData.color,
+      minLevel: i * 50 + 1,
+      maxLevel: (i + 1) * 50,
+      scoreBonus: rankNum * 5, // Each rank gives +5% score bonus
+    });
+  }
+  
+  return ranks;
+}
+
+// Get current rank based on level
+export function getRankByLevel(level: number): RankInfo {
+  const rankIndex = Math.min(Math.floor((level - 1) / 50), 299);
+  const ranks = getAllRanks();
+  return ranks[rankIndex];
+}
+
+// Get score bonus percentage from rank
+export function getRankScoreBonus(level: number): number {
+  const rank = getRankByLevel(level);
+  return rank.scoreBonus;
+}
+
+// Legacy getRank function for compatibility
 export function getRank(level: number): { name: string; icon: string; color: string } {
-  if (level >= 14000) return { name: 'DIVINE RUNNER', icon: '🌟', color: 'divine' };
-  if (level >= 12000) return { name: 'IMMORTAL RUNNER', icon: '💫', color: 'immortal' };
-  if (level >= 10000) return { name: 'ETERNAL RUNNER', icon: '🔱', color: 'eternal' };
-  if (level >= 8000) return { name: 'CELESTIAL RUNNER', icon: '☀️', color: 'celestial' };
-  if (level >= 6000) return { name: 'TRANSCENDENT RUNNER', icon: '🌀', color: 'transcendent' };
-  if (level >= 4000) return { name: 'LEGENDARY RUNNER', icon: '⚡', color: 'legendary' };
-  if (level >= 2500) return { name: 'MYTHICAL RUNNER', icon: '✨', color: 'mythical' };
-  if (level >= 1500) return { name: 'MYTHIC RUNNER', icon: '🔥', color: 'mythic' };
-  if (level >= 800) return { name: 'EPIC RUNNER', icon: '💎', color: 'epic' };
-  if (level >= 400) return { name: 'GRAN MASTER RUNNER', icon: '👑👑', color: 'grandmaster' };
-  if (level >= 200) return { name: 'MASTER RUNNER', icon: '👑', color: 'master' };
-  if (level >= 50) return { name: 'ELITE RUNNER', icon: '⭐', color: 'elite' };
-  return { name: 'WARRIOR RUNNER', icon: '🥋', color: 'warrior' };
+  const rankInfo = getRankByLevel(level);
+  return { name: rankInfo.name, icon: rankInfo.icon, color: rankInfo.color };
 }
 
 // Legacy getTier for compatibility

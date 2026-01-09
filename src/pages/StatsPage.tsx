@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { BarChart3, Flame, Ruler, Clock, TrendingUp, Calendar, Award, Star, Trophy, Zap } from 'lucide-react';
 import { BottomNav } from '@/components/layout/BottomNav';
-import { useGameStore, getRank, getReputationLevel, SHOES, getTotalShoeBonus } from '@/store/gameStore';
+import { useGameStore, getRank, getReputationLevel, SHOES, getTotalShoeBonus, getRankByLevel, getRankScoreBonus } from '@/store/gameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { WeeklyChart } from '@/components/stats/WeeklyChart';
 import { MonthlyChart } from '@/components/stats/MonthlyChart';
@@ -55,6 +55,8 @@ export default function StatsPage() {
 
   // Get current rank and reputation
   const currentRank = getRank(user.level);
+  const currentRankInfo = getRankByLevel(user.level);
+  const rankScoreBonus = getRankScoreBonus(user.level);
   const reputationLevel = getReputationLevel(user.reputation);
   const shoeBonus = getTotalShoeBonus(ownedShoes);
 
@@ -62,19 +64,12 @@ export default function StatsPage() {
   const maxDistance = 15000;
   const distanceProgress = Math.min((user.totalDistance / maxDistance) * 100, 100);
 
-  // Get next rank level
-  const getNextRankLevel = () => {
-    if (user.level < 20) return 20;
-    if (user.level < 60) return 60;
-    if (user.level < 100) return 100;
-    if (user.level < 200) return 200;
-    if (user.level < 350) return 350;
-    if (user.level < 450) return 450;
-    return 600;
-  };
-
-  const nextRankLevel = getNextRankLevel();
-  const rankProgress = user.level >= 450 ? 100 : ((user.level / nextRankLevel) * 100);
+  // Get next rank progress
+  const currentRankMinLevel = currentRankInfo.minLevel;
+  const currentRankMaxLevel = currentRankInfo.maxLevel;
+  const levelsInCurrentRank = user.level - currentRankMinLevel + 1;
+  const totalLevelsInRank = currentRankMaxLevel - currentRankMinLevel + 1;
+  const rankProgress = (levelsInCurrentRank / totalLevelsInRank) * 100;
 
   // Get rank color
   const getRankColor = (color: string) => {
@@ -429,7 +424,7 @@ export default function StatsPage() {
             >
               <span className="text-3xl">{currentRank.icon}</span>
             </div>
-            <div>
+            <div className="flex-1">
               <p 
                 className="font-varsity text-2xl uppercase tracking-wide"
                 style={{
@@ -437,11 +432,43 @@ export default function StatsPage() {
                   textShadow: '2px 2px 0px #1E3A5F',
                 }}
               >
-                {currentRank.name}
+                Rango {currentRankInfo.rank}
               </p>
-              <p className="text-sm text-sky-200/90 font-semibold">Livello {user.level}</p>
+              <p className="text-sm text-sky-200/90 font-semibold">{currentRankInfo.name}</p>
+              <p className="text-xs text-emerald-300 font-bold mt-1">
+                🎯 Bonus Score: +{rankScoreBonus}%
+              </p>
             </div>
           </div>
+          
+          {/* Rank info box */}
+          <div 
+            className="rounded-lg p-3 mb-4 relative z-10"
+            style={{
+              background: 'rgba(0, 0, 0, 0.3)',
+              border: '1px solid rgba(96, 165, 250, 0.3)'
+            }}
+          >
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span className="text-sky-300/70">Livello attuale:</span>
+                <span className="text-white font-bold ml-2">{user.level}</span>
+              </div>
+              <div>
+                <span className="text-sky-300/70">Range rango:</span>
+                <span className="text-white font-bold ml-2">{currentRankInfo.minLevel}-{currentRankInfo.maxLevel}</span>
+              </div>
+              <div>
+                <span className="text-sky-300/70">Prossimo rango:</span>
+                <span className="text-white font-bold ml-2">Lv. {currentRankInfo.maxLevel + 1}</span>
+              </div>
+              <div>
+                <span className="text-sky-300/70">Bonus prossimo:</span>
+                <span className="text-emerald-400 font-bold ml-2">+{(currentRankInfo.rank + 1) * 5}%</span>
+              </div>
+            </div>
+          </div>
+          
           <div className="space-y-2 relative z-10">
             <div className="flex justify-between text-sm">
               <span 
@@ -489,7 +516,7 @@ export default function StatsPage() {
               </motion.div>
             </div>
             <p className="text-sm text-sky-200/90 font-semibold">
-              Prossimo rango al livello {nextRankLevel}
+              Prossimo rango al livello {currentRankInfo.maxLevel + 1}
             </p>
           </div>
         </motion.div>
