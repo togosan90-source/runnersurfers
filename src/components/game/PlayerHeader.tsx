@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Zap, Flame, Star, Crown } from 'lucide-react';
+import { MapPin, Zap, Flame, Star, Crown, Coins } from 'lucide-react';
 import { useGameStore, getTier, getExpPerKm, getExpNeeded } from '@/store/gameStore';
 import { useProfile } from '@/hooks/useProfile';
 import coinsGold from '@/assets/coins-gold.png';
@@ -156,13 +156,12 @@ export const PlayerHeader = memo(function PlayerHeader() {
                 }}
                 whileHover={{ scale: 1.05 }}
               >
-                <motion.img 
-                  src={coinsGold} 
-                  alt="Coins" 
-                  className="w-5 h-5 object-contain"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <Coins className="w-5 h-5 text-amber-400" />
+                </motion.div>
                 <span className="font-mono font-bold text-amber-400">{user.coins.toLocaleString()}</span>
               </motion.div>
             </div>
