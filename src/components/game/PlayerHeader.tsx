@@ -163,26 +163,75 @@ export const PlayerHeader = memo(function PlayerHeader() {
 
           {/* Info Section */}
           <div className="flex-1 w-full min-w-0">
-            {/* Rank Badge - Styled */}
+            {/* Rank Badge - Cyberpunk Style */}
             <motion.div 
-              className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-xl"
+              className="inline-flex items-center gap-3 mb-3 px-4 py-2 relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%)',
-                border: '2px solid #34d399',
-                boxShadow: '0 3px 0 #064e3b, 0 0 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                background: 'linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.9) 100%)',
+                border: '1px solid #00ff8840',
+                clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
               }}
-              whileHover={{ scale: 1.02, y: -1 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <span className="text-xl">{tier.icon}</span>
-              <span 
-                className="font-varsity text-base uppercase tracking-wide text-white"
+              {/* Scan line effect */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  textShadow: '2px 2px 0 #065f46',
+                  background: 'linear-gradient(180deg, transparent 0%, #00ff8810 50%, transparent 100%)',
+                  height: '200%',
+                }}
+                animate={{ y: ['-100%', '0%'] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              />
+              
+              {/* Corner cuts */}
+              <div 
+                className="absolute top-0 right-0 w-2.5 h-2.5"
+                style={{ background: 'linear-gradient(135deg, transparent 50%, #00ff8860 50%)' }}
+              />
+              <div 
+                className="absolute bottom-0 left-0 w-2.5 h-2.5"
+                style={{ background: 'linear-gradient(-45deg, transparent 50%, #00ff8860 50%)' }}
+              />
+              
+              {/* Glowing border lines */}
+              <div className="absolute top-0 left-0 right-2.5 h-px" style={{ background: 'linear-gradient(90deg, #00ff88, transparent)' }} />
+              <div className="absolute bottom-0 left-2.5 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #00ff88)' }} />
+              
+              {/* Icon in hexagon */}
+              <div 
+                className="w-8 h-8 flex items-center justify-center relative z-10"
+                style={{
+                  background: '#00ff8815',
+                  border: '1px solid #00ff8850',
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                }}
+              >
+                <span className="text-lg">{tier.icon}</span>
+              </div>
+              
+              {/* Rank name */}
+              <span 
+                className="font-mono text-sm font-bold uppercase tracking-[0.15em] relative z-10"
+                style={{
+                  color: '#00ff88',
+                  textShadow: '0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.3)',
                 }}
               >
                 {tier.name}
               </span>
-              <Zap className="w-4 h-4 text-yellow-300" />
+              
+              {/* Status LED */}
+              <motion.div
+                className="w-2 h-2 relative z-10"
+                style={{
+                  background: '#00ff88',
+                  boxShadow: '0 0 8px rgba(0, 255, 136, 0.8), 0 0 16px rgba(0, 255, 136, 0.5)',
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+                }}
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
             </motion.div>
 
             {/* EXP Bar - Redesigned */}
