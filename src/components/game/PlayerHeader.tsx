@@ -172,15 +172,17 @@ export const PlayerHeader = memo(function PlayerHeader() {
 
           {/* Info Section */}
           <div className="flex-1 w-full min-w-0">
-            {/* Rank Badge - Cyberpunk Style */}
+            {/* Rank Badge - Cyberpunk Style - Clickable to stats */}
             <motion.div 
-              className="inline-flex items-center gap-3 mb-3 px-4 py-2 relative overflow-hidden"
+              className="inline-flex items-center gap-3 mb-3 px-4 py-2 relative overflow-hidden cursor-pointer"
               style={{
                 background: 'linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.9) 100%)',
                 border: '1px solid #00ff8840',
                 clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
               }}
               whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate('/stats')}
             >
               {/* Scan line effect */}
               <motion.div
