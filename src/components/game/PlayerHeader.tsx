@@ -54,6 +54,24 @@ export const PlayerHeader = memo(function PlayerHeader() {
           background: 'linear-gradient(180deg, #1e1e30 0%, #141428 100%)',
         }}
       >
+        {/* Coins - Fixed top right on mobile */}
+        <motion.div 
+          className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+          style={{
+            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%)',
+            border: '1px solid rgba(251, 191, 36, 0.4)',
+            boxShadow: '0 0 15px rgba(251, 191, 36, 0.2)',
+          }}
+          whileHover={{ scale: 1.05 }}
+        >
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Coins className="w-5 h-5 text-amber-400" />
+          </motion.div>
+          <span className="font-mono font-bold text-amber-400">{user.coins.toLocaleString()}</span>
+        </motion.div>
         {/* Floating particles */}
         {[...Array(6)].map((_, i) => (
           <motion.div
@@ -145,27 +163,6 @@ export const PlayerHeader = memo(function PlayerHeader() {
 
           {/* Info Section */}
           <div className="flex-1 w-full min-w-0">
-            {/* Top row: Coins */}
-            <div className="flex items-center justify-end mb-2">
-              <motion.div 
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%)',
-                  border: '1px solid rgba(251, 191, 36, 0.4)',
-                  boxShadow: '0 0 15px rgba(251, 191, 36, 0.2)',
-                }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <Coins className="w-5 h-5 text-amber-400" />
-                </motion.div>
-                <span className="font-mono font-bold text-amber-400">{user.coins.toLocaleString()}</span>
-              </motion.div>
-            </div>
-
             {/* Rank Badge - Styled */}
             <motion.div 
               className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-xl"
