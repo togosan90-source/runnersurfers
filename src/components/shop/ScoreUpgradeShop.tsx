@@ -208,168 +208,216 @@ export function ScoreUpgradeShop() {
 
       {/* Main Upgrade Card */}
       <motion.div
-        className="relative rounded-3xl overflow-hidden"
+        className="relative rounded-2xl overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{
-          background: 'linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%)',
-          border: '2px solid transparent',
-          backgroundClip: 'padding-box',
+          background: currentLevel >= 8 
+            ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #92400E 100%)'
+            : currentLevel >= 5
+            ? 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 50%, #4C1D95 100%)'
+            : 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)',
+          border: currentLevel >= 8 
+            ? '3px solid #FCD34D'
+            : currentLevel >= 5
+            ? '3px solid #A78BFA'
+            : '3px solid #34D399',
+          boxShadow: currentLevel >= 8 
+            ? '0 4px 0 0 #78350F, 0 0 30px rgba(252, 211, 77, 0.4)'
+            : currentLevel >= 5
+            ? '0 4px 0 0 #5B21B6, 0 0 30px rgba(167, 139, 250, 0.4)'
+            : '0 4px 0 0 #065F46, 0 0 30px rgba(52, 211, 153, 0.4)',
         }}
       >
-        {/* Animated gradient border */}
+        {/* Decorative elements */}
+        <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '5%', top: '10%', filter: 'drop-shadow(0 0 6px currentColor)' }}>⚡</div>
+        <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '90%', top: '15%', filter: 'drop-shadow(0 0 6px currentColor)' }}>✨</div>
+        <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '85%', top: '75%', filter: 'drop-shadow(0 0 6px currentColor)' }}>💎</div>
+        <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '10%', top: '80%', filter: 'drop-shadow(0 0 6px currentColor)' }}>🔥</div>
+
+        {/* Animated shine effect */}
         <motion.div
-          className="absolute -inset-[2px] rounded-3xl pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: currentLevel >= 8 
-              ? 'linear-gradient(135deg, #fbbf24, #f59e0b, #eab308, #fbbf24)'
-              : currentLevel >= 5
-              ? 'linear-gradient(135deg, #a855f7, #ec4899, #8b5cf6, #a855f7)'
-              : 'linear-gradient(135deg, hsl(var(--primary)), #22d3ee, hsl(var(--primary)))',
-            backgroundSize: '200% 200%',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
           }}
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+          animate={{ x: ['-100%', '200%'] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
-        
-        {/* Inner card */}
-        <div className="relative bg-gradient-to-br from-card via-background to-card rounded-3xl m-[2px]">
-          {/* Floating particles effect */}
-          <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
-            {[...Array(6)].map((_, i) => (
+
+        <div className="relative z-10 p-6">
+          {/* Header with glow effect */}
+          <div className="text-center mb-6">
+            <motion.div
+              className="relative inline-block"
+              animate={isUpgrading ? {
+                scale: [1, 1.05, 1],
+              } : {}}
+              transition={{
+                duration: 0.8,
+                repeat: isUpgrading ? Infinity : 0,
+              }}
+            >
+              {/* Glow background */}
               <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full bg-primary/60"
+                className="absolute inset-0 blur-2xl rounded-full"
                 style={{
-                  left: `${15 + i * 15}%`,
-                  top: '80%',
+                  background: currentLevel >= 8 
+                    ? 'radial-gradient(circle, rgba(251,191,36,0.6) 0%, transparent 70%)'
+                    : currentLevel >= 5
+                    ? 'radial-gradient(circle, rgba(168,85,247,0.6) 0%, transparent 70%)'
+                    : 'radial-gradient(circle, rgba(52,211,153,0.6) 0%, transparent 70%)',
                 }}
                 animate={{
-                  y: [-20, -100],
-                  opacity: [0, 1, 0],
-                  scale: [0.5, 1.5, 0.5],
+                  scale: [1, 1.3, 1],
+                  opacity: [0.5, 0.8, 0.5],
                 }}
                 transition={{
-                  duration: 2.5 + i * 0.3,
+                  duration: 2,
                   repeat: Infinity,
-                  delay: i * 0.4,
-                  ease: "easeOut"
+                  ease: "easeInOut"
                 }}
               />
-            ))}
+              
+              {/* Level display */}
+              <div 
+                className="relative px-8 py-5 rounded-2xl shadow-2xl"
+                style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  border: '2px solid rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                <div className="flex items-center gap-4">
+                  <motion.div 
+                    className="p-3 rounded-xl"
+                    style={{
+                      background: currentLevel >= 8 
+                        ? 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)'
+                        : currentLevel >= 5
+                        ? 'linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)'
+                        : 'linear-gradient(135deg, #34D399 0%, #10B981 100%)',
+                      boxShadow: '0 0 20px rgba(255,255,255,0.3)',
+                    }}
+                    animate={{
+                      boxShadow: [
+                        '0 0 20px rgba(255,255,255,0.3)',
+                        '0 0 35px rgba(255,255,255,0.5)',
+                        '0 0 20px rgba(255,255,255,0.3)',
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <TrendingUp className="w-8 h-8 text-white drop-shadow-lg" />
+                  </motion.div>
+                  <div className="text-left">
+                    <p 
+                      className="text-xs uppercase tracking-widest font-bold"
+                      style={{ color: 'rgba(255,255,255,0.8)' }}
+                    >
+                      Score Power
+                    </p>
+                    <p 
+                      className="text-4xl font-black"
+                      style={{ 
+                        color: '#FFFFFF',
+                        textShadow: '0 0 20px rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      +{currentLevel}
+                    </p>
+                  </div>
+                  {currentLevel >= 8 && (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Sparkles className="w-6 h-6 text-yellow-300" />
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           </div>
 
-          <div className="relative z-10 p-6">
-            {/* Header with glow effect */}
-            <div className="text-center mb-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <motion.div 
+              className="relative overflow-hidden rounded-xl p-4 text-center"
+              style={{
+                background: 'linear-gradient(135deg, rgba(252, 211, 77, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%)',
+                border: '2px solid #FCD34D',
+                boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.3)',
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
               <motion.div
-                className="relative inline-block"
-                animate={isUpgrading ? {
-                  scale: [1, 1.05, 1],
-                } : {}}
-                transition={{
-                  duration: 0.8,
-                  repeat: isUpgrading ? Infinity : 0,
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(252, 211, 77, 0.2) 50%, transparent 100%)',
                 }}
-              >
-                {/* Glow background */}
-                <motion.div
-                  className="absolute inset-0 blur-2xl rounded-full"
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              />
+              <div className="relative">
+                <div 
+                  className="w-10 h-10 mx-auto mb-2 rounded-xl flex items-center justify-center"
                   style={{
-                    background: currentLevel >= 8 
-                      ? 'radial-gradient(circle, rgba(251,191,36,0.5) 0%, transparent 70%)'
-                      : currentLevel >= 5
-                      ? 'radial-gradient(circle, rgba(168,85,247,0.5) 0%, transparent 70%)'
-                      : 'radial-gradient(circle, hsl(var(--primary) / 0.5) 0%, transparent 70%)',
+                    background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                    boxShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
                   }}
-                  animate={{
-                    scale: [1, 1.3, 1],
-                    opacity: [0.5, 0.8, 0.5],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
-                
-                {/* Level display */}
-                <div className={`relative px-8 py-5 rounded-2xl bg-gradient-to-br ${currentColor.bg} shadow-2xl`}>
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
-                      <TrendingUp className="w-8 h-8 text-white drop-shadow-lg" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-xs text-white/70 uppercase tracking-widest font-medium">Score Power</p>
-                      <p className="text-4xl font-black text-white drop-shadow-lg">+{currentLevel}</p>
-                    </div>
-                    {currentLevel >= 8 && (
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                      >
-                        <Sparkles className="w-6 h-6 text-yellow-300" />
-                      </motion.div>
-                    )}
-                  </div>
+                >
+                  <Zap className="w-5 h-5" style={{ color: '#78350F' }} />
                 </div>
-              </motion.div>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <motion.div 
-                className="relative overflow-hidden rounded-2xl p-4 text-center"
+                <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#FCD34D' }}>Bonus Score</p>
+                <p 
+                  className="text-3xl font-black"
+                  style={{ color: '#FEF3C7', textShadow: '0 0 10px rgba(254, 243, 199, 0.5)' }}
+                >
+                  +{currentBonus.scoreBonus}%
+                </p>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              className="relative overflow-hidden rounded-xl p-4 text-center"
+              style={{
+                background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.25) 0%, rgba(6, 182, 212, 0.25) 100%)',
+                border: '2px solid #22D3EE',
+                boxShadow: '0 2px 0 0 #0E7490, 0 0 15px rgba(34, 211, 238, 0.3)',
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: 'linear-gradient(135deg, hsl(var(--primary) / 0.15) 0%, hsl(var(--primary) / 0.05) 100%)',
-                  border: '1px solid hsl(var(--primary) / 0.3)',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.2) 50%, transparent 100%)',
                 }}
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent"
-                  animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <div className="relative">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-xl bg-primary/20 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-primary" />
-                  </div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Bonus Score</p>
-                  <p className="text-3xl font-black text-primary">+{currentBonus.scoreBonus}%</p>
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+              />
+              <div className="relative">
+                <div 
+                  className="w-10 h-10 mx-auto mb-2 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, #22D3EE 0%, #06B6D4 100%)',
+                    boxShadow: '0 0 10px rgba(34, 211, 238, 0.5)',
+                  }}
+                >
+                  <Sparkles className="w-5 h-5" style={{ color: '#164E63' }} />
                 </div>
-              </motion.div>
-              
-              <motion.div 
-                className="relative overflow-hidden rounded-2xl p-4 text-center"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)',
-                  border: '1px solid rgba(34,211,238,0.3)',
-                }}
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-t from-cyan-400/10 to-transparent"
-                  animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                />
-                <div className="relative">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-xl bg-cyan-400/20 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-cyan-400" />
-                  </div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Bonus EXP</p>
-                  <p className="text-3xl font-black text-cyan-400">+{currentBonus.expBonus}%</p>
-                </div>
-              </motion.div>
-            </div>
+                <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#22D3EE' }}>Bonus EXP</p>
+                <p 
+                  className="text-3xl font-black"
+                  style={{ color: '#ECFEFF', textShadow: '0 0 10px rgba(236, 254, 255, 0.5)' }}
+                >
+                  +{currentBonus.expBonus}%
+                </p>
+              </div>
+            </motion.div>
+          </div>
 
           {/* Upgrade Section */}
           {canUpgrade ? (
@@ -503,7 +551,6 @@ export function ScoreUpgradeShop() {
               </p>
             </div>
           )}
-          </div>
         </div>
       </motion.div>
     </div>
