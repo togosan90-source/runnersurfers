@@ -16,7 +16,6 @@ export function DailyQuests() {
 
   const completedCount = dailyQuests.filter(q => q.completed).length;
   const totalCoinsEarned = dailyQuests.filter(q => q.completed).reduce((sum, q) => sum + q.coins, 0);
-  const totalExpEarned = dailyQuests.filter(q => q.completed).reduce((sum, q) => sum + q.expPercent, 0);
 
   return (
     <motion.div
@@ -163,30 +162,18 @@ export function DailyQuests() {
             <Gift className="w-4 h-4" />
             Ricompense ottenute:
           </span>
-          <div className="flex items-center gap-4 text-sm">
-            <motion.span
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg font-bold"
-              style={{
-                background: 'rgba(251, 191, 36, 0.2)',
-                color: '#fbbf24',
-              }}
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <Coins className="w-4 h-4" />
-              +{totalCoinsEarned.toLocaleString()}
-            </motion.span>
-            <span
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg font-bold"
-              style={{
-                background: 'rgba(168, 85, 247, 0.2)',
-                color: '#c084fc',
-              }}
-            >
-              <Star className="w-4 h-4" />
-              +{totalExpEarned}%
-            </span>
-          </div>
+          <motion.span
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold"
+            style={{
+              background: 'rgba(251, 191, 36, 0.2)',
+              color: '#fbbf24',
+            }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Coins className="w-4 h-4" />
+            +{totalCoinsEarned.toLocaleString()}
+          </motion.span>
         </motion.div>
       )}
 
@@ -319,30 +306,19 @@ export function DailyQuests() {
                   </div>
                 </div>
 
-                {/* Rewards */}
-                <div className="flex items-center gap-2 text-xs">
-                  <span
-                    className="px-2 py-0.5 rounded-md font-bold"
-                    style={{
-                      background: 'rgba(168, 85, 247, 0.2)',
-                      color: '#c084fc',
-                    }}
-                  >
-                    +{quest.expPercent}%
-                  </span>
-                  <motion.span
-                    className="flex items-center gap-1 px-2 py-0.5 rounded-md font-bold"
-                    style={{
-                      background: 'rgba(251, 191, 36, 0.2)',
-                      color: '#fbbf24',
-                    }}
-                    animate={isLegendary && !isCompleted ? { scale: [1, 1.1, 1] } : {}}
-                    transition={{ duration: 0.6, repeat: Infinity }}
-                  >
-                    <Coins className="w-3 h-3" />
-                    {quest.coins.toLocaleString()}
-                  </motion.span>
-                </div>
+                {/* Rewards - only coins */}
+                <motion.span
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-md font-bold"
+                  style={{
+                    background: 'rgba(251, 191, 36, 0.2)',
+                    color: '#fbbf24',
+                  }}
+                  animate={isLegendary && !isCompleted ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ duration: 0.6, repeat: Infinity }}
+                >
+                  <Coins className="w-3 h-3" />
+                  {quest.coins.toLocaleString()}
+                </motion.span>
               </div>
 
               {/* Progress bar */}
