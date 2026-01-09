@@ -70,7 +70,7 @@ export function ShoeUpgradeShop() {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground mb-4">
-        Potenzia le tue scarpe da +1 a +10! Ogni livello aggiunge +2% bonus.
+        Potenzia le tue scarpe da +1 a +10! Bonus crescenti per ogni livello.
       </p>
 
       {ownedShoesList.map((shoe, index) => {
@@ -223,7 +223,7 @@ export function ShoeUpgradeShop() {
                   <div className="flex items-center gap-2 text-xs mb-2">
                     <Zap className="w-3 h-3 text-gold" />
                     <span className="text-gold font-medium">
-                      Bonus upgrade: +{currentBonus}% extra
+                      Bonus upgrade: +{currentBonus.coinBonus}% monete, +{currentBonus.expBonus}% exp
                     </span>
                   </div>
                 )}
