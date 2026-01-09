@@ -1,4 +1,5 @@
-import { Route, Gauge, Clock, Flame, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Route, Gauge, Clock, Flame } from 'lucide-react';
 
 interface RunningMetricsProps {
   distance: number;
@@ -18,125 +19,189 @@ export function RunningMetrics({
   const metrics = [
     {
       icon: Route,
-      label: 'Distanza',
-      description: 'Km percorsi',
+      label: 'DISTANZA',
       value: distance.toFixed(2),
-      unit: 'km',
-      gradient: 'from-emerald-500 via-teal-500 to-cyan-500',
-      bgGradient: 'from-emerald-500/20 via-teal-500/15 to-cyan-500/10',
-      iconBg: 'bg-emerald-500/30',
-      iconColor: 'text-emerald-400',
-      glowColor: 'rgba(16, 185, 129, 0.4)',
-      borderColor: 'border-emerald-500/40',
+      unit: 'KM',
+      color: '#00ff88',
+      shadowColor: 'rgba(0, 255, 136, 0.5)',
     },
     {
       icon: Gauge,
-      label: 'Velocità',
-      description: 'Km ogni ora',
+      label: 'VELOCITÀ',
       value: speed.toFixed(1),
-      unit: 'km/h',
-      gradient: 'from-blue-500 via-indigo-500 to-purple-500',
-      bgGradient: 'from-blue-500/20 via-indigo-500/15 to-purple-500/10',
-      iconBg: 'bg-blue-500/30',
-      iconColor: 'text-blue-400',
-      glowColor: 'rgba(59, 130, 246, 0.4)',
-      borderColor: 'border-blue-500/40',
+      unit: 'KM/H',
+      color: '#00d4ff',
+      shadowColor: 'rgba(0, 212, 255, 0.5)',
     },
     {
       icon: Clock,
-      label: 'Andatura',
-      description: 'Tempo per 1 km',
+      label: 'PASSO',
       value: pace,
-      unit: 'min/km',
-      gradient: 'from-amber-500 via-orange-500 to-red-500',
-      bgGradient: 'from-amber-500/20 via-orange-500/15 to-red-500/10',
-      iconBg: 'bg-amber-500/30',
-      iconColor: 'text-amber-400',
-      glowColor: 'rgba(245, 158, 11, 0.4)',
-      borderColor: 'border-amber-500/40',
+      unit: '/KM',
+      color: '#ff00ff',
+      shadowColor: 'rgba(255, 0, 255, 0.5)',
     },
     {
       icon: Flame,
-      label: 'Calorie',
-      description: 'Energia bruciata',
+      label: 'CALORIE',
       value: calories.toString(),
-      unit: 'kcal',
-      gradient: 'from-rose-500 via-pink-500 to-fuchsia-500',
-      bgGradient: 'from-rose-500/20 via-pink-500/15 to-fuchsia-500/10',
-      iconBg: 'bg-rose-500/30',
-      iconColor: 'text-rose-400',
-      glowColor: 'rgba(244, 63, 94, 0.4)',
-      borderColor: 'border-rose-500/40',
+      unit: 'KCAL',
+      color: '#ff3366',
+      shadowColor: 'rgba(255, 51, 102, 0.5)',
     },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      {metrics.map((metric) => (
-        <div
+      {metrics.map((metric, index) => (
+        <motion.div
           key={metric.label}
-          className={`relative overflow-hidden rounded-xl p-4 border ${metric.borderColor} bg-gradient-to-br ${metric.bgGradient} backdrop-blur-sm`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          className="relative overflow-hidden"
           style={{
-            boxShadow: `0 4px 20px ${metric.glowColor}, inset 0 1px 0 rgba(255,255,255,0.1)`,
+            background: 'linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.9) 100%)',
+            border: `1px solid ${metric.color}40`,
+            borderRadius: '4px',
+            clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))',
           }}
         >
-          {/* Decorative corner accents */}
-          <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 ${metric.borderColor} rounded-tl-xl opacity-60`} />
-          <div className={`absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 ${metric.borderColor} rounded-br-xl opacity-60`} />
-          
-          {/* Gradient overlay stripe */}
-          <div className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l ${metric.bgGradient} opacity-50`} />
-          
-          {/* Icon badge */}
-          <div 
-            className={`relative z-10 w-10 h-10 rounded-lg flex items-center justify-center mb-2 ${metric.iconBg} border border-white/10`}
+          {/* Scan line effect */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
             style={{
-              boxShadow: `0 0 15px ${metric.glowColor}`,
+              background: `linear-gradient(180deg, transparent 0%, ${metric.color}10 50%, transparent 100%)`,
+              height: '200%',
             }}
-          >
-            <metric.icon className={`w-5 h-5 ${metric.iconColor}`} />
-          </div>
-          
-          {/* Value */}
-          <div className="relative z-10 flex items-baseline gap-1.5 mb-1">
-            <span 
-              className={`font-sporty text-2xl font-bold italic bg-gradient-to-r ${metric.gradient} bg-clip-text text-transparent`}
-              style={{
-                filter: `drop-shadow(0 0 8px ${metric.glowColor})`,
-              }}
-            >
-              {metric.value}
-            </span>
-            <span className={`font-mono text-sm ${metric.iconColor}`}>
-              {metric.unit}
-            </span>
-          </div>
-          
-          {/* Label and description */}
-          <div className="relative z-10">
-            <span className={`font-semibold text-sm bg-gradient-to-r ${metric.gradient} bg-clip-text text-transparent`}>
-              {metric.label}
-            </span>
-            <p className="text-xs text-muted-foreground/80 mt-0.5">
-              {metric.description}
-            </p>
-          </div>
+            animate={{ y: ['-100%', '0%'] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+          />
 
-          {/* Status indicator */}
+          {/* Corner cuts decoration */}
           <div 
-            className={`absolute top-3 right-3 w-2 h-2 rounded-full bg-gradient-to-r ${metric.gradient}`}
+            className="absolute top-0 right-0 w-3 h-3"
             style={{
-              boxShadow: `0 0 8px ${metric.glowColor}`,
+              background: `linear-gradient(135deg, transparent 50%, ${metric.color}60 50%)`,
             }}
           />
-          
-          {/* Decorative sparkle dots */}
-          <div className="absolute bottom-2 left-1/2 flex gap-1">
-            <div className={`w-1 h-1 rounded-full bg-gradient-to-r ${metric.gradient} opacity-60`} />
-            <div className={`w-1 h-1 rounded-full bg-gradient-to-r ${metric.gradient} opacity-40`} />
-            <div className={`w-1 h-1 rounded-full bg-gradient-to-r ${metric.gradient} opacity-20`} />
+          <div 
+            className="absolute bottom-0 left-0 w-3 h-3"
+            style={{
+              background: `linear-gradient(-45deg, transparent 50%, ${metric.color}60 50%)`,
+            }}
+          />
+
+          {/* Glowing border lines */}
+          <div 
+            className="absolute top-0 left-0 right-3 h-px"
+            style={{ background: `linear-gradient(90deg, ${metric.color}, transparent)` }}
+          />
+          <div 
+            className="absolute bottom-0 left-3 right-0 h-px"
+            style={{ background: `linear-gradient(90deg, transparent, ${metric.color})` }}
+          />
+          <div 
+            className="absolute top-3 right-0 bottom-0 w-px"
+            style={{ background: `linear-gradient(180deg, ${metric.color}, transparent)` }}
+          />
+          <div 
+            className="absolute top-0 left-0 bottom-3 w-px"
+            style={{ background: `linear-gradient(180deg, transparent, ${metric.color})` }}
+          />
+
+          <div className="relative z-10 p-4">
+            {/* Header with icon */}
+            <div className="flex items-center justify-between mb-2">
+              <div 
+                className="flex items-center gap-2"
+              >
+                <div 
+                  className="w-8 h-8 flex items-center justify-center"
+                  style={{
+                    background: `${metric.color}15`,
+                    border: `1px solid ${metric.color}50`,
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  }}
+                >
+                  <metric.icon 
+                    className="w-4 h-4" 
+                    style={{ 
+                      color: metric.color,
+                      filter: `drop-shadow(0 0 4px ${metric.shadowColor})`,
+                    }} 
+                  />
+                </div>
+                <span 
+                  className="text-[10px] font-mono font-bold tracking-[0.2em]"
+                  style={{ 
+                    color: metric.color,
+                    textShadow: `0 0 10px ${metric.shadowColor}`,
+                  }}
+                >
+                  {metric.label}
+                </span>
+              </div>
+              
+              {/* Status LED */}
+              <motion.div
+                className="w-2 h-2"
+                style={{
+                  background: metric.color,
+                  boxShadow: `0 0 8px ${metric.shadowColor}, 0 0 16px ${metric.shadowColor}`,
+                  clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+                }}
+                animate={{ opacity: isRunning ? [0.5, 1, 0.5] : 0.3 }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+            </div>
+
+            {/* Value display */}
+            <div className="flex items-baseline gap-1">
+              <span 
+                className="font-mono text-3xl font-bold tracking-tight"
+                style={{
+                  color: metric.color,
+                  textShadow: `0 0 20px ${metric.shadowColor}, 0 0 40px ${metric.shadowColor}`,
+                }}
+              >
+                {metric.value}
+              </span>
+              <span 
+                className="font-mono text-xs font-medium opacity-70"
+                style={{ color: metric.color }}
+              >
+                {metric.unit}
+              </span>
+            </div>
+
+            {/* Data bar visualization */}
+            <div className="mt-2 h-1 w-full overflow-hidden" style={{ background: `${metric.color}20` }}>
+              <motion.div
+                className="h-full"
+                style={{ background: `linear-gradient(90deg, ${metric.color}, ${metric.color}80)` }}
+                initial={{ width: '0%' }}
+                animate={{ width: isRunning ? '100%' : '30%' }}
+                transition={{ duration: 2, repeat: isRunning ? Infinity : 0, repeatType: 'reverse' }}
+              />
+            </div>
+
+            {/* Hex pattern decoration */}
+            <div className="absolute bottom-1 right-2 flex gap-0.5 opacity-30">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1.5 h-1.5"
+                  style={{
+                    background: metric.color,
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    opacity: 1 - i * 0.25,
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );
