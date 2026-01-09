@@ -96,9 +96,23 @@ export default function LeaderboardPage() {
             <Trophy className="w-6 h-6" />
             Classifica Globale
           </h1>
-          <p className="text-sm text-muted-foreground capitalize">
-            📅 {currentMonth} - Top 300 Runner
-          </p>
+          <div 
+            className="inline-flex items-center gap-2 px-3 py-1.5 mt-2"
+            style={{
+              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%)',
+              clipPath: 'polygon(6px 0%, calc(100% - 6px) 0%, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0% 50%)',
+              border: '1px solid rgba(34, 211, 238, 0.3)',
+            }}
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: '0 0 6px rgba(34, 211, 238, 0.8)' }} />
+            <span 
+              className="font-mono text-xs uppercase tracking-wider capitalize"
+              style={{ color: '#22D3EE', textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}
+            >
+              📅 {currentMonth} - Top 300 Runner
+            </span>
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: '0 0 6px rgba(34, 211, 238, 0.8)' }} />
+          </div>
         </motion.div>
 
         {/* User Position Card */}
