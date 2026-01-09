@@ -466,53 +466,218 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="bg-gradient-to-br from-accent/10 to-primary/10 rounded-xl p-4 border border-accent/20 mb-6"
+            className="rounded-2xl p-5 mb-6 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #164E63 100%)',
+              border: '3px solid #22D3EE',
+              boxShadow: '0 4px 0 0 #0E7490, 0 0 30px rgba(34, 211, 238, 0.4)',
+            }}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-accent" />
-                <span className="font-bold">Punti Skill Disponibili</span>
+            {/* Decorative elements */}
+            <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '10%', top: '15%', filter: 'drop-shadow(0 0 6px rgba(34, 211, 238, 0.8))' }}>⚡</div>
+            <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '85%', top: '20%', filter: 'drop-shadow(0 0 6px rgba(34, 211, 238, 0.8))' }}>✨</div>
+            <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '75%', top: '70%', filter: 'drop-shadow(0 0 6px rgba(34, 211, 238, 0.8))' }}>💎</div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 relative z-10">
+              <div className="flex items-center gap-3">
+                <motion.div 
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, #22D3EE 0%, #06B6D4 100%)',
+                    border: '2px solid #67E8F9',
+                    boxShadow: '0 0 20px rgba(34, 211, 238, 0.6)',
+                  }}
+                  animate={{
+                    boxShadow: [
+                      '0 0 20px rgba(34, 211, 238, 0.6)',
+                      '0 0 35px rgba(34, 211, 238, 0.9)',
+                      '0 0 20px rgba(34, 211, 238, 0.6)',
+                    ],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                  }}
+                >
+                  <Zap className="w-7 h-7" style={{ color: '#ECFEFF', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.8))' }} />
+                </motion.div>
+                <div>
+                  <h3 
+                    className="font-varsity text-lg uppercase tracking-wide"
+                    style={{
+                      color: '#ECFEFF',
+                      textShadow: '2px 2px 0px #164E63, 0 0 15px rgba(236, 254, 255, 0.5)',
+                    }}
+                  >
+                    Punti Skill
+                  </h3>
+                  <p className="text-xs" style={{ color: '#A5F3FC' }}>
+                    Ogni punto = +0.05% bonus!
+                  </p>
+                </div>
               </div>
-              <span className="font-display text-2xl font-bold text-accent">{user.skillPoints}</span>
+              
+              <motion.div 
+                className="flex flex-col items-center justify-center px-4 py-2 rounded-xl"
+                style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  border: '2px solid rgba(34, 211, 238, 0.5)',
+                }}
+                animate={{
+                  scale: user.skillPoints > 0 ? [1, 1.05, 1] : 1,
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: user.skillPoints > 0 ? Infinity : 0,
+                }}
+              >
+                <span 
+                  className="font-display text-3xl font-bold"
+                  style={{
+                    color: '#FCD34D',
+                    textShadow: '0 0 15px rgba(252, 211, 77, 0.6)',
+                  }}
+                >
+                  {user.skillPoints}
+                </span>
+                <span className="text-[10px] uppercase font-bold" style={{ color: '#A5F3FC' }}>Disponibili</span>
+              </motion.div>
             </div>
-            <p className="text-xs text-muted-foreground mb-4">
-              Ogni livello guadagni 3 punti skill. Ogni punto = +1% bonus!
-            </p>
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div className="bg-card rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm flex items-center gap-1">
-                    <Coins className="w-4 h-4 text-gold" />
-                    Monete
-                  </span>
-                  <span className="font-bold text-gold">+{user.skillCoins}%</span>
+
+            {/* Skill Cards */}
+            <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
+              {/* Coins Skill */}
+              <motion.div 
+                className="rounded-xl p-4 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(252, 211, 77, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%)',
+                  border: '2px solid #FCD34D',
+                  boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.3)',
+                }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(252, 211, 77, 0.2) 50%, transparent 100%)',
+                  }}
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{
+                          background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                          boxShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
+                        }}
+                      >
+                        <Coins className="w-5 h-5" style={{ color: '#78350F' }} />
+                      </div>
+                      <span 
+                        className="font-varsity uppercase text-sm"
+                        style={{ color: '#FEF3C7' }}
+                      >
+                        Monete
+                      </span>
+                    </div>
+                  </div>
+                  <p 
+                    className="font-display text-2xl font-bold mb-3 text-center"
+                    style={{
+                      color: '#FCD34D',
+                      textShadow: '0 0 10px rgba(252, 211, 77, 0.5)',
+                    }}
+                  >
+                    +{user.skillCoins.toFixed(2)}%
+                  </p>
+                  <Button 
+                    size="sm" 
+                    className="w-full font-bold"
+                    onClick={() => addSkillPoint('coins')}
+                    disabled={user.skillPoints <= 0}
+                    style={{
+                      background: user.skillPoints > 0 
+                        ? 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)'
+                        : undefined,
+                      color: user.skillPoints > 0 ? '#78350F' : undefined,
+                      border: user.skillPoints > 0 ? '2px solid #FEF3C7' : undefined,
+                      boxShadow: user.skillPoints > 0 ? '0 2px 0 0 #B45309' : undefined,
+                    }}
+                  >
+                    +0.05%
+                  </Button>
                 </div>
-                <Button 
-                  size="sm" 
-                  className="w-full"
-                  onClick={() => addSkillPoint('coins')}
-                  disabled={user.skillPoints <= 0}
-                >
-                  +1 Punto
-                </Button>
-              </div>
-              <div className="bg-card rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm flex items-center gap-1">
-                    <Trophy className="w-4 h-4 text-primary" />
-                    Score
-                  </span>
-                  <span className="font-bold text-primary">+{user.skillScore}%</span>
+              </motion.div>
+
+              {/* Score Skill */}
+              <motion.div 
+                className="rounded-xl p-4 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%)',
+                  border: '2px solid #A855F7',
+                  boxShadow: '0 2px 0 0 #6D28D9, 0 0 15px rgba(168, 85, 247, 0.3)',
+                }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(168, 85, 247, 0.2) 50%, transparent 100%)',
+                  }}
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+                />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{
+                          background: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)',
+                          boxShadow: '0 0 10px rgba(168, 85, 247, 0.5)',
+                        }}
+                      >
+                        <Trophy className="w-5 h-5" style={{ color: '#F3E8FF' }} />
+                      </div>
+                      <span 
+                        className="font-varsity uppercase text-sm"
+                        style={{ color: '#F3E8FF' }}
+                      >
+                        Score
+                      </span>
+                    </div>
+                  </div>
+                  <p 
+                    className="font-display text-2xl font-bold mb-3 text-center"
+                    style={{
+                      color: '#C084FC',
+                      textShadow: '0 0 10px rgba(192, 132, 252, 0.5)',
+                    }}
+                  >
+                    +{user.skillScore.toFixed(2)}%
+                  </p>
+                  <Button 
+                    size="sm" 
+                    className="w-full font-bold"
+                    onClick={() => addSkillPoint('score')}
+                    disabled={user.skillPoints <= 0}
+                    style={{
+                      background: user.skillPoints > 0 
+                        ? 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)'
+                        : undefined,
+                      color: user.skillPoints > 0 ? '#F3E8FF' : undefined,
+                      border: user.skillPoints > 0 ? '2px solid #C4B5FD' : undefined,
+                      boxShadow: user.skillPoints > 0 ? '0 2px 0 0 #6D28D9' : undefined,
+                    }}
+                  >
+                    +0.05%
+                  </Button>
                 </div>
-                <Button 
-                  size="sm" 
-                  className="w-full"
-                  onClick={() => addSkillPoint('score')}
-                  disabled={user.skillPoints <= 0}
-                >
-                  +1 Punto
-                </Button>
-              </div>
+              </motion.div>
             </div>
             
             {/* Save Button */}
@@ -520,16 +685,23 @@ export default function ProfilePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
+              className="relative z-10"
             >
               <Button
                 size="sm"
-                className="w-full gap-2"
-                variant={skillsSaved ? "default" : "secondary"}
+                className="w-full gap-2 font-bold"
                 onClick={handleSaveSkills}
                 disabled={isSavingSkills}
-                style={skillsSaved ? {
-                  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                } : undefined}
+                style={{
+                  background: skillsSaved 
+                    ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                    : 'linear-gradient(135deg, #22D3EE 0%, #06B6D4 100%)',
+                  color: '#ECFEFF',
+                  border: skillsSaved ? '2px solid #86EFAC' : '2px solid #67E8F9',
+                  boxShadow: skillsSaved 
+                    ? '0 2px 0 0 #166534, 0 0 15px rgba(34, 197, 94, 0.4)'
+                    : '0 2px 0 0 #0E7490, 0 0 15px rgba(34, 211, 238, 0.4)',
+                }}
               >
                 {isSavingSkills ? (
                   <>
@@ -549,7 +721,7 @@ export default function ProfilePage() {
                 ) : (
                   <>
                     <Save className="w-4 h-4" />
-                    Salva
+                    Salva Progressi
                   </>
                 )}
               </Button>
