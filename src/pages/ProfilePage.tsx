@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
-import { User, Settings, Award, Ruler, Flame, Clock, TrendingUp, LogOut, Edit2, Star, Zap, Trophy, Coins, Camera } from 'lucide-react';
+import { User, Settings, Award, Ruler, Flame, Clock, TrendingUp, LogOut, Edit2, Star, Zap, Trophy, Coins, Camera, Save, Check } from 'lucide-react';
 import trophyGold from '@/assets/trophy-gold.png';
 import coinsGold from '@/assets/coins-gold.png';
 import { BottomNav } from '@/components/layout/BottomNav';
@@ -26,13 +26,15 @@ export default function ProfilePage() {
     addSkillPoint
   } = useGameStore();
   const { signOut } = useAuth();
-  const { profile, fetchProfile } = useProfile();
+  const { profile, fetchProfile, syncProfileFromStore } = useProfile();
   const { uploadAvatar, uploading } = useAvatarUpload();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [newUsername, setNewUsername] = useState(user.username);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSavingSkills, setIsSavingSkills] = useState(false);
+  const [skillsSaved, setSkillsSaved] = useState(false);
 
   const rank = getRank(user.level);
   const reputationLevel = getReputationLevel(user.reputation);
@@ -75,6 +77,19 @@ export default function ProfilePage() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${minutes}m`;
+  };
+
+  const handleSaveSkills = async () => {
+    setIsSavingSkills(true);
+    try {
+      await syncProfileFromStore();
+      setSkillsSaved(true);
+      toast.success('Punti skill salvati!');
+      setTimeout(() => setSkillsSaved(false), 2000);
+    } catch (error) {
+      toast.error('Errore nel salvataggio');
+    }
+    setIsSavingSkills(false);
   };
 
   // Mock badges
@@ -463,7 +478,7 @@ export default function ProfilePage() {
             <p className="text-xs text-muted-foreground mb-4">
               Ogni livello guadagni 3 punti skill. Ogni punto = +1% bonus!
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 mb-3">
               <div className="bg-card rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm flex items-center gap-1">
@@ -499,6 +514,46 @@ export default function ProfilePage() {
                 </Button>
               </div>
             </div>
+            
+            {/* Save Button */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Button
+                size="sm"
+                className="w-full gap-2"
+                variant={skillsSaved ? "default" : "secondary"}
+                onClick={handleSaveSkills}
+                disabled={isSavingSkills}
+                style={skillsSaved ? {
+                  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                } : undefined}
+              >
+                {isSavingSkills ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Save className="w-4 h-4" />
+                    </motion.div>
+                    Salvataggio...
+                  </>
+                ) : skillsSaved ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Salvato!
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    Salva
+                  </>
+                )}
+              </Button>
+            </motion.div>
           </motion.div>
         )}
 
