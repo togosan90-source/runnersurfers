@@ -563,12 +563,14 @@ export const useGameStore = create<GameState>()((set, get) => ({
         const state = get();
         if (state.user.skillPoints <= 0) return;
         
+        const increment = 0.05; // Each skill point adds 0.05%
+        
         set({
           user: {
             ...state.user,
             skillPoints: state.user.skillPoints - 1,
-            skillCoins: type === 'coins' ? state.user.skillCoins + 1 : state.user.skillCoins,
-            skillScore: type === 'score' ? state.user.skillScore + 1 : state.user.skillScore,
+            skillCoins: type === 'coins' ? Number((state.user.skillCoins + increment).toFixed(2)) : state.user.skillCoins,
+            skillScore: type === 'score' ? Number((state.user.skillScore + increment).toFixed(2)) : state.user.skillScore,
           }
         });
       },
