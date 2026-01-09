@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useProfile } from '@/hooks/useProfile';
 
 // Score upgrade system constants
 const SCORE_UPGRADE_SUCCESS_RATES: Record<number, number> = {
@@ -72,6 +73,7 @@ function getScoreUpgradeCost(currentLevel: number, targetLevel: number, playerLe
 
 export function ScoreUpgradeShop() {
   const { user, scoreUpgradeLevel, attemptScoreUpgrade } = useGameStore();
+  const { syncProfileFromStore } = useProfile();
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [upgradeResult, setUpgradeResult] = useState<'success' | 'fail' | null>(null);
 
@@ -105,6 +107,9 @@ export function ScoreUpgradeShop() {
     } else {
       toast.error(`💔 Upgrade fallito! Hai perso ${result.cost.toLocaleString()} monete`);
     }
+    
+    // Sync to database after upgrade attempt
+    await syncProfileFromStore();
     
     setTimeout(() => {
       setIsUpgrading(false);

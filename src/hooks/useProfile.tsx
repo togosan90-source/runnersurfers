@@ -3,6 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useGameStore, getExpNeeded } from '@/store/gameStore';
 
+export interface ShoeUpgradeData {
+  shoeId: string;
+  level: number;
+}
+
 export interface Profile {
   id: string;
   username: string;
@@ -20,6 +25,8 @@ export interface Profile {
   streak_days: number;
   last_run_date: string | null;
   owned_shoes: string[];
+  score_upgrade_level: number;
+  shoe_upgrades: ShoeUpgradeData[];
   created_at: string;
   updated_at: string;
 }
@@ -31,6 +38,8 @@ export const useProfile = () => {
   const setUserData = useGameStore((state) => state.setUser);
   const gameUser = useGameStore((state) => state.user);
   const ownedShoes = useGameStore((state) => state.ownedShoes);
+  const scoreUpgradeLevel = useGameStore((state) => state.scoreUpgradeLevel);
+  const shoeUpgrades = useGameStore((state) => state.shoeUpgrades);
 
   useEffect(() => {
     if (user) {
@@ -54,7 +63,18 @@ export const useProfile = () => {
     if (error) {
       console.error('Error fetching profile:', error);
     } else if (data) {
-      setProfile(data as Profile);
+      // Parse shoe_upgrades from JSONB
+      const shoeUpgradesData = Array.isArray(data.shoe_upgrades) 
+        ? (data.shoe_upgrades as unknown as ShoeUpgradeData[])
+        : [];
+      
+      const profileData: Profile = {
+        ...data,
+        shoe_upgrades: shoeUpgradesData,
+      } as Profile;
+      
+      setProfile(profileData);
+      
       // Sync with game store - all fields
       setUserData({
         id: data.id,
@@ -73,20 +93,26 @@ export const useProfile = () => {
         lastRunDate: data.last_run_date,
       });
       
-      // Also sync owned shoes to the store
+      // Sync owned shoes to the store
       if (data.owned_shoes && Array.isArray(data.owned_shoes)) {
         useGameStore.setState({ ownedShoes: data.owned_shoes });
       }
+      
+      // Sync score upgrade level and shoe upgrades
+      useGameStore.setState({ 
+        scoreUpgradeLevel: data.score_upgrade_level || 0,
+        shoeUpgrades: shoeUpgradesData,
+      });
     }
     setLoading(false);
   };
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const updateProfile = async (updates: Partial<Omit<Profile, 'shoe_upgrades'> & { shoe_upgrades?: object[] }>) => {
     if (!user) return { error: new Error('Not authenticated') };
 
     const { error } = await supabase
       .from('profiles')
-      .update(updates)
+      .update(updates as Record<string, unknown>)
       .eq('id', user.id);
 
     if (!error) {
@@ -112,6 +138,9 @@ export const useProfile = () => {
       return;
     }
     
+    // Convert shoeUpgrades to JSON-compatible format
+    const shoeUpgradesJson = shoeUpgrades.map(u => ({ shoeId: u.shoeId, level: u.level }));
+    
     const { error } = await supabase
       .from('profiles')
       .update({
@@ -128,6 +157,8 @@ export const useProfile = () => {
         streak_days: gameUser.streakDays,
         last_run_date: gameUser.lastRunDate,
         owned_shoes: ownedShoes,
+        score_upgrade_level: scoreUpgradeLevel,
+        shoe_upgrades: shoeUpgradesJson,
       })
       .eq('id', user.id);
     

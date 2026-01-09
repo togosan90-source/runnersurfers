@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { useGameStore, SHOES, SHOE_UPGRADE_SUCCESS_RATES, SHOE_UPGRADE_BONUSES, getShoeUpgradeCost, getShoeUpgradeBonus } from '@/store/gameStore';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useProfile } from '@/hooks/useProfile';
 
 export function ShoeUpgradeShop() {
   const { user, ownedShoes, shoeUpgrades, getShoeUpgradeLevel, attemptShoeUpgrade } = useGameStore();
+  const { syncProfileFromStore } = useProfile();
   const [upgrading, setUpgrading] = useState<string | null>(null);
   const [result, setResult] = useState<{ shoeId: string; success: boolean } | null>(null);
 
@@ -27,7 +29,7 @@ export function ShoeUpgradeShop() {
     setUpgrading(shoeId);
     
     // Simula animazione upgrade
-    setTimeout(() => {
+    setTimeout(async () => {
       const { success, newLevel, cost: spentCost } = attemptShoeUpgrade(shoeId);
       
       setResult({ shoeId, success });
@@ -38,6 +40,9 @@ export function ShoeUpgradeShop() {
       } else {
         toast.error(`💔 Upgrade fallito! Hai speso ${spentCost.toLocaleString()} monete`);
       }
+      
+      // Sync to database after upgrade attempt
+      await syncProfileFromStore();
       
       setTimeout(() => setResult(null), 2000);
     }, 1500);
