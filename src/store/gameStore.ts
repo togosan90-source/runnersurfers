@@ -151,9 +151,33 @@ export function getShoeUpgradeCost(level: number, targetLevel: number, shoeId: s
   return Math.floor(baseCost * coinMultiplier * (levelMultipliers[targetLevel] || 1) * shoeMultiplier);
 }
 
-// Get bonus per upgrade level (each +1 gives +2% extra bonus)
-export function getShoeUpgradeBonus(upgradeLevel: number): number {
-  return upgradeLevel * 2; // +2% per upgrade level
+// Progressive bonus per upgrade level (coins and exp bonuses)
+export const SHOE_UPGRADE_BONUSES: Record<number, { coinBonus: number; expBonus: number }> = {
+  0: { coinBonus: 0, expBonus: 0 },
+  1: { coinBonus: 2, expBonus: 2 },    // +1: 2% coins, 2% exp
+  2: { coinBonus: 2, expBonus: 2 },    // +2: 2% coins, 2% exp
+  3: { coinBonus: 3, expBonus: 3 },    // +3: 3% coins, 3% exp
+  4: { coinBonus: 4, expBonus: 4 },    // +4: 4% coins, 4% exp
+  5: { coinBonus: 5, expBonus: 5 },    // +5: 5% coins, 5% exp
+  6: { coinBonus: 6, expBonus: 6 },    // +6: 6% coins, 6% exp
+  7: { coinBonus: 8, expBonus: 8 },    // +7: 8% coins, 8% exp
+  8: { coinBonus: 10, expBonus: 10 },  // +8: 10% coins, 10% exp
+  9: { coinBonus: 12, expBonus: 12 },  // +9: 12% coins, 12% exp
+  10: { coinBonus: 15, expBonus: 15 }, // +10: 15% coins, 15% exp
+};
+
+// Get cumulative bonus for upgrade level
+export function getShoeUpgradeBonus(upgradeLevel: number): { coinBonus: number; expBonus: number } {
+  let totalCoinBonus = 0;
+  let totalExpBonus = 0;
+  
+  for (let i = 1; i <= upgradeLevel; i++) {
+    const bonus = SHOE_UPGRADE_BONUSES[i] || { coinBonus: 0, expBonus: 0 };
+    totalCoinBonus += bonus.coinBonus;
+    totalExpBonus += bonus.expBonus;
+  }
+  
+  return { coinBonus: totalCoinBonus, expBonus: totalExpBonus };
 }
 
 interface GameState {
@@ -808,8 +832,8 @@ export const useGameStore = create<GameState>()((set, get) => ({
       const upgradeBonus = getShoeUpgradeBonus(upgradeLevel);
       
       return {
-        coinBonus: shoe.coinBonus + upgradeBonus,
-        expBonus: shoe.expBonus + upgradeBonus,
+        coinBonus: shoe.coinBonus + upgradeBonus.coinBonus,
+        expBonus: shoe.expBonus + upgradeBonus.expBonus,
       };
     },
   }));
