@@ -259,16 +259,42 @@ export function getExpNeeded(level: number): number {
   return 100; // 100 EXP = 100%
 }
 
-// NEW Coins System - Progressive earnings per km (extended for 15.000 levels)
+// NEW Coins System - Progressive earnings (extended for 15.000 levels)
+// Base: 100 coins/100m = 800 coins/km, 3000 coins/5km, 5000 coins/level up
+// Multiplier increases gradually with level
+
+// Get coin multiplier based on level (starts at 1x, grows to ~20x at level 15000)
+export function getCoinMultiplier(level: number): number {
+  if (level <= 100) return 1 + (level - 1) * 0.01;           // 1.00x - 1.99x
+  if (level <= 300) return 2 + (level - 100) * 0.015;        // 2.00x - 5.00x
+  if (level <= 600) return 5 + (level - 300) * 0.02;         // 5.00x - 11.00x
+  if (level <= 1000) return 11 + (level - 600) * 0.0125;     // 11.00x - 16.00x
+  if (level <= 2000) return 16 + (level - 1000) * 0.01;      // 16.00x - 26.00x
+  if (level <= 4000) return 26 + (level - 2000) * 0.0075;    // 26.00x - 41.00x
+  if (level <= 7000) return 41 + (level - 4000) * 0.006;     // 41.00x - 59.00x
+  if (level <= 10000) return 59 + (level - 7000) * 0.005;    // 59.00x - 74.00x
+  if (level <= 13000) return 74 + (level - 10000) * 0.004;   // 74.00x - 86.00x
+  return 86 + (level - 13000) * 0.003;                       // 86.00x - 92.00x at 15000
+}
+
+// Coins earned per 100 meters (base: 100 coins)
+export function getCoinsPerHundredMeters(level: number): number {
+  return Math.floor(100 * getCoinMultiplier(level));
+}
+
+// Coins earned per kilometer (base: 800 coins)
 export function getCoinsPerKm(level: number): number {
-  if (level < 10) return 100;
-  if (level <= 100) return 100 + level * 10;
-  if (level <= 500) return 1100 + (level - 100) * 15;
-  if (level <= 1000) return 7100 + (level - 500) * 20;
-  if (level <= 2000) return 17100 + (level - 1000) * 25;
-  if (level <= 5000) return 42100 + (level - 2000) * 30;
-  if (level <= 10000) return 132100 + (level - 5000) * 35;
-  return 307100 + (level - 10000) * 40;
+  return Math.floor(800 * getCoinMultiplier(level));
+}
+
+// Coins earned per 5 kilometers (base: 3000 coins)
+export function getCoinsPerFiveKm(level: number): number {
+  return Math.floor(3000 * getCoinMultiplier(level));
+}
+
+// Coins earned per level up (base: 5000 coins)
+export function getCoinsPerLevelUp(level: number): number {
+  return Math.floor(5000 * getCoinMultiplier(level));
 }
 
 // NEW Ranking System - Extended for 15.000 levels
