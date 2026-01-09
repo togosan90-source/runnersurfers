@@ -218,6 +218,10 @@ export default function RunPage() {
             // Anti-cheat: Ignore unrealistic speeds (vehicle detection)
             if (currentSpeed > MAX_SPEED_THRESHOLD) {
               console.log(`Speed too high (vehicle detected): ${currentSpeed.toFixed(1)} km/h`);
+              toast.error('🚗 Velocità troppo alta! Sei in veicolo? Lo score è bloccato.', {
+                id: 'vehicle-detected',
+                duration: 3000,
+              });
               setSpeed(0);
               setIsMoving(false);
               lastPositionRef.current = { ...newPos, time: Date.now() };
