@@ -597,10 +597,51 @@ export default function LeaderboardPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-6 text-center text-xs text-muted-foreground"
+          className="mt-6 relative bg-gradient-to-br from-cyan-950/60 via-slate-950/80 to-cyan-950/60 p-4 overflow-hidden"
+          style={{
+            clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))'
+          }}
         >
-          <p>🔄 Aggiornamento: Tempo reale</p>
-          <p>📅 Reset Score: Ultimo giorno del mese</p>
+          {/* Scan line effect */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-pulse"
+              style={{ top: '30%' }} />
+            <div className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-pulse"
+              style={{ top: '70%' }} />
+          </div>
+          
+          {/* Corner decorations */}
+          <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-cyan-500/60" />
+          <div className="absolute top-0 right-2.5 w-2 h-2 border-r border-t border-cyan-500/60" />
+          <div className="absolute bottom-0 left-2.5 w-2 h-2 border-l border-b border-cyan-500/60" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-cyan-500/60" />
+          
+          {/* Glowing border lines */}
+          <div className="absolute top-0 left-3 right-3 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+          <div className="absolute bottom-0 left-3 right-3 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+          
+          <div className="relative flex flex-col items-center gap-2">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"
+                style={{ boxShadow: '0 0 6px rgba(34, 211, 238, 0.8)' }} />
+              <span className="text-cyan-300 font-mono text-xs tracking-wider"
+                style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>
+                AGGIORNAMENTO: TEMPO REALE
+              </span>
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"
+                style={{ boxShadow: '0 0 6px rgba(34, 211, 238, 0.8)' }} />
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"
+                style={{ boxShadow: '0 0 6px rgba(251, 191, 36, 0.8)' }} />
+              <span className="text-amber-300 font-mono text-xs tracking-wider"
+                style={{ textShadow: '0 0 8px rgba(251, 191, 36, 0.5)' }}>
+                RESET SCORE: ULTIMO GIORNO DEL MESE
+              </span>
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"
+                style={{ boxShadow: '0 0 6px rgba(251, 191, 36, 0.8)' }} />
+            </div>
+          </div>
         </motion.div>
       </div>
 
