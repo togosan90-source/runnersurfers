@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Zap, Trophy, TrendingUp, Users, Target } from 'lucide-react';
+import { Play, Zap, Trophy, TrendingUp, Users, Target, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -17,126 +17,276 @@ export default function LandingPage() {
   }, [user, loading, navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30 overflow-hidden">
+    <div 
+      className="min-h-screen overflow-hidden relative"
+      style={{
+        background: 'linear-gradient(180deg, #0a0a14 0%, #0f1629 50%, #0a0a14 100%)',
+      }}
+    >
+      {/* Animated grid background */}
+      <div 
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+        }}
+      />
+
+      {/* Glowing orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px]"
+          style={{ background: 'rgba(0, 255, 136, 0.15)' }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[100px]"
+          style={{ background: 'rgba(34, 211, 238, 0.15)' }}
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
+          transition={{ duration: 6, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full blur-[80px]"
+          style={{ background: 'rgba(168, 85, 247, 0.1)' }}
+          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+      </div>
+
       {/* Hero Section */}
       <div className="relative">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-        </div>
-
         <div className="relative max-w-4xl mx-auto px-4 pt-16 pb-24 text-center">
-          {/* Logo */}
+          {/* Logo with cyberpunk hexagon */}
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, type: 'spring' }}
             className="mb-8"
           >
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent mb-6 animate-float">
-              <span className="text-5xl">🏃‍♂️</span>
+            <div className="relative inline-block mb-8">
+              {/* Outer glow ring */}
+              <motion.div
+                className="absolute -inset-4 opacity-60 blur-xl"
+                style={{ background: 'linear-gradient(135deg, #00ff88, #22d3ee, #a855f7)' }}
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              />
+              
+              {/* Hexagonal container */}
+              <div 
+                className="relative w-28 h-28 flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(34, 211, 238, 0.2) 100%)',
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  border: '2px solid rgba(0, 255, 136, 0.5)',
+                }}
+              >
+                <motion.span 
+                  className="text-5xl"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  🏃‍♂️
+                </motion.span>
+              </div>
+              
+              {/* Corner decorations */}
+              <div className="absolute -top-2 -left-2 w-4 h-4 border-l-2 border-t-2 border-cyan-400" />
+              <div className="absolute -top-2 -right-2 w-4 h-4 border-r-2 border-t-2 border-cyan-400" />
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 border-l-2 border-b-2 border-cyan-400" />
+              <div className="absolute -bottom-2 -right-2 w-4 h-4 border-r-2 border-b-2 border-cyan-400" />
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-black text-foreground tracking-tight mb-4">
-              RUNNER
-              <span className="text-gradient-primary"> LEGENDS</span>
+
+            {/* Title with neon effect */}
+            <h1 className="font-mono text-4xl md:text-6xl font-black tracking-tight mb-4">
+              <span 
+                style={{ 
+                  color: '#ffffff',
+                  textShadow: '0 0 10px rgba(255,255,255,0.5)'
+                }}
+              >
+                RUNNER
+              </span>
+              <span 
+                className="block md:inline"
+                style={{ 
+                  color: '#00ff88',
+                  textShadow: '0 0 20px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4), 0 0 60px rgba(0, 255, 136, 0.2)'
+                }}
+              >
+                {" "}LEGENDS
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium">
-              "Corri. Livella. Conquista."
-            </p>
+            
+            {/* Subtitle with scan line */}
+            <div 
+              className="inline-flex items-center gap-3 px-6 py-2 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                clipPath: 'polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0% 50%)',
+                border: '1px solid rgba(0, 255, 136, 0.3)',
+              }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(90deg, transparent, rgba(0,255,136,0.1), transparent)' }}
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" style={{ boxShadow: '0 0 8px rgba(0, 255, 136, 0.8)' }} />
+              <p 
+                className="font-mono text-lg md:text-xl tracking-wider"
+                style={{ color: '#00ff88', textShadow: '0 0 10px rgba(0, 255, 136, 0.5)' }}
+              >
+                "Corri. Livella. Conquista."
+              </p>
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" style={{ boxShadow: '0 0 8px rgba(0, 255, 136, 0.8)' }} />
+            </div>
           </motion.div>
 
-          {/* CTA Button */}
+          {/* CTA Button - Cyberpunk style */}
           <motion.div
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
             className="mb-12"
           >
-            <Button
-              size="lg"
+            <motion.button
               onClick={() => navigate('/run')}
-              className="group relative text-xl px-12 py-8 rounded-2xl font-display font-bold bg-gradient-to-r from-accent to-primary hover:opacity-90 transition-all glow-accent animate-pulse-glow"
+              className="group relative px-12 py-6 font-mono font-bold text-xl uppercase tracking-wider overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%)',
+                clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))',
+                border: '2px solid #00ff88',
+                color: '#00ff88',
+                textShadow: '0 0 10px rgba(0, 255, 136, 0.5)',
+              }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <span className="flex items-center gap-3">
-                <Play className="w-8 h-8 group-hover:scale-110 transition-transform" />
+              {/* Scan line effect */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(180deg, transparent, rgba(0,255,136,0.2), transparent)', height: '200%' }}
+                animate={{ y: ['-100%', '0%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              />
+              
+              {/* Corner decorations */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-cyan-400" />
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-cyan-400" />
+              
+              <span className="relative z-10 flex items-center gap-3">
+                <Play className="w-6 h-6" />
                 🚀 INIZIA A CORRERE
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
-            </Button>
+              
+              {/* Glow effect */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                style={{ boxShadow: 'inset 0 0 30px rgba(0, 255, 136, 0.3)' }}
+              />
+            </motion.button>
           </motion.div>
 
-          {/* Auth links */}
+          {/* Auth links - Cyberpunk style */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="flex items-center justify-center gap-4 text-sm text-muted-foreground"
+            className="flex items-center justify-center gap-6"
           >
-            <button 
+            <motion.button 
               onClick={() => navigate('/auth')}
-              className="hover:text-foreground transition-colors flex items-center gap-1"
+              className="flex items-center gap-2 px-4 py-2 font-mono text-sm uppercase tracking-wider"
+              style={{
+                color: '#22d3ee',
+                textShadow: '0 0 8px rgba(34, 211, 238, 0.5)',
+              }}
+              whileHover={{ scale: 1.05 }}
             >
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" style={{ boxShadow: '0 0 6px rgba(34, 211, 238, 0.8)' }} />
               👤 Crea Account
-            </button>
-            <span>|</span>
-            <button 
+            </motion.button>
+            
+            <div className="w-px h-6" style={{ background: 'linear-gradient(180deg, transparent, #22d3ee, transparent)' }} />
+            
+            <motion.button 
               onClick={() => navigate('/auth')}
-              className="hover:text-foreground transition-colors flex items-center gap-1"
+              className="flex items-center gap-2 px-4 py-2 font-mono text-sm uppercase tracking-wider"
+              style={{
+                color: '#22d3ee',
+                textShadow: '0 0 8px rgba(34, 211, 238, 0.5)',
+              }}
+              whileHover={{ scale: 1.05 }}
             >
               🔐 Login
-            </button>
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" style={{ boxShadow: '0 0 6px rgba(34, 211, 238, 0.8)' }} />
+            </motion.button>
           </motion.div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="max-w-5xl mx-auto px-4 pb-24">
-        <motion.h2
+      <div className="max-w-5xl mx-auto px-4 pb-24 relative z-10">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-display text-2xl md:text-3xl font-bold text-center mb-12"
+          className="text-center mb-12"
         >
-          Trasforma ogni corsa in un'avventura
-        </motion.h2>
+          <h2 
+            className="font-mono text-2xl md:text-3xl font-bold tracking-wider uppercase"
+            style={{ color: '#ffffff', textShadow: '0 0 10px rgba(255,255,255,0.3)' }}
+          >
+            Trasforma ogni corsa in un'
+            <span style={{ color: '#00ff88', textShadow: '0 0 20px rgba(0, 255, 136, 0.6)' }}>avventura</span>
+          </h2>
+          <div className="w-32 h-1 mx-auto mt-4" style={{ background: 'linear-gradient(90deg, transparent, #00ff88, transparent)' }} />
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             {
               icon: TrendingUp,
               title: 'Sistema Livelli',
               description: '600 livelli da conquistare. Ogni corsa ti avvicina alla leggenda.',
-              color: 'from-primary to-primary/60',
+              color: '#00ff88',
             },
             {
               icon: Zap,
               title: 'Score Dinamico',
               description: 'Punti che salgono in tempo reale. Più corri, più guadagni!',
-              color: 'from-accent to-accent/60',
+              color: '#22d3ee',
             },
             {
               icon: Trophy,
               title: 'Classifiche Globali',
               description: 'Sfida i runner di tutto il mondo. Top 300 mensile.',
-              color: 'from-gold to-warning',
+              color: '#fbbf24',
             },
             {
               icon: Target,
               title: 'Obiettivi Giornalieri',
               description: 'Completa sfide quotidiane e guadagna ricompense bonus.',
-              color: 'from-destructive to-destructive/60',
+              color: '#f43f5e',
             },
             {
               icon: Users,
               title: 'Sistema Tier',
               description: 'Da Iron a Grand Master. Scala le leghe con il tuo livello.',
-              color: 'from-tier-platinum to-tier-diamond',
+              color: '#a855f7',
             },
             {
               icon: Zap,
               title: 'Boost & Shop',
               description: '20 boost temporanei e equipaggiamento permanente.',
-              color: 'from-tier-emerald to-tier-sapphire',
+              color: '#06b6d4',
             },
           ].map((feature, index) => (
             <motion.div
@@ -145,35 +295,122 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-card rounded-2xl p-6 border border-border hover:border-primary/30 transition-colors group"
+              className="relative p-5 overflow-hidden group"
+              style={{
+                background: 'linear-gradient(135deg, rgba(20, 20, 40, 0.9) 0%, rgba(10, 10, 20, 0.95) 100%)',
+                clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))',
+              }}
             >
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                <feature.icon className="w-6 h-6 text-primary-foreground" />
+              {/* Scan line effect */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ background: `linear-gradient(180deg, transparent, ${feature.color}10, transparent)`, height: '200%' }}
+                animate={{ y: ['-100%', '0%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              />
+              
+              {/* Corner decorations */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-l border-t" style={{ borderColor: `${feature.color}60` }} />
+              <div className="absolute top-0 right-3 w-3 h-3 border-r border-t" style={{ borderColor: `${feature.color}60` }} />
+              <div className="absolute bottom-0 left-3 w-3 h-3 border-l border-b" style={{ borderColor: `${feature.color}60` }} />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-r border-b" style={{ borderColor: `${feature.color}60` }} />
+              
+              {/* Border glow */}
+              <div className="absolute top-0 left-4 right-4 h-px" style={{ background: `linear-gradient(90deg, transparent, ${feature.color}40, transparent)` }} />
+              <div className="absolute bottom-0 left-4 right-4 h-px" style={{ background: `linear-gradient(90deg, transparent, ${feature.color}40, transparent)` }} />
+              
+              <div className="relative z-10">
+                {/* Hexagonal icon */}
+                <div 
+                  className="w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+                  style={{
+                    background: `linear-gradient(135deg, ${feature.color}30 0%, ${feature.color}10 100%)`,
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    border: `1px solid ${feature.color}50`,
+                  }}
+                >
+                  <feature.icon className="w-6 h-6" style={{ color: feature.color, filter: `drop-shadow(0 0 6px ${feature.color})` }} />
+                </div>
+                
+                <h3 
+                  className="font-mono font-bold text-lg mb-2 uppercase tracking-wider"
+                  style={{ color: feature.color, textShadow: `0 0 10px ${feature.color}50` }}
+                >
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-gray-400 font-mono">{feature.description}</p>
               </div>
-              <h3 className="font-display font-bold text-lg mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground">{feature.description}</p>
+              
+              {/* Status LED */}
+              <div 
+                className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse"
+                style={{ background: feature.color, boxShadow: `0 0 8px ${feature.color}` }}
+              />
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Footer CTA */}
-      <div className="bg-gradient-to-br from-secondary to-secondary/80 py-16">
-        <div className="max-w-2xl mx-auto text-center px-4">
-          <h2 className="font-display text-3xl font-bold text-secondary-foreground mb-4">
-            Pronto a diventare una leggenda?
-          </h2>
-          <p className="text-secondary-foreground/80 mb-8">
-            Unisciti a migliaia di runner e inizia la tua avventura oggi.
-          </p>
-          <Button
-            size="lg"
-            onClick={() => navigate('/run')}
-            className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-display font-bold px-8 py-6 text-lg rounded-xl"
+      {/* Footer CTA - Cyberpunk style */}
+      <div 
+        className="relative py-16 overflow-hidden"
+        style={{
+          background: 'linear-gradient(180deg, rgba(0, 255, 136, 0.05) 0%, rgba(10, 10, 20, 0.95) 100%)',
+        }}
+      >
+        {/* Top border glow */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #00ff88, transparent)' }} />
+        
+        <div className="max-w-2xl mx-auto text-center px-4 relative z-10">
+          <motion.h2 
+            className="font-mono text-2xl md:text-3xl font-bold mb-4 uppercase tracking-wider"
+            style={{ color: '#ffffff', textShadow: '0 0 10px rgba(255,255,255,0.3)' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            <Play className="w-5 h-5 mr-2" />
-            Inizia Ora - È Gratis!
-          </Button>
+            Pronto a diventare una{' '}
+            <span style={{ color: '#00ff88', textShadow: '0 0 20px rgba(0, 255, 136, 0.6)' }}>leggenda</span>?
+          </motion.h2>
+          
+          <motion.p 
+            className="text-gray-400 font-mono mb-8"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            Unisciti a migliaia di runner e inizia la tua avventura oggi.
+          </motion.p>
+          
+          <motion.button
+            onClick={() => navigate('/run')}
+            className="group relative px-10 py-5 font-mono font-bold text-lg uppercase tracking-wider overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #00ff88 0%, #22d3ee 100%)',
+              clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))',
+              color: '#0a0a14',
+            }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            {/* Shine effect */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)' }}
+              animate={{ x: ['-100%', '200%'] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            
+            <span className="relative z-10 flex items-center gap-2">
+              <Play className="w-5 h-5" />
+              Inizia Ora - È Gratis!
+            </span>
+          </motion.button>
         </div>
       </div>
     </div>
