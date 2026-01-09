@@ -23,7 +23,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl overflow-hidden relative"
+      className="w-full rounded-2xl overflow-hidden relative"
       style={{
         background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
         padding: '4px',
@@ -79,7 +79,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
           </motion.div>
         ))}
         
-        <div className="flex items-start gap-4 relative z-10">
+        <div className="flex flex-col sm:flex-row items-start gap-4 relative z-10">
           {/* Avatar with animated glow ring */}
           <div className="relative flex-shrink-0">
             <motion.div
@@ -144,7 +144,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
           </div>
 
           {/* Info Section */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 w-full min-w-0">
             {/* Top row: Coins */}
             <div className="flex items-center justify-end mb-2">
               <motion.div 
@@ -191,7 +191,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
 
             {/* EXP Bar - Redesigned */}
             <div 
-              className="relative p-3 rounded-xl mb-3"
+              className="relative p-3 rounded-xl mb-3 w-full"
               style={{
                 background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%)',
                 border: '1px solid rgba(139, 92, 246, 0.3)',
@@ -252,7 +252,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
 
             {/* KM Progress Bar - Enhanced */}
             <div 
-              className="relative p-3 rounded-xl overflow-hidden"
+              className="relative p-3 rounded-xl overflow-hidden w-full"
               style={{
                 background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%)',
                 border: '1px solid rgba(6, 182, 212, 0.3)',
@@ -345,7 +345,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
             </div>
 
             {/* RunnerSurfers Title - Premium Style */}
-            <div className="flex justify-center mt-3 -ml-20 sm:ml-0">
+            <div className="flex justify-center mt-3 sm:-ml-20 w-full">
               <motion.div className="relative">
                 {/* Glow effect behind text */}
                 <motion.div
