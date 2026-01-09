@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { BarChart3, Flame, Ruler, Clock, TrendingUp, Calendar, Award, Star, Trophy, Zap } from 'lucide-react';
 import { BottomNav } from '@/components/layout/BottomNav';
-import { useGameStore, getRank, getReputationLevel, SHOES, getTotalShoeBonus, getRankByLevel, getRankScoreBonus } from '@/store/gameStore';
+import { useGameStore, getRank, getReputationLevel, SHOES, getTotalShoeBonus, getRankByLevel, getRankScoreBonus, getReputationByDistance, getNextReputationTier, getReputationScoreBonus, getAllReputationTiers } from '@/store/gameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { WeeklyChart } from '@/components/stats/WeeklyChart';
 import { MonthlyChart } from '@/components/stats/MonthlyChart';
@@ -59,6 +59,11 @@ export default function StatsPage() {
   const rankScoreBonus = getRankScoreBonus(user.level);
   const reputationLevel = getReputationLevel(user.reputation);
   const shoeBonus = getTotalShoeBonus(ownedShoes);
+  
+  // NEW: Distance-based reputation
+  const currentRepTier = getReputationByDistance(user.totalDistance);
+  const nextRepTier = getNextReputationTier(user.totalDistance);
+  const repScoreBonus = getReputationScoreBonus(user.totalDistance);
 
   // Calculate distance progress (max 15,000 km)
   const maxDistance = 15000;
@@ -521,72 +526,198 @@ export default function StatsPage() {
           </div>
         </motion.div>
 
-        {/* Reputation Section */}
+        {/* Reputation Section - Distance Based */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-xl p-5 mb-6"
+          className="rounded-xl p-5 mb-6 relative overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
-            border: '3px solid white',
-            boxShadow: '0 4px 0 0 #1E40AF, inset 0 1px 0 0 rgba(255,255,255,0.3)',
+            background: 'linear-gradient(180deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%)',
+            border: '3px solid #C4B5FD',
+            boxShadow: '0 4px 0 0 #3B0764, 0 0 25px rgba(124, 58, 237, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <Star className="w-6 h-6 text-white" />
+          {/* Animated Stars */}
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-sm pointer-events-none"
+              initial={{ 
+                x: `${5 + i * 8}%`, 
+                y: '100%',
+                opacity: 0,
+                scale: 0.5
+              }}
+              animate={{ 
+                y: [100, -20],
+                opacity: [0, 1, 0.8, 0],
+                scale: [0.5, 1, 0.8],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.3,
+                ease: "easeOut"
+              }}
+              style={{
+                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
+              }}
+            >
+              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '💫'}
+            </motion.div>
+          ))}
+          
+          {/* Icon */}
+          <motion.div
+            className="absolute right-4 top-4 text-4xl pointer-events-none"
+            animate={{ 
+              opacity: [0.7, 1, 0.7],
+              scale: [0.95, 1.1, 0.95],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(196, 181, 253, 0.8))'
+            }}
+          >
+            {currentRepTier.icon}
+          </motion.div>
+          
+          <div className="flex items-center gap-3 mb-4 relative z-10">
+            <Star className="w-6 h-6 text-violet-200" />
             <span 
               className="font-varsity text-2xl uppercase tracking-wide"
               style={{
                 color: 'white',
-                textShadow: '3px 3px 0px #1E40AF, -1px -1px 0px #1E40AF, 1px -1px 0px #1E40AF, -1px 1px 0px #1E40AF',
+                textShadow: '3px 3px 0px #3B0764, -1px -1px 0px #3B0764, 1px -1px 0px #3B0764, -1px 1px 0px #3B0764',
               }}
             >
               Reputazione
             </span>
           </div>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p 
-                className="font-brush text-2xl"
-                style={{
-                  color: 'white',
-                  textShadow: '2px 2px 0px rgba(0,0,0,0.3)',
-                }}
-              >
-                {reputationLevel.name}
-              </p>
-              <p className="text-sm text-white/80 font-brush">
-                {user.reputation.toLocaleString()} punti reputazione
-              </p>
+          
+          <div className="flex items-center gap-4 mb-4 relative z-10">
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: '2px solid rgba(196, 181, 253, 0.5)',
+                boxShadow: '0 0 15px rgba(124, 58, 237, 0.5)'
+              }}
+            >
+              <span className="text-3xl">{currentRepTier.icon}</span>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-white/80 font-brush">Livello</p>
+            <div className="flex-1">
               <p 
-                className="font-brush text-2xl"
+                className="font-varsity text-2xl uppercase tracking-wide"
                 style={{
-                  color: 'white',
-                  textShadow: '2px 2px 0px rgba(0,0,0,0.3)',
+                  color: '#C4B5FD',
+                  textShadow: '2px 2px 0px #3B0764',
                 }}
               >
-                {reputationLevel.level}
+                Livello {currentRepTier.level}
+              </p>
+              <p className="text-lg text-white font-semibold">{currentRepTier.name}</p>
+              <p className="text-xs text-emerald-300 font-bold mt-1">
+                🎯 Bonus Score: +{repScoreBonus}%
               </p>
             </div>
           </div>
+          
+          {/* Info box */}
           <div 
-            className="rounded-lg p-3 text-sm"
+            className="rounded-lg p-3 mb-4 relative z-10"
             style={{
-              backgroundColor: 'rgba(255,255,255,0.15)',
+              background: 'rgba(0, 0, 0, 0.3)',
+              border: '1px solid rgba(196, 181, 253, 0.3)'
             }}
           >
-            <p className="font-brush text-white mb-1">Come guadagnare reputazione:</p>
-            <div className="grid grid-cols-2 gap-1 text-white/90 font-brush">
-              <span>2 km/giorno → +100</span>
-              <span>5 km/giorno → +300</span>
-              <span>7 km/giorno → +600</span>
-              <span>8 km/giorno → +800</span>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span className="text-violet-300/70">Km percorsi:</span>
+                <span className="text-white font-bold ml-2">{user.totalDistance.toFixed(1)} km</span>
+              </div>
+              <div>
+                <span className="text-violet-300/70">Richiesti:</span>
+                <span className="text-white font-bold ml-2">{currentRepTier.requiredKm} km</span>
+              </div>
+              {nextRepTier && (
+                <>
+                  <div>
+                    <span className="text-violet-300/70">Prossimo:</span>
+                    <span className="text-white font-bold ml-2">{nextRepTier.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-violet-300/70">Mancano:</span>
+                    <span className="text-amber-300 font-bold ml-2">{(nextRepTier.requiredKm - user.totalDistance).toFixed(1)} km</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
+          
+          {/* Progress bar */}
+          {nextRepTier && (
+            <div className="space-y-2 relative z-10">
+              <div className="flex justify-between text-sm">
+                <span className="text-violet-200 font-semibold">
+                  Progresso verso {nextRepTier.name}
+                </span>
+                <span className="text-white font-bold">
+                  {Math.min(((user.totalDistance - currentRepTier.requiredKm) / (nextRepTier.requiredKm - currentRepTier.requiredKm)) * 100, 100).toFixed(0)}%
+                </span>
+              </div>
+              <div 
+                className="h-4 rounded-full overflow-hidden"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.15)',
+                  border: '2px solid rgba(196, 181, 253, 0.3)'
+                }}
+              >
+                <motion.div 
+                  className="h-full rounded-full relative"
+                  initial={{ width: 0 }}
+                  animate={{ 
+                    width: `${Math.min(((user.totalDistance - currentRepTier.requiredKm) / (nextRepTier.requiredKm - currentRepTier.requiredKm)) * 100, 100)}%` 
+                  }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  style={{
+                    background: 'linear-gradient(90deg, #C4B5FD 0%, #A78BFA 50%, #8B5CF6 100%)',
+                    boxShadow: '0 0 10px rgba(196, 181, 253, 0.6)'
+                  }}
+                >
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    style={{
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)'
+                    }}
+                  />
+                </motion.div>
+              </div>
+              <p className="text-xs text-violet-200/80">
+                🎁 Prossimo bonus: +{nextRepTier.scoreBonus}% score
+              </p>
+            </div>
+          )}
+          
+          {!nextRepTier && (
+            <div className="text-center py-2 relative z-10">
+              <p className="text-lg text-amber-300 font-bold">🏆 Hai raggiunto il rango massimo! 🏆</p>
+            </div>
+          )}
         </motion.div>
 
         {/* Equipment Section */}

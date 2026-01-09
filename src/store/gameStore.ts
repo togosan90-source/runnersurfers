@@ -460,7 +460,103 @@ export function getTier(level: number): { name: string; icon: string; color: str
   return getRank(level);
 }
 
-// NEW Reputation System - Daily gains based on distance
+// NEW Reputation System - Distance-based progression up to 15,000 km
+// Each reputation tier requires more km to unlock, with score bonuses
+
+export interface ReputationTier {
+  level: number;
+  name: string;
+  icon: string;
+  color: string;
+  requiredKm: number;
+  scoreBonus: number; // percentage bonus
+}
+
+// Generate all reputation tiers (progressive km requirements up to 15,000 km)
+export function getAllReputationTiers(): ReputationTier[] {
+  const tiers: ReputationTier[] = [
+    { level: 1, name: 'Novizio', icon: '🌱', color: 'novice', requiredKm: 10, scoreBonus: 1 },
+    { level: 2, name: 'Iniziato', icon: '🚶', color: 'novice', requiredKm: 20, scoreBonus: 2 },
+    { level: 3, name: 'Avventuriero', icon: '🏃', color: 'novice', requiredKm: 50, scoreBonus: 3 },
+    { level: 4, name: 'Combattente', icon: '⚔️', color: 'fighter', requiredKm: 100, scoreBonus: 4 },
+    { level: 5, name: 'Veterano', icon: '🎖️', color: 'veteran', requiredKm: 150, scoreBonus: 5 },
+    { level: 6, name: 'Esperto', icon: '📚', color: 'expert', requiredKm: 200, scoreBonus: 6 },
+    { level: 7, name: 'Maestro', icon: '🎓', color: 'master', requiredKm: 300, scoreBonus: 7 },
+    { level: 8, name: 'Campione', icon: '🏆', color: 'champion', requiredKm: 400, scoreBonus: 8 },
+    { level: 9, name: 'Eroe', icon: '🦸', color: 'hero', requiredKm: 500, scoreBonus: 9 },
+    { level: 10, name: 'Gladiatore', icon: '🛡️', color: 'gladiator', requiredKm: 650, scoreBonus: 10 },
+    { level: 11, name: 'Conquistatore', icon: '👑', color: 'conqueror', requiredKm: 800, scoreBonus: 11 },
+    { level: 12, name: 'Dominatore', icon: '⚡', color: 'dominator', requiredKm: 1000, scoreBonus: 12 },
+    { level: 13, name: 'Leggenda', icon: '⭐', color: 'legend', requiredKm: 1250, scoreBonus: 13 },
+    { level: 14, name: 'Mitico', icon: '🔥', color: 'mythic', requiredKm: 1500, scoreBonus: 14 },
+    { level: 15, name: 'Immortale', icon: '💫', color: 'immortal', requiredKm: 1800, scoreBonus: 15 },
+    { level: 16, name: 'Divino', icon: '🌟', color: 'divine', requiredKm: 2200, scoreBonus: 16 },
+    { level: 17, name: 'Celestiale', icon: '✨', color: 'celestial', requiredKm: 2600, scoreBonus: 17 },
+    { level: 18, name: 'Cosmico', icon: '🌌', color: 'cosmic', requiredKm: 3000, scoreBonus: 18 },
+    { level: 19, name: 'Universale', icon: '🪐', color: 'universal', requiredKm: 3500, scoreBonus: 19 },
+    { level: 20, name: 'Etereo', icon: '👻', color: 'ethereal', requiredKm: 4000, scoreBonus: 20 },
+    { level: 21, name: 'Trascendente', icon: '🔮', color: 'transcendent', requiredKm: 4500, scoreBonus: 21 },
+    { level: 22, name: 'Supremo', icon: '💎', color: 'supreme', requiredKm: 5000, scoreBonus: 22 },
+    { level: 23, name: 'Assoluto', icon: '🏅', color: 'absolute', requiredKm: 5500, scoreBonus: 23 },
+    { level: 24, name: 'Infinito', icon: '♾️', color: 'infinite', requiredKm: 6000, scoreBonus: 24 },
+    { level: 25, name: 'Eterno', icon: '⏳', color: 'eternal', requiredKm: 6500, scoreBonus: 25 },
+    { level: 26, name: 'Onnipotente', icon: '🌀', color: 'omnipotent', requiredKm: 7000, scoreBonus: 26 },
+    { level: 27, name: 'Titanico', icon: '🗿', color: 'titanic', requiredKm: 7500, scoreBonus: 27 },
+    { level: 28, name: 'Colossale', icon: '🏛️', color: 'colossal', requiredKm: 8000, scoreBonus: 28 },
+    { level: 29, name: 'Monumentale', icon: '🗽', color: 'monumental', requiredKm: 8500, scoreBonus: 29 },
+    { level: 30, name: 'Epico', icon: '📜', color: 'epic', requiredKm: 9000, scoreBonus: 30 },
+    { level: 31, name: 'Fenomenale', icon: '💥', color: 'phenomenal', requiredKm: 9500, scoreBonus: 31 },
+    { level: 32, name: 'Straordinario', icon: '🎭', color: 'extraordinary', requiredKm: 10000, scoreBonus: 32 },
+    { level: 33, name: 'Incredibile', icon: '🎪', color: 'incredible', requiredKm: 10500, scoreBonus: 33 },
+    { level: 34, name: 'Maestoso', icon: '🦁', color: 'majestic', requiredKm: 11000, scoreBonus: 34 },
+    { level: 35, name: 'Glorioso', icon: '🌅', color: 'glorious', requiredKm: 11500, scoreBonus: 35 },
+    { level: 36, name: 'Radioso', icon: '☀️', color: 'radiant', requiredKm: 12000, scoreBonus: 36 },
+    { level: 37, name: 'Splendente', icon: '💡', color: 'shining', requiredKm: 12500, scoreBonus: 37 },
+    { level: 38, name: 'Fulgido', icon: '🌞', color: 'bright', requiredKm: 13000, scoreBonus: 38 },
+    { level: 39, name: 'Luminoso', icon: '🌈', color: 'luminous', requiredKm: 13500, scoreBonus: 39 },
+    { level: 40, name: 'Abbagliante', icon: '⚜️', color: 'dazzling', requiredKm: 14000, scoreBonus: 40 },
+    { level: 41, name: 'Ultra Leggendario', icon: '🏆⭐', color: 'ultralegend', requiredKm: 14500, scoreBonus: 42 },
+    { level: 42, name: 'GOAT', icon: '🐐', color: 'goat', requiredKm: 15000, scoreBonus: 45 },
+  ];
+  
+  return tiers;
+}
+
+// Get current reputation tier based on total distance
+export function getReputationByDistance(totalDistanceKm: number): ReputationTier {
+  const tiers = getAllReputationTiers();
+  
+  // Find the highest tier the user qualifies for
+  for (let i = tiers.length - 1; i >= 0; i--) {
+    if (totalDistanceKm >= tiers[i].requiredKm) {
+      return tiers[i];
+    }
+  }
+  
+  // Return "Nuovo" for users who haven't reached 10km yet
+  return { level: 0, name: 'Nuovo', icon: '🌱', color: 'new', requiredKm: 0, scoreBonus: 0 };
+}
+
+// Get next reputation tier
+export function getNextReputationTier(totalDistanceKm: number): ReputationTier | null {
+  const tiers = getAllReputationTiers();
+  
+  for (const tier of tiers) {
+    if (totalDistanceKm < tier.requiredKm) {
+      return tier;
+    }
+  }
+  
+  return null; // Already at max tier
+}
+
+// Get reputation score bonus
+export function getReputationScoreBonus(totalDistanceKm: number): number {
+  const tier = getReputationByDistance(totalDistanceKm);
+  return tier.scoreBonus;
+}
+
+// Legacy daily reputation gains (still used for daily tracking)
 export function getReputationForDistance(distanceKm: number): number {
   if (distanceKm >= 8) return 800;
   if (distanceKm >= 7) return 600;
@@ -469,7 +565,7 @@ export function getReputationForDistance(distanceKm: number): number {
   return 0;
 }
 
-// NEW Reputation Levels
+// Legacy reputation level function (for backward compatibility)
 export function getReputationLevel(reputation: number): { name: string; level: number; color: string } {
   if (reputation >= 200000) return { name: 'Insane 4', level: 16, color: 'insane' };
   if (reputation >= 150000) return { name: 'Insane 3', level: 15, color: 'insane' };
