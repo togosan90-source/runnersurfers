@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Play, Zap, Trophy, TrendingUp, Users, Target, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,22 @@ import { useAuth } from '@/hooks/useAuth';
 export default function LandingPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Parallax scroll transforms
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+  
+  // Different parallax speeds for different layers
+  const gridY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const orb1Y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const orb2Y = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
+  const orb3Y = useTransform(scrollYProgress, [0, 1], ['0%', '60%']);
+  const heroY = useTransform(scrollYProgress, [0, 0.5], ['0%', '20%']);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.5]);
+  const featuresY = useTransform(scrollYProgress, [0.2, 0.8], ['50px', '-50px']);
 
   // Redirect to run if already logged in
   useEffect(() => {
@@ -18,13 +34,14 @@ export default function LandingPage() {
 
   return (
     <div 
-      className="min-h-screen overflow-hidden relative"
+      ref={containerRef}
+      className="min-h-screen overflow-x-hidden relative"
       style={{
         background: 'linear-gradient(180deg, #0a0a14 0%, #0f1629 50%, #0a0a14 100%)',
       }}
     >
-      {/* Animated grid background */}
-      <div 
+      {/* Animated grid background with parallax */}
+      <motion.div 
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
@@ -32,33 +49,46 @@ export default function LandingPage() {
             linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
+          y: gridY,
         }}
       />
 
-      {/* Glowing orbs */}
+      {/* Glowing orbs with parallax */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
           className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px]"
-          style={{ background: 'rgba(0, 255, 136, 0.15)' }}
+          style={{ 
+            background: 'rgba(0, 255, 136, 0.15)',
+            y: orb1Y,
+          }}
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div 
           className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[100px]"
-          style={{ background: 'rgba(34, 211, 238, 0.15)' }}
+          style={{ 
+            background: 'rgba(34, 211, 238, 0.15)',
+            y: orb2Y,
+          }}
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
           transition={{ duration: 6, repeat: Infinity }}
         />
         <motion.div 
           className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full blur-[80px]"
-          style={{ background: 'rgba(168, 85, 247, 0.1)' }}
+          style={{ 
+            background: 'rgba(168, 85, 247, 0.1)',
+            y: orb3Y,
+          }}
           animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 10, repeat: Infinity }}
         />
       </div>
 
-      {/* Hero Section */}
-      <div className="relative">
+      {/* Hero Section with parallax */}
+      <motion.div 
+        className="relative"
+        style={{ y: heroY, opacity: heroOpacity }}
+      >
         <div className="relative max-w-4xl mx-auto px-4 pt-16 pb-24 text-center">
           {/* Logo with cyberpunk hexagon */}
           <motion.div
@@ -230,10 +260,13 @@ export default function LandingPage() {
             </motion.button>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Features Section */}
-      <div className="max-w-5xl mx-auto px-4 pb-24 relative z-10">
+      {/* Features Section with parallax */}
+      <motion.div 
+        className="max-w-5xl mx-auto px-4 pb-24 relative z-10"
+        style={{ y: featuresY }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -349,7 +382,7 @@ export default function LandingPage() {
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Footer CTA - Cyberpunk style */}
       <div 
