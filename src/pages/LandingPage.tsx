@@ -4,6 +4,7 @@ import { Play, Zap, Trophy, TrendingUp, Users, Target, ChevronRight } from 'luci
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import sprintShoe from '@/assets/sprint-shoe.png';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -115,13 +116,14 @@ export default function LandingPage() {
                   border: '2px solid rgba(0, 255, 136, 0.5)',
                 }}
               >
-                <motion.span 
-                  className="text-5xl"
-                  animate={{ scale: [1, 1.1, 1] }}
+                <motion.img 
+                  src={sprintShoe}
+                  alt="Running shoe"
+                  className="w-16 h-16 object-contain"
+                  animate={{ scale: [1, 1.1, 1], rotate: [-5, 5, -5] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                >
-                  🏃‍♂️
-                </motion.span>
+                  style={{ filter: 'drop-shadow(0 0 10px rgba(0, 255, 136, 0.5))' }}
+                />
               </div>
               
               {/* Corner decorations */}
