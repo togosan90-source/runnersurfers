@@ -48,14 +48,44 @@ export function ShoeUpgradeShop() {
     }, 1500);
   };
 
-  const getShoeGradient = (id: string) => {
+  const getShoeStyle = (id: string) => {
     switch (id) {
-      case 'avalon': return 'from-blue-500 to-blue-700';
-      case 'zeus': return 'from-yellow-400 to-orange-500';
-      case 'woodblas': return 'from-green-400 to-emerald-600';
-      case 'energy': return 'from-purple-400 to-pink-500';
-      case 'infinity': return 'from-cyan-400 to-violet-600';
-      default: return 'from-gray-400 to-gray-600';
+      case 'avalon': return {
+        gradient: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 50%, #1E3A8A 100%)',
+        border: '#60A5FA',
+        shadow: '0 4px 0 0 #1E40AF, 0 0 30px rgba(96, 165, 250, 0.4)',
+        glow: 'rgba(96, 165, 250, 0.6)',
+      };
+      case 'zeus': return {
+        gradient: 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #92400E 100%)',
+        border: '#FCD34D',
+        shadow: '0 4px 0 0 #78350F, 0 0 30px rgba(252, 211, 77, 0.4)',
+        glow: 'rgba(252, 211, 77, 0.6)',
+      };
+      case 'woodblas': return {
+        gradient: 'linear-gradient(135deg, #22C55E 0%, #16A34A 50%, #166534 100%)',
+        border: '#4ADE80',
+        shadow: '0 4px 0 0 #14532D, 0 0 30px rgba(74, 222, 128, 0.4)',
+        glow: 'rgba(74, 222, 128, 0.6)',
+      };
+      case 'energy': return {
+        gradient: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #5B21B6 100%)',
+        border: '#C084FC',
+        shadow: '0 4px 0 0 #4C1D95, 0 0 30px rgba(192, 132, 252, 0.4)',
+        glow: 'rgba(192, 132, 252, 0.6)',
+      };
+      case 'infinity': return {
+        gradient: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #164E63 100%)',
+        border: '#22D3EE',
+        shadow: '0 4px 0 0 #0E7490, 0 0 30px rgba(34, 211, 238, 0.4)',
+        glow: 'rgba(34, 211, 238, 0.6)',
+      };
+      default: return {
+        gradient: 'linear-gradient(135deg, #6B7280 0%, #4B5563 50%, #374151 100%)',
+        border: '#9CA3AF',
+        shadow: '0 4px 0 0 #1F2937, 0 0 30px rgba(156, 163, 175, 0.4)',
+        glow: 'rgba(156, 163, 175, 0.6)',
+      };
     }
   };
 
@@ -155,6 +185,7 @@ export function ShoeUpgradeShop() {
         const upgradeResult = result?.shoeId === shoe.id ? result : null;
         const currentBonus = getShoeUpgradeBonus(currentLevel);
         const isEquipped = user.equippedShoes === shoe.id;
+        const shoeStyle = getShoeStyle(shoe.id);
 
         return (
           <motion.div
@@ -162,20 +193,45 @@ export function ShoeUpgradeShop() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`relative rounded-xl border-2 overflow-hidden ${
-              isEquipped ? 'border-primary' : 'border-border'
-            }`}
+            className="relative rounded-2xl overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.8) 100%)',
+              background: shoeStyle.gradient,
+              border: `3px solid ${shoeStyle.border}`,
+              boxShadow: shoeStyle.shadow,
             }}
           >
+            {/* Decorative elements */}
+            <div className="absolute text-lg pointer-events-none opacity-40" style={{ left: '5%', top: '10%', filter: 'drop-shadow(0 0 6px currentColor)' }}>✨</div>
+            <div className="absolute text-lg pointer-events-none opacity-40" style={{ left: '85%', top: '15%', filter: 'drop-shadow(0 0 6px currentColor)' }}>⚡</div>
+
+            {/* Animated shine effect */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
+              }}
+              animate={{ x: ['-100%', '200%'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+
             {/* Equipped badge */}
             {isEquipped && (
-              <div className="absolute top-2 right-2 z-10">
-                <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded">
-                  EQUIPAGGIATO
+              <motion.div 
+                className="absolute top-3 right-3 z-10"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <span 
+                  className="text-[10px] font-bold px-3 py-1 rounded-lg uppercase"
+                  style={{
+                    background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                    color: '#78350F',
+                    boxShadow: '0 0 15px rgba(252, 211, 77, 0.5)',
+                  }}
+                >
+                  ⭐ Equipaggiato
                 </span>
-              </div>
+              </motion.div>
             )}
 
             {/* Upgrade animation overlay */}
@@ -225,8 +281,8 @@ export function ShoeUpgradeShop() {
                   className="absolute inset-0 z-20 flex items-center justify-center"
                   style={{
                     background: upgradeResult.success 
-                      ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.8) 100%)'
-                      : 'linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.8) 100%)',
+                      ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.95) 0%, rgba(16, 185, 129, 0.9) 100%)'
+                      : 'linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.9) 100%)',
                   }}
                 >
                   <motion.div
@@ -252,137 +308,211 @@ export function ShoeUpgradeShop() {
               )}
             </AnimatePresence>
 
-            <div className="flex">
-              {/* Shoe icon with upgrade level */}
-              <div className={`relative w-28 h-28 bg-gradient-to-br ${getShoeGradient(shoe.id)} flex items-center justify-center`}>
-                <span className="text-5xl">{shoe.icon}</span>
-                
-                {/* Level badge */}
-                {currentLevel > 0 && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+            <div className="relative z-10 p-5">
+              {/* Header with shoe info */}
+              <div className="flex items-center gap-4 mb-4">
+                {/* Shoe icon */}
+                <motion.div 
+                  className="relative w-20 h-20 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '2px solid rgba(255,255,255,0.3)',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                  animate={{
+                    boxShadow: [
+                      `0 0 20px ${shoeStyle.glow}`,
+                      `0 0 35px ${shoeStyle.glow}`,
+                      `0 0 20px ${shoeStyle.glow}`,
+                    ],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <span className="text-4xl">{shoe.icon}</span>
+                  
+                  {/* Level badge */}
+                  {currentLevel > 0 && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs"
+                      style={{
+                        background: currentLevel >= 7 
+                          ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' 
+                          : currentLevel >= 4 
+                            ? 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)'
+                            : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                        boxShadow: '0 0 15px rgba(0,0,0,0.5)',
+                        color: 'white',
+                        border: '2px solid rgba(255,255,255,0.3)',
+                      }}
+                    >
+                      +{currentLevel}
+                    </motion.div>
+                  )}
+                </motion.div>
+
+                {/* Shoe name and base stats */}
+                <div className="flex-1">
+                  <h4 
+                    className="font-varsity text-lg uppercase tracking-wide"
                     style={{
-                      background: currentLevel >= 7 
-                        ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' 
-                        : currentLevel >= 4 
-                          ? 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)'
-                          : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                      boxShadow: '0 0 15px rgba(0,0,0,0.3)',
-                      color: 'white',
+                      color: '#FFFFFF',
+                      textShadow: '2px 2px 0px rgba(0,0,0,0.3), 0 0 15px rgba(255,255,255,0.3)',
                     }}
                   >
-                    +{currentLevel}
-                  </motion.div>
-                )}
+                    {shoe.name}
+                  </h4>
+                  <p 
+                    className="text-xs font-medium"
+                    style={{ color: 'rgba(255,255,255,0.8)' }}
+                  >
+                    Base: +{shoe.coinBonus}% Monete, +{shoe.expBonus}% EXP
+                  </p>
+                  
+                  {/* Current upgrade bonus */}
+                  {currentLevel > 0 && (
+                    <div 
+                      className="flex items-center gap-2 text-xs mt-1 px-2 py-1 rounded-lg inline-flex"
+                      style={{
+                        background: 'rgba(252, 211, 77, 0.2)',
+                        border: '1px solid rgba(252, 211, 77, 0.5)',
+                      }}
+                    >
+                      <Zap className="w-3 h-3" style={{ color: '#FCD34D' }} />
+                      <span style={{ color: '#FCD34D' }} className="font-medium">
+                        +{currentBonus.coinBonus}% monete, +{currentBonus.expBonus}% exp
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h4 className="font-bold text-foreground">{shoe.name}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      Base: +{shoe.coinBonus}% Monete, +{shoe.expBonus}% EXP
-                    </p>
+              {/* Upgrade section */}
+              {!isMaxed ? (
+                <div 
+                  className="rounded-xl p-4"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '2px solid rgba(255,255,255,0.2)',
+                  }}
+                >
+                  {/* Level transition */}
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div 
+                      className="px-3 py-1.5 rounded-lg font-bold text-sm"
+                      style={{
+                        background: 'rgba(255,255,255,0.2)',
+                        color: 'white',
+                      }}
+                    >
+                      +{currentLevel}
+                    </div>
+                    <ArrowUp className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.7)' }} />
+                    <motion.div 
+                      className="px-3 py-1.5 rounded-lg font-bold text-sm"
+                      style={{
+                        background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                        color: '#78350F',
+                        boxShadow: '0 0 15px rgba(252, 211, 77, 0.5)',
+                      }}
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      +{nextLevel}
+                    </motion.div>
                   </div>
-                </div>
 
-                {/* Current upgrade bonus */}
-                {currentLevel > 0 && (
-                  <div className="flex items-center gap-2 text-xs mb-2">
-                    <Zap className="w-3 h-3 text-gold" />
-                    <span className="text-gold font-medium">
-                      Bonus upgrade: +{currentBonus.coinBonus}% monete, +{currentBonus.expBonus}% exp
+                  {/* Success rate */}
+                  <div className="flex justify-between text-xs mb-2">
+                    <span style={{ color: 'rgba(255,255,255,0.7)' }}>Probabilità di successo</span>
+                    <span 
+                      className="font-bold"
+                      style={{
+                        color: successRate >= 50 ? '#4ADE80' : 
+                               successRate >= 20 ? '#FCD34D' : '#F87171'
+                      }}
+                    >
+                      {successRate}%
                     </span>
                   </div>
-                )}
 
-                {/* Upgrade info */}
-                {!isMaxed ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">
-                        +{currentLevel} → +{nextLevel}
-                      </span>
-                      <span 
-                        className={`font-bold ${
-                          successRate >= 50 ? 'text-green-400' : 
-                          successRate >= 20 ? 'text-yellow-400' : 'text-red-400'
-                        }`}
-                      >
-                        {successRate}% successo
-                      </span>
-                    </div>
-
-                    {/* Success rate bar */}
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full"
-                        style={{
-                          width: `${successRate}%`,
-                          background: successRate >= 50 
-                            ? 'linear-gradient(90deg, #22c55e, #4ade80)' 
-                            : successRate >= 20 
-                              ? 'linear-gradient(90deg, #eab308, #facc15)'
-                              : 'linear-gradient(90deg, #ef4444, #f87171)',
-                        }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${successRate}%` }}
-                        transition={{ duration: 0.5 }}
-                      />
-                    </div>
-
-                    {/* Upgrade button */}
-                    <Button
-                      size="sm"
-                      onClick={() => handleUpgrade(shoe.id)}
-                      disabled={!canAfford || isUpgrading}
-                      className={`w-full gap-2 ${
-                        canAfford 
-                          ? 'bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black' 
-                          : ''
-                      }`}
-                    >
-                      <ArrowUp className="w-4 h-4" />
-                      <span>Potenzia</span>
-                      <Coins className="w-3 h-3 ml-1" />
-                      <span>{cost.toLocaleString()}</span>
-                    </Button>
+                  {/* Success rate bar */}
+                  <div 
+                    className="h-3 rounded-full overflow-hidden mb-3"
+                    style={{ background: 'rgba(0,0,0,0.3)' }}
+                  >
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${successRate}%`,
+                        background: successRate >= 50 
+                          ? 'linear-gradient(90deg, #22c55e, #4ade80)' 
+                          : successRate >= 20 
+                            ? 'linear-gradient(90deg, #eab308, #facc15)'
+                            : 'linear-gradient(90deg, #ef4444, #f87171)',
+                        boxShadow: successRate >= 50 
+                          ? '0 0 10px rgba(74, 222, 128, 0.5)'
+                          : successRate >= 20 
+                            ? '0 0 10px rgba(252, 211, 77, 0.5)'
+                            : '0 0 10px rgba(248, 113, 113, 0.5)',
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${successRate}%` }}
+                      transition={{ duration: 0.5 }}
+                    />
                   </div>
-                ) : (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Sparkles className="w-4 h-4 text-gold" />
-                    <span className="text-gold font-bold">LIVELLO MASSIMO +10</span>
-                  </div>
-                )}
-              </div>
+
+                  {/* Upgrade button */}
+                  <Button
+                    size="sm"
+                    onClick={() => handleUpgrade(shoe.id)}
+                    disabled={!canAfford || isUpgrading}
+                    className="w-full gap-2 font-bold"
+                    style={canAfford ? {
+                      background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                      color: '#78350F',
+                      border: '2px solid #FEF3C7',
+                      boxShadow: '0 2px 0 0 #B45309, 0 0 15px rgba(252, 211, 77, 0.4)',
+                    } : undefined}
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                    <span>Potenzia</span>
+                    <Coins className="w-4 h-4 ml-1" />
+                    <span>{cost.toLocaleString()}</span>
+                  </Button>
+                </div>
+              ) : (
+                <motion.div 
+                  className="text-center py-4 rounded-xl"
+                  style={{
+                    background: 'rgba(252, 211, 77, 0.2)',
+                    border: '2px solid #FCD34D',
+                  }}
+                  animate={{ boxShadow: ['0 0 20px rgba(252, 211, 77, 0.3)', '0 0 30px rgba(252, 211, 77, 0.5)', '0 0 20px rgba(252, 211, 77, 0.3)'] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Sparkles className="w-10 h-10 mx-auto mb-2" style={{ color: '#FCD34D' }} />
+                  </motion.div>
+                  <p 
+                    className="font-varsity text-lg uppercase"
+                    style={{ color: '#FCD34D', textShadow: '0 0 10px rgba(252, 211, 77, 0.5)' }}
+                  >
+                    Livello Massimo +10
+                  </p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    Bonus: +{currentBonus.coinBonus}% monete, +{currentBonus.expBonus}% exp
+                  </p>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         );
       })}
-
-      {/* Legend */}
-      <div className="mt-6 p-4 rounded-xl bg-muted/30 border border-border">
-        <h4 className="font-bold text-sm mb-3 flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-primary" />
-          Probabilità di successo
-        </h4>
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          {Object.entries(SHOE_UPGRADE_SUCCESS_RATES).map(([level, rate]) => (
-            <div key={level} className="flex justify-between">
-              <span className="text-muted-foreground">+{Number(level) - 1} → +{level}</span>
-              <span className={`font-medium ${
-                rate >= 50 ? 'text-green-400' : 
-                rate >= 20 ? 'text-yellow-400' : 'text-red-400'
-              }`}>
-                {rate}%
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
