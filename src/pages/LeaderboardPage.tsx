@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getRank, getReputationLevel } from '@/store/gameStore';
+import { MarathonEvents } from '@/components/game/MarathonEvents';
 
 const getRankIcon = (rank: number) => {
   if (rank === 1) return '🥇';
@@ -261,6 +262,9 @@ export default function LeaderboardPage() {
             )}
           </motion.div>
         )}
+
+        {/* Marathon Events */}
+        <MarathonEvents />
 
         {/* Tabs for different rankings */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
