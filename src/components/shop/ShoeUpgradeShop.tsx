@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, TrendingUp, Coins, Check, ArrowUp, X, Zap, Lock } from 'lucide-react';
+import { Sparkles, TrendingUp, Coins, Check, ArrowUp, X, Zap, Lock, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useGameStore, SHOES, SHOE_UPGRADE_SUCCESS_RATES, getShoeUpgradeCost, getShoeUpgradeBonus } from '@/store/gameStore';
+import { useGameStore, SHOES, SHOE_UPGRADE_SUCCESS_RATES, SHOE_UPGRADE_BONUSES, getShoeUpgradeCost, getShoeUpgradeBonus } from '@/store/gameStore';
 import { toast } from 'sonner';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 export function ShoeUpgradeShop() {
   const { user, ownedShoes, shoeUpgrades, getShoeUpgradeLevel, attemptShoeUpgrade } = useGameStore();
@@ -69,6 +70,71 @@ export function ShoeUpgradeShop() {
 
   return (
     <div className="space-y-4">
+      {/* Upgrade Progression Table */}
+      <Collapsible>
+        <CollapsibleTrigger asChild>
+          <Button variant="outline" className="w-full flex items-center justify-between gap-2 mb-4">
+            <span className="flex items-center gap-2">
+              <Info className="w-4 h-4" />
+              Tabella Progressione Upgrade
+            </span>
+            <ArrowUp className="w-4 h-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="rounded-lg border border-border overflow-hidden mb-4">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="px-3 py-2 text-left font-semibold">Livello</th>
+                  <th className="px-3 py-2 text-center font-semibold">Successo</th>
+                  <th className="px-3 py-2 text-center font-semibold">Monete</th>
+                  <th className="px-3 py-2 text-center font-semibold">EXP</th>
+                  <th className="px-3 py-2 text-right font-semibold">Totale</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => {
+                  const bonus = SHOE_UPGRADE_BONUSES[level];
+                  const cumulative = getShoeUpgradeBonus(level);
+                  const successRate = SHOE_UPGRADE_SUCCESS_RATES[level];
+                  
+                  return (
+                    <tr 
+                      key={level} 
+                      className={`border-t border-border/50 ${
+                        level <= 2 ? 'bg-green-500/10' : 
+                        level <= 6 ? 'bg-yellow-500/10' : 
+                        level <= 8 ? 'bg-orange-500/10' : 
+                        'bg-red-500/10'
+                      }`}
+                    >
+                      <td className="px-3 py-2 font-bold text-primary">+{level}</td>
+                      <td className="px-3 py-2 text-center">
+                        <span className={`font-medium ${
+                          successRate >= 60 ? 'text-green-500' :
+                          successRate >= 30 ? 'text-yellow-500' :
+                          'text-red-500'
+                        }`}>
+                          {successRate}%
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 text-center text-gold">+{bonus.coinBonus}%</td>
+                      <td className="px-3 py-2 text-center text-cyan-400">+{bonus.expBonus}%</td>
+                      <td className="px-3 py-2 text-right">
+                        <span className="text-muted-foreground">
+                          {cumulative.coinBonus}% / {cumulative.expBonus}%
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
       <p className="text-sm text-muted-foreground mb-4">
         Potenzia le tue scarpe da +1 a +10! Bonus crescenti per ogni livello.
       </p>
