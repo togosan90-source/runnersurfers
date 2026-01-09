@@ -56,15 +56,17 @@ export const PlayerHeader = memo(function PlayerHeader() {
           background: 'linear-gradient(180deg, #1e1e30 0%, #141428 100%)',
         }}
       >
-        {/* Coins - Fixed top right on mobile */}
+        {/* Coins - Fixed top right on mobile - Clickable to shop */}
         <motion.div 
-          className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+          className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer"
           style={{
             background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%)',
             border: '1px solid rgba(251, 191, 36, 0.4)',
             boxShadow: '0 0 15px rgba(251, 191, 36, 0.2)',
           }}
           whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/shop')}
         >
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
