@@ -82,14 +82,19 @@ export default function RunPage() {
   const [gpsEnabled, setGpsEnabled] = useState(false);
   const [pointsPerSecond, setPointsPerSecond] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
+  const [movingSeconds, setMovingSeconds] = useState(0);
+  const [scoreActive, setScoreActive] = useState(false);
 
   const watchIdRef = useRef<number | null>(null);
   const lastPositionRef = useRef<{ lat: number; lng: number; time: number } | null>(null);
   const scoreIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const movingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastExpMilestone = useRef(0);
   const lastKmMilestone = useRef(0);
   const previousLevelRef = useRef(user.level);
   const runStartTimeRef = useRef<number>(0);
+  const lastSpeedUpdateRef = useRef<number>(Date.now());
 
   // Restore state from global store if run is in progress (e.g., after navigation)
   useEffect(() => {
@@ -213,19 +218,72 @@ export default function RunPage() {
     };
   }, [isRunning, isPaused, gpsEnabled, distance, updateRun]);
 
-  // Score increment effect
-  // Score increment effect - only when moving
+  // Detect if user is moving based on speed
   useEffect(() => {
     if (!isRunning || isPaused) {
+      setIsMoving(false);
+      setMovingSeconds(0);
+      setScoreActive(false);
+      return;
+    }
+
+    const MOVEMENT_THRESHOLD = 2; // km/h - minimum speed to be considered moving
+    const isCurrentlyMoving = speed >= MOVEMENT_THRESHOLD;
+    
+    setIsMoving(isCurrentlyMoving);
+    
+    // Reset moving timer when user stops
+    if (!isCurrentlyMoving) {
+      setMovingSeconds(0);
+      setScoreActive(false);
+    }
+  }, [speed, isRunning, isPaused]);
+
+  // Timer to track continuous movement (10 seconds to activate score)
+  useEffect(() => {
+    if (!isRunning || isPaused || !isMoving) {
+      if (movingTimerRef.current) {
+        clearInterval(movingTimerRef.current);
+        movingTimerRef.current = null;
+      }
+      return;
+    }
+
+    movingTimerRef.current = setInterval(() => {
+      setMovingSeconds(prev => {
+        const newValue = prev + 1;
+        // Activate score after 10 seconds of continuous movement
+        if (newValue >= 10 && !scoreActive) {
+          setScoreActive(true);
+          console.log('Score activated after 10 seconds of movement');
+        }
+        return newValue;
+      });
+    }, 1000);
+
+    return () => {
+      if (movingTimerRef.current) {
+        clearInterval(movingTimerRef.current);
+        movingTimerRef.current = null;
+      }
+    };
+  }, [isRunning, isPaused, isMoving, scoreActive]);
+
+  // Score increment effect - only when moving AND score is active
+  useEffect(() => {
+    if (!isRunning || isPaused || !scoreActive || !isMoving) {
       if (scoreIntervalRef.current) {
         clearInterval(scoreIntervalRef.current);
+        scoreIntervalRef.current = null;
       }
       setPointsPerSecond(0);
       return;
     }
 
+    console.log('Starting score increment - Speed:', speed, 'ScoreActive:', scoreActive, 'IsMoving:', isMoving);
+
     scoreIntervalRef.current = setInterval(() => {
-      // Only gain points if actually moving (speed > 2 km/h walking threshold)
+      // Double check we're still moving
       if (speed < 2) {
         setPointsPerSecond(0);
         return;
@@ -238,20 +296,22 @@ export default function RunPage() {
       // Jogging (6-10 km/h): ~15-40 pts/sec
       // Running (10-15 km/h): ~40-80 pts/sec
       // Sprinting (15+ km/h): ~80-150 pts/sec
-      const speedBonus = Math.pow(speed, 1.3); // Exponential reward for faster speeds
+      const speedBonus = Math.pow(speed, 1.3);
       const baseIncrement = speedBonus * 0.8;
       const increment = Math.floor(baseIncrement * multiplier);
       
+      console.log('Score increment:', increment, 'Speed:', speed.toFixed(1));
       setPointsPerSecond(increment);
       setScore(prev => prev + increment);
-    }, 1000); // Update every second for cleaner display
+    }, 1000);
 
     return () => {
       if (scoreIntervalRef.current) {
         clearInterval(scoreIntervalRef.current);
+        scoreIntervalRef.current = null;
       }
     };
-  }, [isRunning, isPaused, speed, getFullMultiplier]);
+  }, [isRunning, isPaused, scoreActive, isMoving, speed, getFullMultiplier]);
 
   // Sync score to global store periodically
   useEffect(() => {
@@ -589,11 +649,31 @@ export default function RunPage() {
                 />
               </div>
 
+              {/* Score Status Indicator */}
+              {!scoreActive && isMoving && (
+                <div className="bg-amber-500/20 border border-amber-500/40 rounded-xl p-3 text-center">
+                  <p className="text-amber-400 font-semibold text-sm">
+                    ⏱️ Attivazione Score: {10 - movingSeconds}s rimanenti
+                  </p>
+                  <p className="text-amber-300/70 text-xs mt-1">
+                    Continua a muoverti per attivare lo score!
+                  </p>
+                </div>
+              )}
+              
+              {!isMoving && isRunning && !isPaused && (
+                <div className="bg-muted/50 border border-muted-foreground/20 rounded-xl p-3 text-center">
+                  <p className="text-muted-foreground font-semibold text-sm">
+                    ⏸️ Score in pausa - Muoviti per guadagnare punti!
+                  </p>
+                </div>
+              )}
+
               {/* Score Counter */}
               <ScoreCounter
                 score={score}
                 pointsPerSecond={pointsPerSecond}
-                isRunning={!isPaused}
+                isRunning={!isPaused && scoreActive && isMoving}
                 speed={speed}
               />
 
