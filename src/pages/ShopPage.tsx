@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, Clock, TrendingUp, Loader2 } from 'lucide-react';
+import { ShoppingCart, Sparkles, Coins, Zap, Lock, Check, CreditCard, Clock, TrendingUp, Loader2, ArrowUp } from 'lucide-react';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { useGameStore, BOOSTS, SHOES } from '@/store/gameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { UpgradeShop } from '@/components/shop/UpgradeShop';
+import { ShoeUpgradeShop } from '@/components/shop/ShoeUpgradeShop';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -308,17 +309,21 @@ export default function ShopPage() {
 
         {/* Tabs */}
         <Tabs defaultValue="boosts" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="boosts" className="gap-2">
-              <Zap className="w-4 h-4" />
+          <TabsList className="grid w-full grid-cols-4 mb-4">
+            <TabsTrigger value="boosts" className="gap-1 text-xs px-2">
+              <Zap className="w-3 h-3" />
               Boost
             </TabsTrigger>
-            <TabsTrigger value="upgrades" className="gap-2">
-              <TrendingUp className="w-4 h-4" />
+            <TabsTrigger value="upgrades" className="gap-1 text-xs px-2">
+              <TrendingUp className="w-3 h-3" />
               Upgrade
             </TabsTrigger>
-            <TabsTrigger value="items" className="gap-2">
-              <ShoppingCart className="w-4 h-4" />
+            <TabsTrigger value="enhance" className="gap-1 text-xs px-2">
+              <ArrowUp className="w-3 h-3" />
+              Potenzia
+            </TabsTrigger>
+            <TabsTrigger value="items" className="gap-1 text-xs px-2">
+              <ShoppingCart className="w-3 h-3" />
               Items
             </TabsTrigger>
           </TabsList>
@@ -584,6 +589,10 @@ export default function ShopPage() {
 
           <TabsContent value="upgrades">
             <UpgradeShop />
+          </TabsContent>
+
+          <TabsContent value="enhance">
+            <ShoeUpgradeShop />
           </TabsContent>
 
           <TabsContent value="items">

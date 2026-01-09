@@ -103,6 +103,59 @@ export interface UserData {
   lastRunDate: string | null;
 }
 
+// Shoe Upgrade System
+export interface ShoeUpgrade {
+  shoeId: string;
+  level: number; // 0 = base, 1-10 = upgrade levels
+}
+
+// Success rates for shoe upgrades
+export const SHOE_UPGRADE_SUCCESS_RATES: Record<number, number> = {
+  1: 100,  // +0 → +1: 100%
+  2: 100,  // +1 → +2: 100%
+  3: 65,   // +2 → +3: 65%
+  4: 60,   // +3 → +4: 60%
+  5: 55,   // +4 → +5: 55%
+  6: 50,   // +5 → +6: 50%
+  7: 30,   // +6 → +7: 30%
+  8: 8,    // +7 → +8: 8%
+  9: 5,    // +8 → +9: 5%
+  10: 2,   // +9 → +10: 2%
+};
+
+// Calculate upgrade cost based on level and player's coin earnings
+export function getShoeUpgradeCost(level: number, targetLevel: number, shoeId: string): number {
+  const shoe = SHOES.find(s => s.id === shoeId);
+  if (!shoe) return 0;
+  
+  // Base costs scale with coin multiplier and target level
+  const coinMultiplier = getCoinMultiplier(level);
+  const baseCost = 5000; // Base cost at level 1
+  
+  // Cost increases exponentially with target upgrade level
+  const levelMultipliers: Record<number, number> = {
+    1: 1,       // 5k base
+    2: 2,       // 10k base
+    3: 5,       // 25k base
+    4: 10,      // 50k base
+    5: 25,      // 125k base
+    6: 50,      // 250k base
+    7: 150,     // 750k base
+    8: 400,     // 2M base
+    9: 1000,    // 5M base
+    10: 3000,   // 15M base
+  };
+  
+  const shoeMultiplier = shoe.coinBonus / 5; // Higher tier shoes cost more
+  
+  return Math.floor(baseCost * coinMultiplier * (levelMultipliers[targetLevel] || 1) * shoeMultiplier);
+}
+
+// Get bonus per upgrade level (each +1 gives +2% extra bonus)
+export function getShoeUpgradeBonus(upgradeLevel: number): number {
+  return upgradeLevel * 2; // +2% per upgrade level
+}
+
 interface GameState {
   // User
   user: UserData;
@@ -110,6 +163,7 @@ interface GameState {
   
   // Equipment
   ownedShoes: string[];
+  shoeUpgrades: ShoeUpgrade[]; // Track upgrade levels for each shoe
   
   // Boosts
   activeBoost: ActiveBoost | null;
@@ -165,6 +219,11 @@ interface GameState {
   purchaseUpgrade: (upgradeId: number) => boolean;
   getTotalScoreBonus: () => number;
   getTotalExpBonus: () => number;
+  
+  // Shoe Upgrade Actions
+  getShoeUpgradeLevel: (shoeId: string) => number;
+  attemptShoeUpgrade: (shoeId: string) => { success: boolean; newLevel: number; cost: number };
+  getTotalShoeBonus: () => { coinBonus: number; expBonus: number };
 }
 
 // NEW Boosts - Premium System (Levels 1-50)
@@ -425,6 +484,9 @@ export const useGameStore = create<GameState>()((set, get) => ({
       
       // Score Upgrades
       purchasedUpgrades: [],
+      
+      // Shoe Upgrades
+      shoeUpgrades: [],
 
       setUser: (userData) => set((state) => ({ 
         user: { ...state.user, ...userData } 
@@ -688,5 +750,66 @@ export const useGameStore = create<GameState>()((set, get) => ({
         }
         return total;
       }, 0);
+    },
+    
+    // Shoe Upgrade Actions
+    getShoeUpgradeLevel: (shoeId: string) => {
+      const state = get();
+      const upgrade = state.shoeUpgrades.find(u => u.shoeId === shoeId);
+      return upgrade?.level || 0;
+    },
+    
+    attemptShoeUpgrade: (shoeId: string) => {
+      const state = get();
+      const currentLevel = state.shoeUpgrades.find(u => u.shoeId === shoeId)?.level || 0;
+      const targetLevel = currentLevel + 1;
+      
+      if (targetLevel > 10) {
+        return { success: false, newLevel: currentLevel, cost: 0 };
+      }
+      
+      const cost = getShoeUpgradeCost(state.user.level, targetLevel, shoeId);
+      
+      if (state.user.coins < cost) {
+        return { success: false, newLevel: currentLevel, cost };
+      }
+      
+      // Deduct coins
+      set({ user: { ...state.user, coins: state.user.coins - cost } });
+      
+      // Check success rate
+      const successRate = SHOE_UPGRADE_SUCCESS_RATES[targetLevel] || 0;
+      const roll = Math.random() * 100;
+      const success = roll < successRate;
+      
+      if (success) {
+        const existingIndex = state.shoeUpgrades.findIndex(u => u.shoeId === shoeId);
+        if (existingIndex >= 0) {
+          const newUpgrades = [...state.shoeUpgrades];
+          newUpgrades[existingIndex] = { shoeId, level: targetLevel };
+          set({ shoeUpgrades: newUpgrades });
+        } else {
+          set({ shoeUpgrades: [...state.shoeUpgrades, { shoeId, level: targetLevel }] });
+        }
+        return { success: true, newLevel: targetLevel, cost };
+      }
+      
+      return { success: false, newLevel: currentLevel, cost };
+    },
+    
+    getTotalShoeBonus: () => {
+      const state = get();
+      const equippedShoeId = state.user.equippedShoes;
+      const shoe = SHOES.find(s => s.id === equippedShoeId);
+      const upgradeLevel = state.shoeUpgrades.find(u => u.shoeId === equippedShoeId)?.level || 0;
+      
+      if (!shoe) return { coinBonus: 0, expBonus: 0 };
+      
+      const upgradeBonus = getShoeUpgradeBonus(upgradeLevel);
+      
+      return {
+        coinBonus: shoe.coinBonus + upgradeBonus,
+        expBonus: shoe.expBonus + upgradeBonus,
+      };
     },
   }));
