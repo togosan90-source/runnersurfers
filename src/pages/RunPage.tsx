@@ -704,10 +704,57 @@ export default function RunPage() {
               )}
               
               {!isMoving && isRunning && !isPaused && (
-                <div className="bg-muted/50 border border-muted-foreground/20 rounded-xl p-3 text-center">
-                  <p className="text-muted-foreground font-semibold text-sm">
-                    ⏸️ Score in pausa - Muoviti per guadagnare punti!
-                  </p>
+                <div className="relative bg-gradient-to-br from-orange-950/80 via-amber-950/60 to-orange-950/80 p-4 overflow-hidden"
+                  style={{
+                    clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))'
+                  }}>
+                  {/* Scan line effect */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-amber-400/40 to-transparent animate-pulse"
+                      style={{ top: '50%' }} />
+                  </div>
+                  
+                  {/* Corner decorations */}
+                  <div className="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-amber-500/60" />
+                  <div className="absolute top-0 right-3 w-3 h-3 border-r-2 border-t-2 border-amber-500/60" />
+                  <div className="absolute bottom-0 left-3 w-3 h-3 border-l-2 border-b-2 border-amber-500/60" />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-amber-500/60" />
+                  
+                  {/* Glowing border lines */}
+                  <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+                  <div className="absolute bottom-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+                  
+                  <div className="relative flex items-center justify-center gap-3">
+                    {/* Hexagonal icon container */}
+                    <div className="relative">
+                      <div className="w-10 h-10 bg-gradient-to-br from-amber-500/30 to-orange-600/30 flex items-center justify-center"
+                        style={{
+                          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+                        }}>
+                        <span className="text-lg">⏸️</span>
+                      </div>
+                      <div className="absolute inset-0 bg-amber-400/20 animate-ping"
+                        style={{
+                          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+                        }} />
+                    </div>
+                    
+                    <div className="flex flex-col">
+                      <span className="text-amber-300 font-bold text-sm tracking-wider"
+                        style={{ textShadow: '0 0 10px rgba(251, 191, 36, 0.5)' }}>
+                        SCORE IN PAUSA
+                      </span>
+                      <span className="text-amber-400/70 text-xs font-mono">
+                        Muoviti per guadagnare punti!
+                      </span>
+                    </div>
+                    
+                    {/* Status LED */}
+                    <div className="relative ml-2">
+                      <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"
+                        style={{ boxShadow: '0 0 8px rgba(251, 191, 36, 0.8)' }} />
+                    </div>
+                  </div>
                 </div>
               )}
 
