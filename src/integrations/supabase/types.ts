@@ -102,6 +102,8 @@ export type Database = {
           owned_shoes: string[]
           reputation: number
           reputation_level: string
+          score_upgrade_level: number
+          shoe_upgrades: Json
           skill_coins: number
           skill_points: number
           skill_score: number
@@ -123,6 +125,8 @@ export type Database = {
           owned_shoes?: string[]
           reputation?: number
           reputation_level?: string
+          score_upgrade_level?: number
+          shoe_upgrades?: Json
           skill_coins?: number
           skill_points?: number
           skill_score?: number
@@ -144,6 +148,8 @@ export type Database = {
           owned_shoes?: string[]
           reputation?: number
           reputation_level?: string
+          score_upgrade_level?: number
+          shoe_upgrades?: Json
           skill_coins?: number
           skill_points?: number
           skill_score?: number
