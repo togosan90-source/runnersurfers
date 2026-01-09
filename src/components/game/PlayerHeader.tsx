@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { MapPin, Zap, Flame, Star, Crown, Coins } from 'lucide-react';
 import { useGameStore, getTier, getExpPerKm, getExpNeeded } from '@/store/gameStore';
 import { useProfile } from '@/hooks/useProfile';
+import { useNavigate } from 'react-router-dom';
 import coinsGold from '@/assets/coins-gold.png';
 import avatarSora from '@/assets/avatar-sora.png';
 
 export const PlayerHeader = memo(function PlayerHeader() {
   const user = useGameStore((state) => state.user);
   const { profile } = useProfile();
+  const navigate = useNavigate();
   const tier = useMemo(() => getTier(user.level), [user.level]);
   const expProgress = useMemo(() => Math.min((user.exp / 100) * 100, 100), [user.exp]);
   
@@ -98,8 +100,11 @@ export const PlayerHeader = memo(function PlayerHeader() {
         ))}
         
         <div className="flex flex-col sm:flex-row items-start gap-4 relative z-10">
-          {/* Avatar with animated glow ring */}
-          <div className="relative flex-shrink-0">
+          {/* Avatar with animated glow ring - Clickable to profile */}
+          <div 
+            className="relative flex-shrink-0 cursor-pointer"
+            onClick={() => navigate('/profile')}
+          >
             <motion.div
               className="absolute -inset-2 rounded-full opacity-60 blur-md"
               style={{
@@ -129,6 +134,8 @@ export const PlayerHeader = memo(function PlayerHeader() {
                 repeat: Infinity,
                 ease: "linear",
               }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {profile?.avatar_url ? (
                 <img 
