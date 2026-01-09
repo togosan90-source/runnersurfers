@@ -8,6 +8,23 @@
 /* Runner Legends - Gaming Style Design System */
 
 @layer base {
+  /* Disable text selection globally */
+  * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Allow selection only in input fields */
+  input, textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
   :root {
     --background: 220 20% 97%;
     --foreground: 222 47% 11%;
