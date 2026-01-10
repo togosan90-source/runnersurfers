@@ -133,7 +133,7 @@ export function RunningMap({ center, path, isRunning, speed = 0 }: RunningMapPro
         {/* Running indicator */}
         {isRunning && (
           <div className="absolute top-3 left-3 z-[1000]">
-            <motion.div 
+            <div 
               className="rounded-full px-3 py-1 text-xs font-bold flex items-center gap-1.5"
               style={{
                 background: 'linear-gradient(180deg, rgba(0, 200, 255, 0.3) 0%, rgba(0, 150, 255, 0.2) 100%)',
@@ -141,23 +141,13 @@ export function RunningMap({ center, path, isRunning, speed = 0 }: RunningMapPro
                 boxShadow: '0 0 15px rgba(0, 200, 255, 0.4)',
                 color: '#00d4ff',
               }}
-              animate={{
-                boxShadow: [
-                  '0 0 15px rgba(0, 200, 255, 0.4)',
-                  '0 0 25px rgba(0, 200, 255, 0.6)',
-                  '0 0 15px rgba(0, 200, 255, 0.4)',
-                ],
-              }}
-              transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <motion.span 
+              <span 
                 className="w-2 h-2 rounded-full"
                 style={{ background: '#00f2fe' }}
-                animate={{ opacity: [1, 0.4, 1], scale: [1, 0.8, 1] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
               />
               TRACKING
-            </motion.div>
+            </div>
           </div>
         )}
       </div>

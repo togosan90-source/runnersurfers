@@ -36,16 +36,6 @@ export function ScoreCounter({ score, pointsPerSecond = 0, isRunning = false, sp
       animate={showPop ? { scale: [1, 1.02, 1] } : {}}
       transition={{ duration: 0.3 }}
     >
-      {/* Scan line effect */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `linear-gradient(180deg, transparent 0%, ${accentColor}10 50%, transparent 100%)`,
-          height: '200%',
-        }}
-        animate={{ y: ['-100%', '0%'] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-      />
 
       {/* Corner cuts decoration */}
       <div 

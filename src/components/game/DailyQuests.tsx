@@ -103,7 +103,7 @@ export function DailyQuests() {
             </div>
           </div>
 
-          <motion.div
+          <div
             className="flex items-center gap-2 px-4 py-2 rounded-xl"
             style={{
               background: completedCount === 10
@@ -112,12 +112,10 @@ export function DailyQuests() {
               border: '2px solid rgba(255,255,255,0.2)',
               boxShadow: completedCount === 10 ? '0 0 20px rgba(34, 197, 94, 0.5)' : 'none',
             }}
-            animate={completedCount === 10 ? { scale: [1, 1.05, 1] } : {}}
-            transition={{ duration: 1, repeat: Infinity }}
           >
             <Zap className={`w-4 h-4 ${completedCount === 10 ? 'text-yellow-300' : 'text-violet-300'}`} />
             <span className="font-bold text-white text-lg">{completedCount}/10</span>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -281,18 +279,16 @@ export function DailyQuests() {
                 </div>
 
                 {/* Rewards - only coins */}
-                <motion.span
+                <span
                   className="flex items-center gap-1 px-2 py-0.5 rounded-md font-bold"
                   style={{
                     background: 'rgba(251, 191, 36, 0.2)',
                     color: '#fbbf24',
                   }}
-                  animate={isLegendary && !isCompleted ? { scale: [1, 1.1, 1] } : {}}
-                  transition={{ duration: 0.6, repeat: Infinity }}
                 >
                   <Coins className="w-3 h-3" />
                   {quest.coins.toLocaleString()}
-                </motion.span>
+                </span>
               </div>
 
               {/* Progress bar */}

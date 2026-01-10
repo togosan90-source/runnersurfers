@@ -67,16 +67,6 @@ export function RunningMetrics({
             clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))',
           }}
         >
-          {/* Scan line effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `linear-gradient(180deg, transparent 0%, ${metric.color}10 50%, transparent 100%)`,
-              height: '200%',
-            }}
-            animate={{ y: ['-100%', '0%'] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-          />
 
           {/* Corner cuts decoration */}
           <div 

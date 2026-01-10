@@ -483,21 +483,17 @@ export function ShoeUpgradeShop() {
                   </Button>
                 </div>
               ) : (
-                <motion.div 
+                <div 
                   className="text-center py-4 rounded-xl"
                   style={{
                     background: 'rgba(252, 211, 77, 0.2)',
                     border: '2px solid #FCD34D',
+                    boxShadow: '0 0 20px rgba(252, 211, 77, 0.3)',
                   }}
-                  animate={{ boxShadow: ['0 0 20px rgba(252, 211, 77, 0.3)', '0 0 30px rgba(252, 211, 77, 0.5)', '0 0 20px rgba(252, 211, 77, 0.3)'] }}
-                  transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
+                  <div>
                     <Sparkles className="w-10 h-10 mx-auto mb-2" style={{ color: '#FCD34D' }} />
-                  </motion.div>
+                  </div>
                   <p 
                     className="font-varsity text-lg uppercase"
                     style={{ color: '#FCD34D', textShadow: '0 0 10px rgba(252, 211, 77, 0.5)' }}
@@ -507,7 +503,7 @@ export function ShoeUpgradeShop() {
                   <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     Bonus: +{currentBonus.coinBonus}% monete, +{currentBonus.expBonus}% exp
                   </p>
-                </motion.div>
+                </div>
               )}
             </div>
           </motion.div>

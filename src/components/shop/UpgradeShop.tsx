@@ -237,35 +237,19 @@ export function UpgradeShop() {
 
               <div className="flex relative z-10">
                 {/* Icon Section */}
-                <motion.div 
+                <div 
                   className="w-24 h-24 flex items-center justify-center relative"
                   style={{
                     background: 'rgba(0,0,0,0.2)',
                   }}
-                  animate={isLegendary ? {
-                    scale: [1, 1.05, 1],
-                  } : {}}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
                 >
                   {/* Glow ring */}
-                  <motion.div
+                  <div
                     className="absolute inset-4 rounded-full"
                     style={{
                       background: style.iconBg,
                       boxShadow: `0 0 25px ${style.glow}`,
-                    }}
-                    animate={{
-                      scale: [0.9, 1, 0.9],
-                      opacity: [0.6, 1, 0.6],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
+                      opacity: 0.8,
                     }}
                   />
                   <div className="relative z-10">
@@ -287,7 +271,7 @@ export function UpgradeShop() {
                       />
                     )}
                   </div>
-                </motion.div>
+                </div>
                 
                 {/* Content Section */}
                 <div className="flex-1 p-4">

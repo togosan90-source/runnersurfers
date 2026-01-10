@@ -157,53 +157,19 @@ export default function ShopPage() {
           <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold/60 rounded-bl-2xl" />
           <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold/60 rounded-br-2xl" />
 
-          {/* Shimmer effect */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.1) 50%, transparent 100%)',
-            }}
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              repeatDelay: 2,
-              ease: "easeInOut",
-            }}
-          />
 
           <div className="relative z-10 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* Enhanced coin icon with glow */}
-              <motion.div 
+              {/* Coin icon */}
+              <div 
                 className="relative w-16 h-16 rounded-full flex items-center justify-center"
                 style={{
                   background: 'linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--warning)) 100%)',
                   boxShadow: '0 0 20px hsl(var(--gold) / 0.6), 0 0 40px hsl(var(--gold) / 0.3), inset 0 2px 4px hsl(0 0% 100% / 0.3)',
                 }}
-                animate={{
-                  boxShadow: [
-                    '0 0 20px hsl(var(--gold) / 0.6), 0 0 40px hsl(var(--gold) / 0.3)',
-                    '0 0 30px hsl(var(--gold) / 0.8), 0 0 60px hsl(var(--gold) / 0.4)',
-                    '0 0 20px hsl(var(--gold) / 0.6), 0 0 40px hsl(var(--gold) / 0.3)',
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
               >
                 <Coins className="w-8 h-8 text-gold-foreground drop-shadow-lg" />
-                {/* Rotating ring */}
-                <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-dashed border-gold-foreground/30"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                />
-              </motion.div>
+              </div>
               
               <div>
                 <p className="text-sm text-gold/80 font-medium tracking-wide uppercase">Le tue monete</p>

@@ -340,10 +340,8 @@ export function SundayCompetitions() {
               : '2px solid #EF4444',
           }}
         >
-          <motion.div
+          <div
             className={`w-2 h-2 rounded-full ${eventActive ? 'bg-green-500' : 'bg-red-500'}`}
-            animate={{ scale: eventActive ? [1, 1.2, 1] : 1, opacity: eventActive ? [1, 0.5, 1] : 1 }}
-            transition={{ duration: 1, repeat: Infinity }}
           />
           <span className={`text-xs font-bold ${eventActive ? 'text-green-400' : 'text-red-400'}`}>
             {eventActive ? 'LIVE' : 'ATTESA'}
