@@ -76,30 +76,6 @@ export const PlayerHeader = memo(function PlayerHeader() {
           </motion.div>
           <span className="font-mono font-bold text-amber-400">{user.coins.toLocaleString()}</span>
         </motion.div>
-        {/* Floating particles */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute pointer-events-none text-xs"
-            initial={{ 
-              x: `${10 + i * 15}%`, 
-              y: '100%',
-              opacity: 0.3
-            }}
-            animate={{ 
-              y: [100, -20],
-              opacity: [0.3, 0.8, 0],
-            }}
-            transition={{
-              duration: 3 + i * 0.5,
-              repeat: Infinity,
-              delay: i * 0.5,
-              ease: "easeOut"
-            }}
-          >
-            {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '💫'}
-          </motion.div>
-        ))}
         
         <div className="flex flex-col sm:flex-row items-start gap-4 relative z-10">
           {/* Avatar with animated glow ring - Clickable to profile */}

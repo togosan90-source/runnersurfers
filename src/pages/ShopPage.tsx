@@ -150,35 +150,6 @@ export default function ShopPage() {
             border: '2px solid hsl(var(--gold) / 0.4)',
           }}
         >
-          {/* Animated golden particles */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(12)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full"
-                style={{
-                  width: Math.random() * 6 + 3,
-                  height: Math.random() * 6 + 3,
-                  background: `radial-gradient(circle, hsl(var(--gold)) 0%, hsl(var(--gold) / 0.5) 100%)`,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  boxShadow: '0 0 8px hsl(var(--gold) / 0.8)',
-                }}
-                animate={{
-                  y: [0, -30, 0],
-                  x: [0, Math.random() * 20 - 10, 0],
-                  opacity: [0.3, 1, 0.3],
-                  scale: [0.8, 1.2, 0.8],
-                }}
-                transition={{
-                  duration: 2 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: Math.random() * 2,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-          </div>
 
           {/* Corner accents */}
           <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold/60 rounded-tl-2xl" />
@@ -399,33 +370,6 @@ export default function ShopPage() {
                         }}
                       />
 
-                      {/* Floating particles for infinity */}
-                      {isInfinity && (
-                        <>
-                          {[...Array(6)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="absolute text-sm pointer-events-none"
-                              initial={{ 
-                                x: `${10 + i * 15}%`, 
-                                y: '100%',
-                                opacity: 0 
-                              }}
-                              animate={{ 
-                                y: [60, -20],
-                                opacity: [0, 1, 0],
-                              }}
-                              transition={{
-                                duration: 2 + Math.random(),
-                                repeat: Infinity,
-                                delay: i * 0.4,
-                              }}
-                            >
-                              ✨
-                            </motion.div>
-                          ))}
-                        </>
-                      )}
 
                       <div className="flex relative z-10">
                         {/* Icon Section */}
