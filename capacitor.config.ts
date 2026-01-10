@@ -29,6 +29,10 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'DARK',
       backgroundColor: '#0A0F1C'
+    },
+    Geolocation: {
+      // iOS will request "When In Use" permission first
+      // User can later grant "Always" in settings if needed
     }
   }
 };
