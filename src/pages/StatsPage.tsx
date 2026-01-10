@@ -118,21 +118,6 @@ export default function StatsPage() {
         boxShadow: '0 2px 0 0 #1E40AF, 0 0 15px rgba(59, 130, 246, 0.2), inset 0 1px 0 0 rgba(255,255,255,0.1)',
       }}
     >
-      {/* Mini star decorations */}
-      <motion.div
-        className="absolute top-2 right-2 text-xs pointer-events-none"
-        animate={{ 
-          opacity: [0.4, 1, 0.4],
-          scale: [0.8, 1, 0.8],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
-        ✨
-      </motion.div>
       
       <div className="flex items-center gap-2 mb-3 relative z-10">
         <Icon className="w-5 h-5 text-sky-300" />
@@ -239,24 +224,6 @@ export default function StatsPage() {
           }}
         >
           
-          {/* Energy Icon Glow */}
-          <motion.div
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-4xl pointer-events-none"
-            animate={{ 
-              opacity: [0.6, 1, 0.6],
-              scale: [0.9, 1.1, 0.9],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              filter: 'drop-shadow(0 0 15px rgba(167, 243, 208, 0.8)) drop-shadow(0 0 30px rgba(52, 211, 153, 0.5))'
-            }}
-          >
-            ⚡
-          </motion.div>
           
           <div className="flex items-center gap-3 mb-3 relative z-10">
             <Ruler className="w-6 h-6 text-emerald-200" />
@@ -292,20 +259,6 @@ export default function StatsPage() {
                   boxShadow: '0 0 15px rgba(167, 243, 208, 0.6)'
                 }}
               >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  animate={{
-                    opacity: [0.3, 0.7, 0.3]
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  style={{
-                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)'
-                  }}
-                />
               </motion.div>
             </div>
           </div>
@@ -326,56 +279,8 @@ export default function StatsPage() {
             boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          {/* Animated Stars rising from bottom */}
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-sm pointer-events-none"
-              initial={{ 
-                x: `${5 + i * 10}%`, 
-                y: '100%',
-                opacity: 0,
-                scale: 0.5
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                scale: [0.5, 1, 0.8],
-                x: [`${5 + i * 10}%`, `${8 + i * 9}%`, `${3 + i * 10}%`]
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.4,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
-              }}
-            >
-              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
-            </motion.div>
-          ))}
           
-          {/* Half Moon on the right */}
-          <motion.div
-            className="absolute right-4 top-4 text-3xl pointer-events-none"
-            animate={{ 
-              opacity: [0.7, 1, 0.7],
-              scale: [0.95, 1, 0.95],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              filter: 'drop-shadow(0 0 12px rgba(251, 191, 36, 0.6))'
-            }}
-          >
-            🌙
-          </motion.div>
-          
+
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <Trophy className="w-6 h-6 text-yellow-300" />
             <span 
@@ -474,20 +379,6 @@ export default function StatsPage() {
                   boxShadow: '0 0 15px rgba(147, 197, 253, 0.6)'
                 }}
               >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  animate={{
-                    opacity: [0.3, 0.7, 0.3]
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  style={{
-                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)'
-                  }}
-                />
               </motion.div>
             </div>
             <p className="text-sm text-sky-200/90 font-semibold">
@@ -508,55 +399,6 @@ export default function StatsPage() {
             boxShadow: '0 4px 0 0 #3B0764, 0 0 25px rgba(124, 58, 237, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          {/* Animated Stars */}
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-sm pointer-events-none"
-              initial={{ 
-                x: `${5 + i * 8}%`, 
-                y: '100%',
-                opacity: 0,
-                scale: 0.5
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                scale: [0.5, 1, 0.8],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.3,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
-              }}
-            >
-              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '💫'}
-            </motion.div>
-          ))}
-          
-          {/* Icon */}
-          <motion.div
-            className="absolute right-4 top-4 text-4xl pointer-events-none"
-            animate={{ 
-              opacity: [0.7, 1, 0.7],
-              scale: [0.95, 1.1, 0.95],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              filter: 'drop-shadow(0 0 15px rgba(196, 181, 253, 0.8))'
-            }}
-          >
-            {currentRepTier.icon}
-          </motion.div>
           
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <Star className="w-6 h-6 text-violet-200" />
@@ -799,56 +641,6 @@ export default function StatsPage() {
             boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          {/* Animated Stars rising from bottom */}
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-lg pointer-events-none"
-              initial={{ 
-                x: `${5 + i * 8}%`, 
-                y: '100%',
-                opacity: 0,
-                scale: 0.5
-              }}
-              animate={{ 
-                y: [100, -20],
-                opacity: [0, 1, 0.8, 0],
-                scale: [0.5, 1, 0.8],
-                x: [`${5 + i * 8}%`, `${8 + i * 7}%`, `${3 + i * 8}%`]
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.4,
-                ease: "easeOut"
-              }}
-              style={{
-                filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
-              }}
-            >
-              {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
-            </motion.div>
-          ))}
-          
-          {/* Half Moon on the right */}
-          <motion.div
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl pointer-events-none"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ 
-              opacity: [0.7, 1, 0.7],
-              scale: [0.95, 1, 0.95],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              filter: 'drop-shadow(0 0 15px rgba(251, 191, 36, 0.6)) drop-shadow(0 0 30px rgba(251, 191, 36, 0.3))'
-            }}
-          >
-            🌙
-          </motion.div>
           
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <Award className="w-6 h-6 text-yellow-300" />
@@ -945,55 +737,6 @@ export default function StatsPage() {
                   boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
                 }}
               >
-                {/* Animated Stars rising from bottom */}
-                {[...Array(10)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute text-sm pointer-events-none"
-                    initial={{ 
-                      x: `${5 + i * 10}%`, 
-                      y: '100%',
-                      opacity: 0,
-                      scale: 0.5
-                    }}
-                    animate={{ 
-                      y: [100, -20],
-                      opacity: [0, 1, 0.8, 0],
-                      scale: [0.5, 1, 0.8],
-                      x: [`${5 + i * 10}%`, `${8 + i * 9}%`, `${3 + i * 10}%`]
-                    }}
-                    transition={{
-                      duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
-                      delay: i * 0.5,
-                      ease: "easeOut"
-                    }}
-                    style={{
-                      filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
-                    }}
-                  >
-                    {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
-                  </motion.div>
-                ))}
-                
-                {/* Half Moon on the right */}
-                <motion.div
-                  className="absolute right-3 top-4 text-3xl pointer-events-none"
-                  animate={{ 
-                    opacity: [0.7, 1, 0.7],
-                    scale: [0.95, 1, 0.95],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  style={{
-                    filter: 'drop-shadow(0 0 10px rgba(251, 191, 36, 0.6))'
-                  }}
-                >
-                  🌙
-                </motion.div>
                 
                 <h3 
                   className="font-varsity text-xl uppercase tracking-wide mb-4 relative z-10"
@@ -1067,25 +810,6 @@ export default function StatsPage() {
                 boxShadow: '0 4px 0 0 #1E40AF, 0 0 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
               }}
             >
-              {/* Animated Running Icons */}
-              {[...Array(5)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute text-xl pointer-events-none opacity-30"
-                  initial={{ x: '-10%', y: `${15 + i * 18}%` }}
-                  animate={{ 
-                    x: ['0%', '110%'],
-                  }}
-                  transition={{
-                    duration: 4 + Math.random() * 2,
-                    repeat: Infinity,
-                    delay: i * 0.8,
-                    ease: "linear"
-                  }}
-                >
-                  🏃
-                </motion.div>
-              ))}
               
               <h3 
                 className="font-varsity text-xl uppercase tracking-wide mb-4 relative z-10 flex items-center gap-2"
@@ -1111,22 +835,6 @@ export default function StatsPage() {
                       boxShadow: '0 2px 0 0 rgba(30, 64, 175, 0.5), inset 0 1px 0 0 rgba(255,255,255,0.1)',
                     }}
                   >
-                    {/* Shine Effect */}
-                    <motion.div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
-                      }}
-                      animate={{
-                        x: ['-100%', '200%'],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        delay: index * 0.5,
-                        ease: "easeInOut"
-                      }}
-                    />
                     
                     <div className="flex items-center gap-3 relative z-10">
                       <div 
