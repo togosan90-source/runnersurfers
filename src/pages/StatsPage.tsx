@@ -238,36 +238,6 @@ export default function StatsPage() {
             boxShadow: '0 4px 0 0 #064E3B, 0 0 30px rgba(16, 185, 129, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
           }}
         >
-          {/* Animated Energy Particles */}
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: 4 + Math.random() * 6,
-                height: 4 + Math.random() * 6,
-                background: 'radial-gradient(circle, rgba(167, 243, 208, 1) 0%, rgba(52, 211, 153, 0.5) 100%)',
-                boxShadow: '0 0 10px rgba(167, 243, 208, 0.8)',
-              }}
-              initial={{ 
-                x: `${Math.random() * 100}%`, 
-                y: `${Math.random() * 100}%`,
-                opacity: 0,
-                scale: 0
-              }}
-              animate={{ 
-                opacity: [0, 1, 0],
-                scale: [0, 1.5, 0],
-                y: [`${50 + Math.random() * 50}%`, `${Math.random() * 30}%`],
-              }}
-              transition={{
-                duration: 2 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.3,
-                ease: "easeOut"
-              }}
-            />
-          ))}
           
           {/* Energy Icon Glow */}
           <motion.div
@@ -732,36 +702,6 @@ export default function StatsPage() {
             boxShadow: '0 4px 0 0 #9A3412, 0 0 20px rgba(249, 115, 22, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.3)',
           }}
         >
-          {/* Animated Falling Leaves */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-2xl pointer-events-none"
-              initial={{ 
-                x: `${10 + i * 12}%`, 
-                y: -20,
-                rotate: 0,
-                opacity: 0.7
-              }}
-              animate={{ 
-                y: ['0%', '120%'],
-                x: [`${10 + i * 12}%`, `${15 + i * 10}%`, `${5 + i * 12}%`],
-                rotate: [0, 180, 360],
-                opacity: [0.7, 0.9, 0.5]
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                repeat: Infinity,
-                delay: i * 0.6,
-                ease: "easeInOut"
-              }}
-              style={{
-                filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.3))'
-              }}
-            >
-              🍂
-            </motion.div>
-          ))}
           
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <Zap className="w-6 h-6 text-white" />

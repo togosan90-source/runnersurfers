@@ -405,34 +405,6 @@ export default function LeaderboardPage() {
                     />
                   )}
 
-                  {/* Podium special effects */}
-                  {isPodium && (
-                    <>
-                      {/* Floating particles */}
-                      {[...Array(4)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute text-xs pointer-events-none"
-                          initial={{ 
-                            x: `${20 + i * 20}%`, 
-                            y: '100%',
-                            opacity: 0 
-                          }}
-                          animate={{ 
-                            y: [50, -10],
-                            opacity: [0, 1, 0],
-                          }}
-                          transition={{
-                            duration: 2 + Math.random(),
-                            repeat: Infinity,
-                            delay: i * 0.5,
-                          }}
-                        >
-                          {displayRank === 1 ? '✨' : displayRank === 2 ? '💫' : '⭐'}
-                        </motion.div>
-                      ))}
-                    </>
-                  )}
 
                   <div className="flex items-center gap-3 relative z-10">
                     {/* Rank Badge */}

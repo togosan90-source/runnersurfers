@@ -46,32 +46,6 @@ export function DailyQuests() {
         }}
       />
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-xs"
-            style={{
-              left: `${5 + i * 10}%`,
-              bottom: 0,
-            }}
-            animate={{
-              y: [0, -150],
-              opacity: [0.6, 0],
-              scale: [0.8, 1.2],
-            }}
-            transition={{
-              duration: 3 + i * 0.3,
-              repeat: Infinity,
-              delay: i * 0.3,
-              ease: "easeOut",
-            }}
-          >
-            {i % 4 === 0 ? '✨' : i % 4 === 1 ? '⭐' : i % 4 === 2 ? '💫' : '🔥'}
-          </motion.div>
-        ))}
-      </div>
 
       {/* Header */}
       <div

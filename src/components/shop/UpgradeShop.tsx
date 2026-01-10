@@ -234,33 +234,6 @@ export function UpgradeShop() {
                 }}
               />
 
-              {/* Floating particles for legendary */}
-              {isLegendary && (
-                <>
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute text-sm pointer-events-none"
-                      initial={{ 
-                        x: `${10 + i * 18}%`, 
-                        y: '100%',
-                        opacity: 0 
-                      }}
-                      animate={{ 
-                        y: [50, -20],
-                        opacity: [0, 1, 0],
-                      }}
-                      transition={{
-                        duration: 2 + Math.random(),
-                        repeat: Infinity,
-                        delay: i * 0.4,
-                      }}
-                    >
-                      ✨
-                    </motion.div>
-                  ))}
-                </>
-              )}
 
               <div className="flex relative z-10">
                 {/* Icon Section */}

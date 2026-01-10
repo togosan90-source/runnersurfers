@@ -267,29 +267,6 @@ export function MarathonEvents() {
         }}
       />
 
-      {/* Floating particles */}
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-sm pointer-events-none"
-          initial={{ 
-            x: `${10 + i * 15}%`, 
-            y: '100%',
-            opacity: 0 
-          }}
-          animate={{ 
-            y: [100, -20],
-            opacity: [0, 0.8, 0],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: i * 0.5,
-          }}
-        >
-          {i % 3 === 0 ? '🏃' : i % 3 === 1 ? '🏅' : '✨'}
-        </motion.div>
-      ))}
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4 relative z-10">

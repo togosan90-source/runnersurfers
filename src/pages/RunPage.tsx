@@ -536,34 +536,6 @@ export default function RunPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {/* Animated particles */}
-                {[...Array(8)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute text-lg pointer-events-none"
-                    initial={{ 
-                      x: `${10 + i * 12}%`, 
-                      y: '100%',
-                      opacity: 0,
-                    }}
-                    animate={{ 
-                      y: [100, -20],
-                      opacity: [0, 1, 0.8, 0],
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
-                      delay: i * 0.5,
-                      ease: "easeOut"
-                    }}
-                    style={{
-                      filter: 'drop-shadow(0 0 6px rgba(74, 222, 128, 0.8))'
-                    }}
-                  >
-                    {i % 4 === 0 ? '⚡' : i % 4 === 1 ? '✨' : i % 4 === 2 ? '🏃' : '💨'}
-                  </motion.div>
-                ))}
 
                 {/* Shine effect */}
                 <motion.div
