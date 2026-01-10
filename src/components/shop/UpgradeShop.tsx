@@ -3,6 +3,7 @@ import { TrendingUp, Coins, Lock, Check, Sparkles, Star } from 'lucide-react';
 import { useGameStore, SCORE_UPGRADES } from '@/store/gameStore';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useProfile } from '@/hooks/useProfile';
 
 export function UpgradeShop() {
   const { 
@@ -10,18 +11,22 @@ export function UpgradeShop() {
     purchasedUpgrades, 
     purchaseUpgrade, 
     getTotalScoreBonus, 
-    getTotalExpBonus 
   } = useGameStore();
+  const { syncProfileFromStore } = useProfile();
 
   const totalScoreBonus = getTotalScoreBonus();
-  const totalExpBonus = getTotalExpBonus();
 
-  const handlePurchase = (upgradeId: number) => {
+  const handlePurchase = async (upgradeId: number) => {
     const upgrade = SCORE_UPGRADES.find(u => u.id === upgradeId);
     if (!upgrade) return;
 
     if (purchasedUpgrades.includes(upgradeId)) {
       toast.error('Hai già acquistato questo upgrade!');
+      return;
+    }
+
+    if (user.level < upgrade.requiredLevel) {
+      toast.error(`Richiesto livello ${upgrade.requiredLevel}!`);
       return;
     }
 
@@ -31,23 +36,21 @@ export function UpgradeShop() {
     }
 
     if (purchaseUpgrade(upgradeId)) {
-      toast.success(`🎉 Upgrade +${upgrade.bonusPercent}% ${upgrade.type === 'score' ? 'Score' : 'EXP'} sbloccato!`);
+      toast.success(`🎉 Upgrade +${upgrade.bonusPercent}% Score sbloccato!`);
+      await syncProfileFromStore();
     }
   };
 
-  // Enhanced upgrade styles based on id and type
-  const getUpgradeStyles = (id: number, type: 'score' | 'exp') => {
-    if (type === 'exp') {
-      return {
-        bg: 'linear-gradient(135deg, #4C1D95 0%, #7C3AED 50%, #A78BFA 100%)',
-        border: '#A78BFA',
-        shadow: '0 4px 0 0 #4C1D95, 0 0 25px rgba(167, 139, 250, 0.4)',
-        glow: 'rgba(167, 139, 250, 0.6)',
-        textColor: '#C4B5FD',
-        iconBg: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-        particle: '💜',
-      };
+  // Format large numbers
+  const formatCost = (cost: number) => {
+    if (cost >= 1000000) {
+      return `${(cost / 1000000).toFixed(0)}M`;
     }
+    return cost.toLocaleString();
+  };
+
+  // Enhanced upgrade styles based on id
+  const getUpgradeStyles = (id: number) => {
     const styles: Record<number, { bg: string; border: string; shadow: string; glow: string; textColor: string; iconBg: string; particle: string }> = {
       1: {
         bg: 'linear-gradient(135deg, #14532D 0%, #166534 50%, #22C55E 100%)',
@@ -66,6 +69,15 @@ export function UpgradeShop() {
         textColor: '#93C5FD',
         iconBg: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
         particle: '💙',
+      },
+      3: {
+        bg: 'linear-gradient(135deg, #4C1D95 0%, #7C3AED 50%, #A78BFA 100%)',
+        border: '#A78BFA',
+        shadow: '0 4px 0 0 #4C1D95, 0 0 25px rgba(167, 139, 250, 0.4)',
+        glow: 'rgba(167, 139, 250, 0.6)',
+        textColor: '#C4B5FD',
+        iconBg: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+        particle: '💜',
       },
       4: {
         bg: 'linear-gradient(135deg, #7C2D12 0%, #C2410C 50%, #F97316 100%)',
@@ -94,104 +106,6 @@ export function UpgradeShop() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      {/* Total Bonus Display */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="mb-6 rounded-xl p-5 relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, #14532D 0%, #166534 50%, #4C1D95 100%)',
-          border: '3px solid #4ADE80',
-          boxShadow: '0 4px 0 0 #14532D, 0 0 30px rgba(74, 222, 128, 0.3), inset 0 1px 0 0 rgba(255,255,255,0.2)',
-        }}
-      >
-        {/* Animated shine */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
-          }}
-          animate={{
-            x: ['-100%', '200%'],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-
-        <div className="flex items-center justify-between relative z-10">
-          <div className="flex items-center gap-3">
-            <motion.div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
-                boxShadow: '0 0 20px rgba(252, 211, 77, 0.6)',
-              }}
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [-5, 5, -5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <Sparkles className="w-6 h-6 text-amber-900" />
-            </motion.div>
-            <span 
-              className="font-varsity text-lg uppercase tracking-wide"
-              style={{
-                color: '#FEF3C7',
-                textShadow: '2px 2px 0px rgba(0,0,0,0.3)',
-              }}
-            >
-              Bonus Totali Attivi
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <div 
-              className="px-4 py-2 rounded-xl text-center"
-              style={{
-                background: 'rgba(0,0,0,0.3)',
-                border: '2px solid #4ADE80',
-              }}
-            >
-              <span className="text-xs text-green-300 block">Score</span>
-              <span 
-                className="font-display text-2xl font-bold"
-                style={{
-                  color: '#4ADE80',
-                  textShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
-                }}
-              >
-                +{totalScoreBonus}%
-              </span>
-            </div>
-            <div 
-              className="px-4 py-2 rounded-xl text-center"
-              style={{
-                background: 'rgba(0,0,0,0.3)',
-                border: '2px solid #A78BFA',
-              }}
-            >
-              <span className="text-xs text-purple-300 block">EXP</span>
-              <span 
-                className="font-display text-2xl font-bold"
-                style={{
-                  color: '#A78BFA',
-                  textShadow: '0 0 10px rgba(167, 139, 250, 0.5)',
-                }}
-              >
-                +{totalExpBonus}%
-              </span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
       <p className="text-sm text-muted-foreground mb-4">
         Upgrade PERMANENTI - Aumenta i tuoi guadagni per sempre! ⚡
       </p>
@@ -200,7 +114,8 @@ export function UpgradeShop() {
         {SCORE_UPGRADES.map((upgrade, index) => {
           const isPurchased = purchasedUpgrades.includes(upgrade.id);
           const canAfford = user.coins >= upgrade.cost;
-          const style = getUpgradeStyles(upgrade.id, upgrade.type);
+          const hasLevel = user.level >= upgrade.requiredLevel;
+          const style = getUpgradeStyles(upgrade.id);
           const isLegendary = upgrade.id === 5;
 
           return (
@@ -215,6 +130,7 @@ export function UpgradeShop() {
                 background: style.bg,
                 border: isPurchased ? '4px solid #4ADE80' : `3px solid ${style.border}`,
                 boxShadow: `${style.shadow}, inset 0 1px 0 0 rgba(255,255,255,0.2)`,
+                opacity: hasLevel ? 1 : 0.6,
               }}
             >
               {/* Animated shine effect */}
@@ -234,7 +150,6 @@ export function UpgradeShop() {
                 }}
               />
 
-
               <div className="flex relative z-10">
                 {/* Icon Section */}
                 <div 
@@ -253,23 +168,13 @@ export function UpgradeShop() {
                     }}
                   />
                   <div className="relative z-10">
-                    {upgrade.type === 'exp' ? (
-                      <Star 
-                        className="w-10 h-10" 
-                        style={{ 
-                          color: 'white',
-                          filter: `drop-shadow(0 0 10px ${style.glow})`,
-                        }} 
-                      />
-                    ) : (
-                      <TrendingUp 
-                        className="w-10 h-10" 
-                        style={{ 
-                          color: 'white',
-                          filter: `drop-shadow(0 0 10px ${style.glow})`,
-                        }} 
-                      />
-                    )}
+                    <TrendingUp 
+                      className="w-10 h-10" 
+                      style={{ 
+                        color: 'white',
+                        filter: `drop-shadow(0 0 10px ${style.glow})`,
+                      }} 
+                    />
                   </div>
                 </div>
                 
@@ -331,7 +236,7 @@ export function UpgradeShop() {
                         className="text-sm mt-1"
                         style={{ color: `${style.textColor}99` }}
                       >
-                        {upgrade.type === 'score' ? '⚡ Bonus Score Permanente' : '✨ Bonus EXP Permanente'}
+                        ⚡ Bonus Score Permanente
                       </p>
                     </div>
                     <motion.div 
@@ -378,6 +283,22 @@ export function UpgradeShop() {
                         Acquistato
                       </span>
                     </div>
+                  ) : !hasLevel ? (
+                    <div 
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl w-fit"
+                      style={{
+                        background: 'rgba(100,100,100,0.3)',
+                        border: '2px solid rgba(255,255,255,0.3)',
+                      }}
+                    >
+                      <Lock className="w-5 h-5" style={{ color: '#9CA3AF' }} />
+                      <span 
+                        className="font-bold"
+                        style={{ color: '#9CA3AF' }}
+                      >
+                        Livello {upgrade.requiredLevel} richiesto
+                      </span>
+                    </div>
                   ) : (
                     <Button
                       size="lg"
@@ -398,12 +319,12 @@ export function UpgradeShop() {
                       {canAfford ? (
                         <>
                           <Coins className="w-5 h-5" />
-                          {upgrade.cost.toLocaleString()} Monete
+                          {formatCost(upgrade.cost)} Monete
                         </>
                       ) : (
                         <>
                           <Lock className="w-5 h-5" />
-                          {upgrade.cost.toLocaleString()} Monete
+                          {formatCost(upgrade.cost)} Monete
                         </>
                       )}
                     </Button>
@@ -413,6 +334,83 @@ export function UpgradeShop() {
             </motion.div>
           );
         })}
+
+        {/* Total Score Bonus Display */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="rounded-xl p-5 relative overflow-hidden mt-6"
+          style={{
+            background: 'linear-gradient(135deg, #14532D 0%, #166534 50%, #22C55E 100%)',
+            border: '3px solid #4ADE80',
+            boxShadow: '0 4px 0 0 #14532D, 0 0 30px rgba(74, 222, 128, 0.3), inset 0 1px 0 0 rgba(255,255,255,0.2)',
+          }}
+        >
+          {/* Animated shine */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+            }}
+            animate={{
+              x: ['-100%', '200%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-3">
+              <motion.div
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',
+                  boxShadow: '0 0 20px rgba(252, 211, 77, 0.6)',
+                }}
+                animate={{
+                  scale: [1, 1.1, 1],
+                  rotate: [-5, 5, -5],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Sparkles className="w-6 h-6 text-amber-900" />
+              </motion.div>
+              <span 
+                className="font-varsity text-lg uppercase tracking-wide"
+                style={{
+                  color: '#FEF3C7',
+                  textShadow: '2px 2px 0px rgba(0,0,0,0.3)',
+                }}
+              >
+                Bonus Score Attivo
+              </span>
+            </div>
+            <div 
+              className="px-6 py-3 rounded-xl text-center"
+              style={{
+                background: 'rgba(0,0,0,0.3)',
+                border: '2px solid #4ADE80',
+              }}
+            >
+              <span 
+                className="font-display text-3xl font-bold"
+                style={{
+                  color: '#4ADE80',
+                  textShadow: '0 0 10px rgba(74, 222, 128, 0.5)',
+                }}
+              >
+                +{totalScoreBonus}%
+              </span>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       <p className="text-xs text-muted-foreground text-center mt-4">
