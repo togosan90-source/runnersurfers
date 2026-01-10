@@ -54,34 +54,19 @@ export default function LandingPage() {
         }}
       />
 
-      {/* Glowing orbs with parallax */}
+      {/* Static background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
+        <div 
           className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px]"
-          style={{ 
-            background: 'rgba(0, 255, 136, 0.15)',
-            y: orb1Y,
-          }}
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity }}
+          style={{ background: 'rgba(0, 255, 136, 0.15)', opacity: 0.4 }}
         />
-        <motion.div 
+        <div 
           className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[100px]"
-          style={{ 
-            background: 'rgba(34, 211, 238, 0.15)',
-            y: orb2Y,
-          }}
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.2, 0.4] }}
-          transition={{ duration: 6, repeat: Infinity }}
+          style={{ background: 'rgba(34, 211, 238, 0.15)', opacity: 0.3 }}
         />
-        <motion.div 
+        <div 
           className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full blur-[80px]"
-          style={{ 
-            background: 'rgba(168, 85, 247, 0.1)',
-            y: orb3Y,
-          }}
-          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity }}
+          style={{ background: 'rgba(168, 85, 247, 0.1)', opacity: 0.3 }}
         />
       </div>
 
@@ -100,11 +85,9 @@ export default function LandingPage() {
           >
             <div className="relative inline-block mb-8">
               {/* Outer glow ring */}
-              <motion.div
+              <div
                 className="absolute -inset-4 opacity-60 blur-xl"
                 style={{ background: 'linear-gradient(135deg, #00ff88, #22d3ee, #a855f7)' }}
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
               />
               
               {/* Hexagonal container */}
@@ -200,13 +183,6 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {/* Scan line effect */}
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: 'linear-gradient(180deg, transparent, rgba(0,255,136,0.2), transparent)', height: '200%' }}
-                animate={{ y: ['-100%', '0%'] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              />
               
               {/* Corner decorations */}
               <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-cyan-400" />

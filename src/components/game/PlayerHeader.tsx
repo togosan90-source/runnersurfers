@@ -231,12 +231,9 @@ export const PlayerHeader = memo(function PlayerHeader() {
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                  >
+                  <div>
                     <Star className="w-4 h-4 text-purple-400" />
-                  </motion.div>
+                  </div>
                   <span className="text-sm font-semibold text-purple-300">Esperienza</span>
                 </div>
                 <motion.span 

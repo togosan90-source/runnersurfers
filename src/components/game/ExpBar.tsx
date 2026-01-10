@@ -65,14 +65,8 @@ export function ExpBar() {
               backgroundSize: '200% 100%',
             }}
             initial={{ width: 0 }}
-            animate={{ 
-              width: `${kmPercentage}%`,
-              backgroundPosition: ['0% 0%', '100% 0%', '0% 0%']
-            }}
-            transition={{ 
-              width: { duration: 0.6, ease: 'easeOut' },
-              backgroundPosition: { duration: 3, repeat: Infinity, ease: 'linear' }
-            }}
+            animate={{ width: `${kmPercentage}%` }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           />
           {/* Glow effect */}
           <motion.div

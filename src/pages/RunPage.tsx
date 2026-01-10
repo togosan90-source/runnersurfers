@@ -537,47 +537,19 @@ export default function RunPage() {
                 whileTap={{ scale: 0.98 }}
               >
 
-                {/* Shine effect */}
-                <motion.div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
-                  }}
-                  animate={{
-                    x: ['-100%', '200%'],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
 
                 <div className="flex flex-col items-center relative z-10">
-                  {/* Animated GPS Icon */}
-                  <motion.div 
+                  {/* GPS Icon */}
+                  <div 
                     className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
                     style={{
                       background: 'linear-gradient(135deg, #22C55E 0%, #06B6D4 100%)',
                       border: '3px solid #4ADE80',
                       boxShadow: '0 0 30px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255,255,255,0.3)',
                     }}
-                    animate={{
-                      scale: [1, 1.1, 1],
-                      boxShadow: [
-                        '0 0 30px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255,255,255,0.3)',
-                        '0 0 50px rgba(74, 222, 128, 0.8), inset 0 2px 0 rgba(255,255,255,0.3)',
-                        '0 0 30px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255,255,255,0.3)',
-                      ],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
                   >
                     <Navigation className="w-10 h-10" style={{ color: 'white', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5))' }} />
-                  </motion.div>
+                  </div>
 
                   {/* Title */}
                   <h2 

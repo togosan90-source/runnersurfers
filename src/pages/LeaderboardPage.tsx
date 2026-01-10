@@ -127,54 +127,16 @@ export default function LeaderboardPage() {
               boxShadow: '0 4px 0 0 #1E40AF, 0 0 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 0 rgba(255,255,255,0.2)',
             }}
           >
-            {/* Animated Stars */}
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute text-sm pointer-events-none"
-                initial={{ 
-                  x: `${10 + i * 12}%`, 
-                  y: '100%',
-                  opacity: 0,
-                  scale: 0.5
-                }}
-                animate={{ 
-                  y: [100, -20],
-                  opacity: [0, 1, 0.8, 0],
-                  scale: [0.5, 1, 0.8],
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: i * 0.4,
-                  ease: "easeOut"
-                }}
-                style={{
-                  filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.8))'
-                }}
-              >
-                {i % 3 === 0 ? '✨' : i % 3 === 1 ? '⭐' : '🌟'}
-              </motion.div>
-            ))}
             
             {/* Trophy Icon */}
-            <motion.div
+            <div
               className="absolute right-4 top-4 text-4xl pointer-events-none"
-              animate={{ 
-                rotate: [-5, 5, -5],
-                scale: [0.95, 1.05, 0.95],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
               style={{
                 filter: 'drop-shadow(0 0 15px rgba(252, 211, 77, 0.6))'
               }}
             >
               🏆
-            </motion.div>
+            </div>
             
             <div className="flex items-center justify-between relative z-10">
               <div>
@@ -185,23 +147,15 @@ export default function LeaderboardPage() {
                   📍 La tua posizione
                 </p>
                 <div className="flex items-center gap-2">
-                  <motion.p 
+                  <p 
                     className="font-display text-4xl font-bold"
                     style={{
                       color: '#FCD34D',
                       textShadow: '0 0 20px rgba(252, 211, 77, 0.6), 2px 2px 0px #78350F',
                     }}
-                    animate={{
-                      scale: [1, 1.02, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
                   >
                     #{userRank}
-                  </motion.p>
+                  </p>
                   <div 
                     className="px-2 py-1 rounded-lg text-xs font-bold"
                     style={{

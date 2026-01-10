@@ -235,15 +235,6 @@ export function ScoreUpgradeShop() {
         <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '85%', top: '75%', filter: 'drop-shadow(0 0 6px currentColor)' }}>💎</div>
         <div className="absolute text-lg pointer-events-none opacity-50" style={{ left: '10%', top: '80%', filter: 'drop-shadow(0 0 6px currentColor)' }}>🔥</div>
 
-        {/* Animated shine effect */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
-          }}
-          animate={{ x: ['-100%', '200%'] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
 
         <div className="relative z-10 p-6">
           {/* Header with glow effect */}
@@ -259,7 +250,7 @@ export function ScoreUpgradeShop() {
               }}
             >
               {/* Glow background */}
-              <motion.div
+              <div
                 className="absolute inset-0 blur-2xl rounded-full"
                 style={{
                   background: currentLevel >= 8 
@@ -267,15 +258,7 @@ export function ScoreUpgradeShop() {
                     : currentLevel >= 5
                     ? 'radial-gradient(circle, rgba(168,85,247,0.6) 0%, transparent 70%)'
                     : 'radial-gradient(circle, rgba(52,211,153,0.6) 0%, transparent 70%)',
-                }}
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
+                  opacity: 0.6,
                 }}
               />
               
@@ -328,12 +311,9 @@ export function ScoreUpgradeShop() {
                     </p>
                   </div>
                   {currentLevel >= 8 && (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    >
+                    <div>
                       <Sparkles className="w-6 h-6 text-yellow-300" />
-                    </motion.div>
+                    </div>
                   )}
                 </div>
               </div>
