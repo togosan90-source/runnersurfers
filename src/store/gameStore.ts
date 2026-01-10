@@ -57,6 +57,7 @@ export interface ScoreUpgrade {
   cost: number;
   bonusPercent: number;
   type: 'score' | 'exp';
+  requiredLevel: number;
   purchased: boolean;
 }
 
@@ -74,11 +75,11 @@ export const DAILY_QUESTS: Omit<DailyQuest, 'completed'>[] = [
 ];
 
 export const SCORE_UPGRADES: Omit<ScoreUpgrade, 'purchased'>[] = [
-  { id: 1, cost: 50000, bonusPercent: 1, type: 'score' },
-  { id: 2, cost: 200000, bonusPercent: 5, type: 'score' },
-  { id: 3, cost: 350000, bonusPercent: 8, type: 'exp' },
-  { id: 4, cost: 400000, bonusPercent: 15, type: 'score' },
-  { id: 5, cost: 600000, bonusPercent: 20, type: 'score' },
+  { id: 1, cost: 100000, bonusPercent: 1, type: 'score', requiredLevel: 1 },
+  { id: 2, cost: 300000, bonusPercent: 5, type: 'score', requiredLevel: 50 },
+  { id: 3, cost: 1000000, bonusPercent: 10, type: 'score', requiredLevel: 150 },
+  { id: 4, cost: 5000000, bonusPercent: 15, type: 'score', requiredLevel: 350 },
+  { id: 5, cost: 15000000, bonusPercent: 50, type: 'score', requiredLevel: 650 },
 ];
 
 interface ActiveBoost {
@@ -904,6 +905,7 @@ export const useGameStore = create<GameState>()((set, get) => ({
         if (!upgrade) return false;
         if (state.purchasedUpgrades.includes(upgradeId)) return false;
         if (state.user.coins < upgrade.cost) return false;
+        if (state.user.level < upgrade.requiredLevel) return false;
         
         set({
           user: { ...state.user, coins: state.user.coins - upgrade.cost },
