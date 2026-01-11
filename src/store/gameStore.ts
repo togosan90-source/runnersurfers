@@ -292,7 +292,7 @@ export const SHOES: Shoe[] = [
     expBonus: 15,
     unlockLevel: 150,
     maxLevel: 300,
-    price: 2,
+    price: 1, // €1
   },
   {
     id: 'woodblas',
@@ -303,7 +303,7 @@ export const SHOES: Shoe[] = [
     expBonus: 30,
     unlockLevel: 300,
     maxLevel: 400,
-    price: 3,
+    price: 1, // €1
   },
   {
     id: 'energy',
@@ -314,7 +314,7 @@ export const SHOES: Shoe[] = [
     expBonus: 50,
     unlockLevel: 400,
     maxLevel: 500,
-    price: 4,
+    price: 1, // €1
   },
   {
     id: 'infinity',
@@ -325,7 +325,7 @@ export const SHOES: Shoe[] = [
     expBonus: 100,
     unlockLevel: 500,
     maxLevel: 600,
-    price: 5,
+    price: 1, // €1
   },
 ];
 

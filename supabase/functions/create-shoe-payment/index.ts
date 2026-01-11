@@ -7,13 +7,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Shoe price mapping
+// Shoe price mapping - All €1 each
 const SHOE_PRICES: Record<string, string> = {
-  avalon: "price_1SmZpaLEpWzr30v1YHRWDb7X",
-  zeus: "price_1SmZpqLEpWzr30v1Y48IizRK",
-  woodblas: "price_1SmZpwLEpWzr30v1R7RlDsVN",
-  energy: "price_1SmZpyLEpWzr30v1cgeJ5tDj",
-  infinity: "price_1SmZpzLEpWzr30v15u7RNLO3",
+  avalon: "price_1SmZpaLEpWzr30v1YHRWDb7X", // €1
+  zeus: "price_1SoIMrLEpWzr30v1TihkT7lb",   // €1
+  woodblas: "price_1SoIMtLEpWzr30v15bM2Ym1u", // €1
+  energy: "price_1SoIMuLEpWzr30v1A6iUyg4b",  // €1
+  infinity: "price_1SoIMvLEpWzr30v1DNF4xFLv", // €1
 };
 
 serve(async (req) => {
