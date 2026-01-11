@@ -520,8 +520,8 @@ export default function RunPage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
-        {/* Player Header */}
-        <PlayerHeader />
+        {/* Player Header - pass live distance during run */}
+        <PlayerHeader liveDistance={isRunning ? distance : 0} />
 
         {/* Start Running CTA (when not running) */}
         <AnimatePresence>
