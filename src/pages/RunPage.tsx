@@ -176,7 +176,7 @@ export default function RunPage() {
   // Speed thresholds for anti-cheat
   const MIN_SPEED_THRESHOLD = 2; // km/h - minimum speed to be considered moving (walking)
   const MAX_SPEED_THRESHOLD = 20; // km/h - maximum human running speed (above = vehicle)
-  const SCORE_ACTIVATION_SECONDS = 60; // 1 minute to activate score
+  const SCORE_ACTIVATION_SECONDS = 15; // 15 seconds to activate score
   const GPS_ACCURACY_THRESHOLD = 20; // meters - reject readings with worse accuracy
 
   // GPS tracking effect with improved precision and anti-cheat
@@ -260,6 +260,7 @@ export default function RunPage() {
   }, [isRunning, isPaused, gpsEnabled, distance, updateRun, score]);
 
   // Detect if user is moving at human pace (walking/running)
+  // Score pauses when user stops but doesn't reset - it resumes when user moves again
   useEffect(() => {
     if (!isRunning || isPaused) {
       setIsMoving(false);
@@ -273,31 +274,37 @@ export default function RunPage() {
     
     setIsMoving(isValidHumanMovement);
     
-    // Reset moving timer when user stops or goes too fast
-    if (!isValidHumanMovement) {
+    // If speed exceeds max (vehicle), reset everything
+    // But if user just stops (speed < min), don't reset - just pause
+    if (speed > MAX_SPEED_THRESHOLD) {
       setMovingSeconds(0);
       setScoreActive(false);
     }
+    // When user stops (speed < MIN), score just pauses (isMoving = false)
+    // movingSeconds and scoreActive are preserved so score resumes when user moves again
   }, [speed, isRunning, isPaused]);
 
-  // Timer to track continuous movement (60 seconds / 1 minute to activate score)
+  // Timer to track continuous movement (15 seconds to activate score)
+  // Score pauses when user stops and resumes when they start moving again
   useEffect(() => {
     if (!isRunning || isPaused || !isMoving) {
       if (movingTimerRef.current) {
         clearInterval(movingTimerRef.current);
         movingTimerRef.current = null;
       }
+      // Don't reset movingSeconds or scoreActive when user stops
+      // This allows the score to pause and resume
       return;
     }
 
     movingTimerRef.current = setInterval(() => {
       setMovingSeconds(prev => {
         const newValue = prev + 1;
-        // Activate score after 60 seconds (1 minute) of continuous human-pace movement
+        // Activate score after 15 seconds of continuous human-pace movement
         if (newValue >= SCORE_ACTIVATION_SECONDS && !scoreActive) {
           setScoreActive(true);
           toast.success('⭐ Score attivato! Continua a correre!');
-          console.log('Score activated after 60 seconds of movement');
+          console.log('Score activated after 15 seconds of movement');
         }
         return newValue;
       });
