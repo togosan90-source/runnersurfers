@@ -7,19 +7,33 @@ import { useNavigate } from 'react-router-dom';
 import coinsGold from '@/assets/coins-gold.png';
 import avatarSora from '@/assets/avatar-sora.png';
 
-export const PlayerHeader = memo(function PlayerHeader() {
+interface PlayerHeaderProps {
+  liveDistance?: number; // Live distance in km during run
+}
+
+export const PlayerHeader = memo(function PlayerHeader({ liveDistance = 0 }: PlayerHeaderProps) {
   const user = useGameStore((state) => state.user);
   const { profile } = useProfile();
   const navigate = useNavigate();
   const tier = useMemo(() => getTier(user.level), [user.level]);
-  const expProgress = useMemo(() => Math.min((user.exp / 100) * 100, 100), [user.exp]);
   
-  // Calculate km progress
+  // Calculate exp per km at current level
   const expPerKm = useMemo(() => getExpPerKm(user.level), [user.level]);
   const expNeeded = useMemo(() => getExpNeeded(user.level + 1), [user.level]);
-  const kmCurrent = useMemo(() => user.exp / expPerKm, [user.exp, expPerKm]);
+  
+  // Calculate live EXP based on current stored exp + live distance during run
+  const liveExp = useMemo(() => {
+    const expFromLiveDistance = liveDistance * expPerKm;
+    return user.exp + expFromLiveDistance;
+  }, [user.exp, liveDistance, expPerKm]);
+  
+  // Calculate EXP progress (live during run)
+  const expProgress = useMemo(() => Math.min((liveExp / 100) * 100, 100), [liveExp]);
+  
+  // Calculate km progress (live during run)
+  const kmCurrent = useMemo(() => liveExp / expPerKm, [liveExp, expPerKm]);
   const kmNeeded = useMemo(() => expNeeded / expPerKm, [expNeeded, expPerKm]);
-  const kmPercentage = useMemo(() => (kmCurrent / kmNeeded) * 100, [kmCurrent, kmNeeded]);
+  const kmPercentage = useMemo(() => Math.min((kmCurrent / kmNeeded) * 100, 100), [kmCurrent, kmNeeded]);
 
   return (
     <motion.div
@@ -244,7 +258,7 @@ export const PlayerHeader = memo(function PlayerHeader() {
                     boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)',
                   }}
                 >
-                  {user.exp}/100
+                  {Math.floor(liveExp)}/100
                 </motion.span>
               </div>
               
